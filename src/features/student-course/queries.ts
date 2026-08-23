@@ -226,14 +226,15 @@ export function useIssueNextQuestion(assessmentId: string) {
   return useMutation({
     mutationFn: () => getNextQuestion(assessmentId),
 
-    onSuccess: (question) => {
+    onSuccess: async (question) => {
       queryClient.setQueryData(
         studentAssessmentKeys.question(assessmentId),
         question,
       );
 
-      void queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: studentAssessmentKeys.detail(assessmentId),
+        exact: true,
       });
     },
   });

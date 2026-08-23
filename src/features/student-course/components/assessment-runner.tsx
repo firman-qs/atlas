@@ -1,33 +1,34 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
   ClipboardCheck,
   LoaderCircle,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
 import {
   studentAssessmentKeys,
   useAssessment,
   useIssueNextQuestion,
   useSubmitAttempt,
 } from "@/features/student-course/queries";
-
 import type {
   AssessmentQuestion,
   SubmitAttemptResult,
 } from "@/features/student-course/types";
-
-import { useQueryClient } from "@tanstack/react-query";
+import { ApiError } from "@/lib/api/api-error";
 
 interface AssessmentRunnerProps {
   assessmentId: string;
@@ -37,10 +38,16 @@ function formatMode(mode: "progress" | "review") {
   return mode === "progress" ? "Progress" : "Review";
 }
 
+function isConflictError(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 409;
+}
+
 export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
   const queryClient = useQueryClient();
+
   const assessmentQuery = useAssessment(assessmentId);
   const issueQuestion = useIssueNextQuestion(assessmentId);
+
   const requestedInitialQuestion = useRef(false);
 
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
@@ -59,6 +66,33 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
     assessment?.learning_record_id ?? "",
   );
 
+  function clearQuestionState() {
+    queryClient.removeQueries({
+      queryKey: studentAssessmentKeys.question(assessmentId),
+      exact: true,
+    });
+
+    setSelectedOptionId(null);
+    setEssayAnswer("");
+  }
+
+  async function reconcileAssessmentState() {
+    clearQuestionState();
+    setAttemptResult(null);
+
+    requestedInitialQuestion.current = false;
+
+    await queryClient.invalidateQueries({
+      queryKey: studentAssessmentKeys.detail(assessmentId),
+      exact: true,
+    });
+
+    await queryClient.refetchQueries({
+      queryKey: studentAssessmentKeys.detail(assessmentId),
+      exact: true,
+    });
+  }
+
   useEffect(() => {
     if (
       !assessment ||
@@ -70,8 +104,27 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
     }
 
     requestedInitialQuestion.current = true;
-    issueQuestion.mutate();
+
+    issueQuestion.mutate(undefined, {
+      onError: () => {
+        requestedInitialQuestion.current = false;
+      },
+    });
   }, [assessment, cachedQuestion, issueQuestion]);
+
+  useEffect(() => {
+    if (
+      assessment?.status === "completed" ||
+      assessment?.status === "canceled"
+    ) {
+      queryClient.removeQueries({
+        queryKey: studentAssessmentKeys.question(assessmentId),
+        exact: true,
+      });
+
+      requestedInitialQuestion.current = false;
+    }
+  }, [assessment?.status, assessmentId, queryClient]);
 
   if (assessmentQuery.isPending) {
     return (
@@ -85,7 +138,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
 
   if (assessmentQuery.isError) {
     return (
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-4xl space-y-4">
         <Alert variant="destructive">
           <AlertDescription>
             {assessmentQuery.error instanceof Error
@@ -93,6 +146,22 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               : "Unable to load assessment."}
           </AlertDescription>
         </Alert>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            void assessmentQuery.refetch();
+          }}
+          disabled={assessmentQuery.isFetching}
+        >
+          {assessmentQuery.isFetching ? (
+            <LoaderCircle className="animate-spin" />
+          ) : (
+            <RefreshCw />
+          )}
+
+          {assessmentQuery.isFetching ? "Retrying..." : "Retry"}
+        </Button>
       </div>
     );
   }
@@ -106,6 +175,16 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
   );
 
   function handleSubmit(question: AssessmentQuestion) {
+    const onSuccess = (result: SubmitAttemptResult) => {
+      setAttemptResult(result);
+    };
+
+    const onError = (error: unknown) => {
+      if (isConflictError(error)) {
+        void reconcileAssessmentState();
+      }
+    };
+
     if (question.content.type === "mcq") {
       if (!selectedOptionId) {
         return;
@@ -118,9 +197,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           },
         },
         {
-          onSuccess: (result) => {
-            setAttemptResult(result);
-          },
+          onSuccess,
+          onError,
         },
       );
 
@@ -140,9 +218,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         },
       },
       {
-        onSuccess: (result) => {
-          setAttemptResult(result);
-        },
+        onSuccess,
+        onError,
       },
     );
   }
@@ -157,26 +234,64 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
       exact: true,
     });
 
-    issueQuestion.mutate();
+    issueQuestion.mutate(undefined, {
+      onError: () => {
+        requestedInitialQuestion.current = false;
+      },
+    });
+  }
+
+  function handleRetryQuestion() {
+    requestedInitialQuestion.current = true;
+
+    issueQuestion.mutate(undefined, {
+      onError: () => {
+        requestedInitialQuestion.current = false;
+      },
+    });
   }
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="space-y-4">
-        <Button
-          variant="ghost"
-          nativeButton={false}
-          render={<Link href="/student/courses" />}
-        >
-          <ArrowLeft />
-          Back to courses
-        </Button>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            nativeButton={false}
+            render={<Link href="/student/courses" />}
+          >
+            <ArrowLeft />
+            Back to courses
+          </Button>
+
+          {assessment.status === "running" && (
+            <CancelAssessmentButton
+              assessmentId={assessment.id}
+              learningRecordId={assessment.learning_record_id}
+              onCanceled={() => {
+                clearQuestionState();
+                setAttemptResult(null);
+
+                void queryClient.invalidateQueries({
+                  queryKey: studentAssessmentKeys.detail(assessment.id),
+                  exact: true,
+                });
+              }}
+            />
+          )}
+        </div>
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge>{formatMode(assessment.mode)}</Badge>
 
             <Badge variant="outline">{assessment.status}</Badge>
+
+            {assessment.current_cycle_number !== null && (
+              <Badge variant="secondary">
+                Cycle {assessment.current_cycle_number}
+              </Badge>
+            )}
           </div>
 
           <h1 className="mt-3 text-3xl font-semibold tracking-tight">
@@ -216,10 +331,25 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           <CardHeader>
             <CardTitle>Assessment canceled</CardTitle>
           </CardHeader>
+
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              This assessment has been canceled and cannot be continued.
+            </p>
+
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link href="/student/courses" />}
+            >
+              Return to courses
+            </Button>
+          </CardContent>
         </Card>
       ) : assessment.status === "created" ? (
         <Alert>
           <ClipboardCheck className="size-4" />
+
           <AlertDescription>
             This assessment has not been started yet. Return to the course
             workspace and start it before answering questions.
@@ -235,13 +365,35 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           </CardContent>
         </Card>
       ) : issueQuestion.isError && !question ? (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {issueQuestion.error instanceof Error
-              ? issueQuestion.error.message
-              : "Unable to load the assessment question."}
-          </AlertDescription>
-        </Alert>
+        <Card>
+          <CardHeader>
+            <CardTitle>Unable to prepare question</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertDescription>
+                {issueQuestion.error instanceof Error
+                  ? issueQuestion.error.message
+                  : "Unable to load the assessment question."}
+              </AlertDescription>
+            </Alert>
+
+            <Button
+              variant="outline"
+              onClick={handleRetryQuestion}
+              disabled={issueQuestion.isPending}
+            >
+              {issueQuestion.isPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <RefreshCw />
+              )}
+
+              {issueQuestion.isPending ? "Retrying..." : "Retry question"}
+            </Button>
+          </CardContent>
+        </Card>
       ) : question ? (
         <Card>
           <CardHeader>
@@ -265,25 +417,20 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                   const selected = selectedOptionId === option.id;
 
                   return (
-                    <button
+                    <Button
                       key={option.id}
                       type="button"
+                      variant={selected ? "secondary" : "outline"}
                       disabled={
                         submitAttempt.isPending || attemptResult !== null
                       }
                       onClick={() => setSelectedOptionId(option.id)}
-                      className={[
-                        "flex w-full rounded-lg border p-4 text-left text-sm transition-colors",
-                        selected
-                          ? "border-primary bg-primary/5"
-                          : "hover:bg-muted/50",
-                        attemptResult ? "cursor-default" : "cursor-pointer",
-                      ].join(" ")}
+                      className="h-auto w-full justify-start whitespace-normal p-4 text-left"
                     >
                       <span className="flex-1">{option.option_text}</span>
 
                       {selected && <Badge variant="secondary">Selected</Badge>}
-                    </button>
+                    </Button>
                   );
                 })}
 
@@ -304,13 +451,13 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               </div>
             ) : (
               <div className="space-y-3">
-                <textarea
+                <Textarea
                   value={essayAnswer}
                   onChange={(event) => setEssayAnswer(event.target.value)}
                   disabled={submitAttempt.isPending || attemptResult !== null}
                   placeholder="Write your answer here..."
                   rows={8}
-                  className="w-full resize-y rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="resize-y"
                 />
 
                 {!attemptResult && (
@@ -331,118 +478,120 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 )}
               </div>
             )}
-          </CardContent>
 
-          {submitAttempt.isError && !attemptResult && (
-            <Alert variant="destructive">
-              <AlertDescription>
-                {submitAttempt.error instanceof Error
-                  ? submitAttempt.error.message
-                  : "Unable to submit your answer."}
-              </AlertDescription>
-            </Alert>
-          )}
+            {submitAttempt.isError && !attemptResult && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {isConflictError(submitAttempt.error)
+                    ? "The assessment changed while your answer was being submitted. ATLAS is synchronizing with the current assessment state."
+                    : submitAttempt.error instanceof Error
+                      ? submitAttempt.error.message
+                      : "Unable to submit your answer."}
+                </AlertDescription>
+              </Alert>
+            )}
 
-          {attemptResult && (
-            <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="font-medium">Answer evaluated</p>
+            {attemptResult && (
+              <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-medium">Answer evaluated</p>
 
-                {attemptResult.is_correct !== null && (
-                  <Badge
-                    variant={
-                      attemptResult.is_correct ? "default" : "destructive"
-                    }
-                  >
-                    {attemptResult.is_correct ? "Correct" : "Incorrect"}
-                  </Badge>
-                )}
-
-                {attemptResult.score !== null && (
-                  <Badge variant="outline">
-                    Score {Math.round(attemptResult.score * 100)}%
-                  </Badge>
-                )}
-              </div>
-
-              {attemptResult.feedback && (
-                <div>
-                  <p className="text-sm font-medium">Feedback</p>
-
-                  <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
-                    {attemptResult.feedback}
-                  </p>
-                </div>
-              )}
-
-              {attemptResult.cycle_completed && (
-                <div className="rounded-md border bg-background p-3">
-                  <p className="text-sm font-medium">Cycle complete</p>
-
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {attemptResult.cycle_score !== null && (
-                      <Badge variant="outline">
-                        Cycle score{" "}
-                        {Math.round(attemptResult.cycle_score * 100)}%
-                      </Badge>
-                    )}
-
-                    <Badge variant="outline">
-                      Required{" "}
-                      {Math.round(attemptResult.mastery_threshold * 100)}%
-                    </Badge>
-
+                  {attemptResult.is_correct !== null && (
                     <Badge
                       variant={
-                        attemptResult.level_mastered ? "default" : "secondary"
+                        attemptResult.is_correct ? "default" : "destructive"
                       }
                     >
-                      {attemptResult.level_mastered
-                        ? "Level mastered"
-                        : "Level not yet mastered"}
+                      {attemptResult.is_correct ? "Correct" : "Incorrect"}
                     </Badge>
-                  </div>
-                </div>
-              )}
-
-              {attemptResult.assessment_status === "completed" ? (
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    nativeButton={false}
-                    render={
-                      <Link
-                        href={`/student/assessments/${assessment.id}/result`}
-                      />
-                    }
-                  >
-                    View result
-                    <ArrowRight />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    nativeButton={false}
-                    render={<Link href="/student/courses" />}
-                  >
-                    Return to courses
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  onClick={handleNextQuestion}
-                  disabled={issueQuestion.isPending}
-                >
-                  {issueQuestion.isPending ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    <ArrowRight />
                   )}
 
-                  {issueQuestion.isPending ? "Preparing..." : "Next question"}
-                </Button>
-              )}
-            </div>
-          )}
+                  {attemptResult.score !== null && (
+                    <Badge variant="outline">
+                      Score {Math.round(attemptResult.score * 100)}%
+                    </Badge>
+                  )}
+                </div>
+
+                {attemptResult.feedback && (
+                  <div>
+                    <p className="text-sm font-medium">Feedback</p>
+
+                    <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
+                      {attemptResult.feedback}
+                    </p>
+                  </div>
+                )}
+
+                {attemptResult.cycle_completed && (
+                  <div className="rounded-md border bg-background p-3">
+                    <p className="text-sm font-medium">Cycle complete</p>
+
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {attemptResult.cycle_score !== null && (
+                        <Badge variant="outline">
+                          Cycle score{" "}
+                          {Math.round(attemptResult.cycle_score * 100)}%
+                        </Badge>
+                      )}
+
+                      <Badge variant="outline">
+                        Required{" "}
+                        {Math.round(attemptResult.mastery_threshold * 100)}%
+                      </Badge>
+
+                      <Badge
+                        variant={
+                          attemptResult.level_mastered ? "default" : "secondary"
+                        }
+                      >
+                        {attemptResult.level_mastered
+                          ? "Level mastered"
+                          : "Level not yet mastered"}
+                      </Badge>
+                    </div>
+                  </div>
+                )}
+
+                {attemptResult.assessment_status === "completed" ? (
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      nativeButton={false}
+                      render={
+                        <Link
+                          href={`/student/assessments/${assessment.id}/result`}
+                        />
+                      }
+                    >
+                      View result
+                      <ArrowRight />
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      nativeButton={false}
+                      render={<Link href="/student/courses" />}
+                    >
+                      Return to courses
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={handleNextQuestion}
+                    disabled={issueQuestion.isPending}
+                  >
+                    {issueQuestion.isPending ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      <ArrowRight />
+                    )}
+
+                    {issueQuestion.isPending ? "Preparing..." : "Next question"}
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardContent>
         </Card>
       ) : null}
     </div>
