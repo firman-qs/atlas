@@ -1,29 +1,30 @@
 import {
-    ArrowRight,
-    ClipboardCheck,
-    LoaderCircle,
-    LockKeyhole,
-    RotateCcw,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import {
+  ArrowRight,
+  ClipboardCheck,
+  LoaderCircle,
+  LockKeyhole,
+  RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-} from "@/components/ui/select";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
 import {
-    useCreateProgressAssessment,
-    useCreateReviewAssessment,
-    useStartAssessment,
-    useStudentQuestionBanks,
+  useCreateProgressAssessment,
+  useCreateReviewAssessment,
+  useStartAssessment,
+  useStudentQuestionBanks,
 } from "@/features/student-course/queries";
 import type { AssessmentOptions } from "@/features/student-course/types";
 
@@ -49,6 +50,7 @@ export function AssessmentOptionsPanel({
     useState<string>("all");
   const selectedQuestionBank =
     selectedQuestionBankId === "all" ? null : selectedQuestionBankId;
+  const router = useRouter();
 
   const selectedQuestionBankLabel =
     selectedQuestionBankId === "all"
@@ -87,32 +89,45 @@ export function AssessmentOptionsPanel({
                 </p>
               </div>
 
-              {assessment.status === "created" ? (
-                <Button
-                  onClick={() => startAssessment.mutate(assessment.id)}
-                  disabled={startAssessment.isPending}
-                >
-                  {startAssessment.isPending ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    <ClipboardCheck />
-                  )}
+              <div className="flex flex-wrap gap-2">
+                {assessment.status === "created" ? (
+                  <Button
+                    onClick={() => {
+                      startAssessment.mutate(assessment.id, {
+                        onSuccess: () => {
+                          router.push(`/student/assessments/${assessment.id}`);
+                        },
+                      });
+                    }}
+                    disabled={startAssessment.isPending}
+                  >
+                    {startAssessment.isPending ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      <ClipboardCheck />
+                    )}
 
-                  {startAssessment.isPending
-                    ? "Starting..."
-                    : "Start assessment"}
-                </Button>
-              ) : (
-                <Button
-                  nativeButton={false}
-                  render={
-                    <Link href={`/student/assessments/${assessment.id}`} />
-                  }
-                >
-                  Continue assessment
-                  <ArrowRight />
-                </Button>
-              )}
+                    {startAssessment.isPending
+                      ? "Starting..."
+                      : "Start assessment"}
+                  </Button>
+                ) : (
+                  <Button
+                    nativeButton={false}
+                    render={
+                      <Link href={`/student/assessments/${assessment.id}`} />
+                    }
+                  >
+                    Continue assessment
+                    <ArrowRight />
+                  </Button>
+                )}
+
+                <CancelAssessmentButton
+                  assessmentId={assessment.id}
+                  learningRecordId={learningRecordId}
+                />
+              </div>
             </div>
 
             {startAssessment.isError && (

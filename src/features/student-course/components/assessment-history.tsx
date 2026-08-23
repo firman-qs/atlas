@@ -1,14 +1,105 @@
 "use client";
 
-import { ArrowRight, ClipboardCheck } from "lucide-react";
+import { ArrowRight, ClipboardCheck, LoaderCircle, Play } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAssessments } from "@/features/student-course/queries";
+import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
+import {
+  useAssessments,
+  useStartAssessment,
+} from "@/features/student-course/queries";
+import type { Assessment } from "@/features/student-course/types";
+
+function AssessmentActions({ assessment }: { assessment: Assessment }) {
+  const router = useRouter();
+  const startAssessment = useStartAssessment(assessment.learning_record_id);
+
+  async function handleStart() {
+    try {
+      await startAssessment.mutateAsync(assessment.id);
+
+      router.push(`/student/assessments/${assessment.id}`);
+    } catch {
+      // Mutation error is rendered below.
+    }
+  }
+
+  if (assessment.status === "created") {
+    return (
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={() => void handleStart()}
+            disabled={startAssessment.isPending}
+          >
+            {startAssessment.isPending ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <Play />
+            )}
+
+            {startAssessment.isPending ? "Starting..." : "Start assessment"}
+          </Button>
+
+          <CancelAssessmentButton
+            assessmentId={assessment.id}
+            learningRecordId={assessment.learning_record_id}
+          />
+        </div>
+
+        {startAssessment.isError && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {startAssessment.error instanceof Error
+                ? startAssessment.error.message
+                : "Unable to start assessment."}
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
+    );
+  }
+
+  if (assessment.status === "running") {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Button
+          nativeButton={false}
+          render={<Link href={`/student/assessments/${assessment.id}`} />}
+        >
+          Continue
+          <ArrowRight />
+        </Button>
+
+        <CancelAssessmentButton
+          assessmentId={assessment.id}
+          learningRecordId={assessment.learning_record_id}
+        />
+      </div>
+    );
+  }
+
+  if (assessment.status === "completed") {
+    return (
+      <Button
+        variant="outline"
+        nativeButton={false}
+        render={<Link href={`/student/assessments/${assessment.id}/result`} />}
+      >
+        View result
+        <ArrowRight />
+      </Button>
+    );
+  }
+
+  return null;
+}
 
 export function AssessmentHistory() {
   const assessments = useAssessments(1, 20);
@@ -43,8 +134,8 @@ export function AssessmentHistory() {
         <h1 className="text-3xl font-semibold tracking-tight">Assessments</h1>
 
         <p className="mt-1 text-muted-foreground">
-          Continue active assessments or review your previous formative
-          assessment evidence.
+          Start or continue active assessments and review your previous
+          formative assessment evidence.
         </p>
       </div>
 
@@ -61,7 +152,7 @@ export function AssessmentHistory() {
           {data.items.map((assessment) => (
             <Card key={assessment.id}>
               <CardHeader>
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <CardTitle>
@@ -75,35 +166,14 @@ export function AssessmentHistory() {
                       <Badge variant="outline">{assessment.status}</Badge>
                     </div>
 
-                    <p className="text-sm text-muted-foreground">
+                    <p className="max-w-2xl text-sm text-muted-foreground">
                       {assessment.learning_objective.description}
                     </p>
                   </div>
 
-                  {assessment.status === "running" ? (
-                    <Button
-                      nativeButton={false}
-                      render={
-                        <Link href={`/student/assessments/${assessment.id}`} />
-                      }
-                    >
-                      Continue
-                      <ArrowRight />
-                    </Button>
-                  ) : assessment.status === "completed" ? (
-                    <Button
-                      variant="outline"
-                      nativeButton={false}
-                      render={
-                        <Link
-                          href={`/student/assessments/${assessment.id}/result`}
-                        />
-                      }
-                    >
-                      View result
-                      <ArrowRight />
-                    </Button>
-                  ) : null}
+                  <div className="shrink-0">
+                    <AssessmentActions assessment={assessment} />
+                  </div>
                 </div>
               </CardHeader>
             </Card>

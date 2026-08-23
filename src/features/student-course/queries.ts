@@ -3,23 +3,24 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
-  createLearningRecord,
+  cancelAssessment,
   createAssessment,
+  createLearningRecord,
   getAssessment,
   getAssessmentOptions,
+  getAssessmentResult,
   getLearningRecordProgress,
   getNextQuestion,
   getStudentEnrollment,
+  getStudentQuestionBanks,
+  listAssessments,
   startAssessment,
   submitAttempt,
-  getAssessmentResult,
-  listAssessments,
-  getStudentQuestionBanks,
 } from "@/features/student-course/api/student-course-client";
 
 import type {
-  SubmitAttemptRequest,
   ReviewTarget,
+  SubmitAttemptRequest,
 } from "@/features/student-course/types";
 
 import { studentCourseKeys } from "@/features/student-courses/queries";
@@ -135,10 +136,15 @@ export function useCreateProgressAssessment(learningRecordId: string) {
         queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.progress(learningRecordId),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.all,
+        }),
       ]);
     },
   });
 }
+
 export function useCreateReviewAssessment(learningRecordId: string) {
   const queryClient = useQueryClient();
 
@@ -168,6 +174,10 @@ export function useCreateReviewAssessment(learningRecordId: string) {
         queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.progress(learningRecordId),
         }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.all,
+        }),
       ]);
     },
   });
@@ -179,7 +189,7 @@ export function useStartAssessment(learningRecordId: string) {
   return useMutation({
     mutationFn: (assessmentId: string) => startAssessment(assessmentId),
 
-    onSuccess: async () => {
+    onSuccess: async (_, assessmentId) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.assessmentOptions(learningRecordId),
@@ -187,6 +197,14 @@ export function useStartAssessment(learningRecordId: string) {
 
         queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.progress(learningRecordId),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.detail(assessmentId),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.all,
         }),
       ]);
     },
@@ -238,11 +256,65 @@ export function useSubmitAttempt(
         }),
 
         queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.result(assessmentId),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.all,
+        }),
+
+        queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.progress(learningRecordId),
         }),
 
         queryClient.invalidateQueries({
           queryKey: studentCourseDetailKeys.assessmentOptions(learningRecordId),
+        }),
+      ]);
+    },
+  });
+}
+
+export function useCancelAssessment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      assessmentId,
+    }: {
+      assessmentId: string;
+      learningRecordId: string;
+    }) => cancelAssessment(assessmentId),
+
+    onSuccess: async (_, variables) => {
+      queryClient.removeQueries({
+        queryKey: studentAssessmentKeys.question(variables.assessmentId),
+        exact: true,
+      });
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.detail(variables.assessmentId),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.result(variables.assessmentId),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentAssessmentKeys.all,
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentCourseDetailKeys.assessmentOptions(
+            variables.learningRecordId,
+          ),
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: studentCourseDetailKeys.progress(
+            variables.learningRecordId,
+          ),
         }),
       ]);
     },
