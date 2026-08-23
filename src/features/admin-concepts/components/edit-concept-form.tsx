@@ -1,0 +1,154 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useUpdateConcept } from "@/features/admin-concepts/queries";
+import type { AdminConcept } from "@/features/admin-concepts/types";
+
+const editConceptSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(1, "Concept code is required.")
+    .max(50, "Concept code must be at most 50 characters."),
+
+  name: z
+    .string()
+    .trim()
+    .min(1, "Concept name is required.")
+    .max(255, "Concept name must be at most 255 characters."),
+
+  description: z.string().trim().min(1, "Concept description is required."),
+});
+
+type EditConceptFormValues = z.infer<typeof editConceptSchema>;
+
+interface EditConceptFormProps {
+  concept: AdminConcept;
+  onCancel: () => void;
+  onSaved: () => void;
+}
+
+export function EditConceptForm({
+  concept,
+  onCancel,
+  onSaved,
+}: EditConceptFormProps) {
+  const updateConcept = useUpdateConcept(concept.course_id);
+
+  const form = useForm<EditConceptFormValues>({
+    resolver: zodResolver(editConceptSchema),
+    defaultValues: {
+      code: concept.code,
+      name: concept.name,
+      description: concept.description,
+    },
+  });
+
+  async function onSubmit(values: EditConceptFormValues) {
+    try {
+      await updateConcept.mutateAsync({
+        conceptId: concept.id,
+        request: {
+          code: values.code.trim(),
+          name: values.name.trim(),
+          description: values.description.trim(),
+        },
+      });
+
+      onSaved();
+    } catch {
+      // Mutation state renders the API error below.
+    }
+  }
+
+  return (
+    <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      {updateConcept.isError && (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {updateConcept.error instanceof Error
+              ? updateConcept.error.message
+              : "Unable to update concept."}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor={`concept-code-${concept.id}`}>Code</Label>
+
+          <Input
+            id={`concept-code-${concept.id}`}
+            disabled={updateConcept.isPending}
+            {...form.register("code")}
+          />
+
+          {form.formState.errors.code && (
+            <p className="text-sm text-destructive">
+              {form.formState.errors.code.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor={`concept-name-${concept.id}`}>Name</Label>
+
+          <Input
+            id={`concept-name-${concept.id}`}
+            disabled={updateConcept.isPending}
+            {...form.register("name")}
+          />
+
+          {form.formState.errors.name && (
+            <p className="text-sm text-destructive">
+              {form.formState.errors.name.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor={`concept-description-${concept.id}`}>Description</Label>
+
+        <Textarea
+          id={`concept-description-${concept.id}`}
+          rows={4}
+          disabled={updateConcept.isPending}
+          {...form.register("description")}
+        />
+
+        {form.formState.errors.description && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.description.message}
+          </p>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          disabled={updateConcept.isPending}
+        >
+          Cancel
+        </Button>
+
+        <Button type="submit" disabled={updateConcept.isPending}>
+          {updateConcept.isPending && <Loader2 className="animate-spin" />}
+
+          {updateConcept.isPending ? "Saving..." : "Save changes"}
+        </Button>
+      </div>
+    </form>
+  );
+}

@@ -1,0 +1,217 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { useUpdateAdminAcademicTerm } from "@/features/admin-academic-terms/queries";
+import {
+  academicSemesterOptions,
+  formatAcademicSemester,
+  isAcademicSemester,
+} from "@/features/admin-academic-terms/semester";
+import type { AdminAcademicTerm } from "@/features/admin-academic-terms/types";
+
+const editAcademicTermSchema = z
+  .object({
+    year: z
+      .number()
+      .int("Year must be a whole number.")
+      .min(2000, "Year must be 2000 or later.")
+      .max(2200, "Year cannot exceed 2200."),
+
+    semester: z.enum([
+      "odd",
+      "even",
+      "ganjil",
+      "genap",
+      "antara",
+      "spring",
+      "fall",
+      "summer",
+    ]),
+
+    starts_at: z.string().min(1, "Start date is required."),
+
+    ends_at: z.string().min(1, "End date is required."),
+  })
+  .refine((values) => values.starts_at <= values.ends_at, {
+    message: "End date must be on or after the start date.",
+    path: ["ends_at"],
+  });
+
+type EditAcademicTermFormValues = z.infer<typeof editAcademicTermSchema>;
+
+interface EditAcademicTermFormProps {
+  academicTerm: AdminAcademicTerm;
+  onSaved: () => void;
+  onCancel: () => void;
+}
+
+export function EditAcademicTermForm({
+  academicTerm,
+  onSaved,
+  onCancel,
+}: EditAcademicTermFormProps) {
+  const updateAcademicTerm = useUpdateAdminAcademicTerm(academicTerm.id);
+
+  const form = useForm<EditAcademicTermFormValues>({
+    resolver: zodResolver(editAcademicTermSchema),
+    defaultValues: {
+      year: academicTerm.year,
+      semester: academicTerm.semester,
+      starts_at: academicTerm.starts_at,
+      ends_at: academicTerm.ends_at,
+    },
+  });
+
+  const selectedSemester = useWatch({
+    control: form.control,
+    name: "semester",
+  });
+
+  async function onSubmit(values: EditAcademicTermFormValues) {
+    try {
+      await updateAcademicTerm.mutateAsync({
+        year: values.year,
+        semester: values.semester,
+        starts_at: values.starts_at,
+        ends_at: values.ends_at,
+      });
+
+      onSaved();
+    } catch {
+      // Mutation state renders the backend error below.
+    }
+  }
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      {updateAcademicTerm.isError && (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {updateAcademicTerm.error instanceof Error
+              ? updateAcademicTerm.error.message
+              : "Unable to update academic term."}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <FieldGroup>
+        <Field data-invalid={!!form.formState.errors.year}>
+          <FieldLabel htmlFor="edit-academic-term-year">Year</FieldLabel>
+
+          <Input
+            id="edit-academic-term-year"
+            type="number"
+            min={2000}
+            max={2200}
+            disabled={updateAcademicTerm.isPending}
+            aria-invalid={!!form.formState.errors.year}
+            {...form.register("year", {
+              valueAsNumber: true,
+            })}
+          />
+
+          <FieldError errors={[form.formState.errors.year]} />
+        </Field>
+
+        <Field data-invalid={!!form.formState.errors.semester}>
+          <FieldLabel>Semester</FieldLabel>
+
+          <Select
+            value={selectedSemester}
+            onValueChange={(value) => {
+              if (isAcademicSemester(value)) {
+                form.setValue("semester", value, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }
+            }}
+            disabled={updateAcademicTerm.isPending}
+          >
+            <SelectTrigger
+              className="w-full"
+              aria-label="Academic term semester"
+              aria-invalid={!!form.formState.errors.semester}
+            >
+              <span>{formatAcademicSemester(selectedSemester)}</span>
+            </SelectTrigger>
+
+            <SelectContent>
+              {academicSemesterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <FieldError errors={[form.formState.errors.semester]} />
+        </Field>
+
+        <Field data-invalid={!!form.formState.errors.starts_at}>
+          <FieldLabel htmlFor="edit-academic-term-start">Start date</FieldLabel>
+
+          <Input
+            id="edit-academic-term-start"
+            type="date"
+            disabled={updateAcademicTerm.isPending}
+            aria-invalid={!!form.formState.errors.starts_at}
+            {...form.register("starts_at")}
+          />
+
+          <FieldError errors={[form.formState.errors.starts_at]} />
+        </Field>
+
+        <Field data-invalid={!!form.formState.errors.ends_at}>
+          <FieldLabel htmlFor="edit-academic-term-end">End date</FieldLabel>
+
+          <Input
+            id="edit-academic-term-end"
+            type="date"
+            disabled={updateAcademicTerm.isPending}
+            aria-invalid={!!form.formState.errors.ends_at}
+            {...form.register("ends_at")}
+          />
+
+          <FieldError errors={[form.formState.errors.ends_at]} />
+        </Field>
+      </FieldGroup>
+
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={updateAcademicTerm.isPending}
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+
+        <Button type="submit" disabled={updateAcademicTerm.isPending}>
+          {updateAcademicTerm.isPending && <Loader2 className="animate-spin" />}
+
+          {updateAcademicTerm.isPending ? "Saving..." : "Save changes"}
+        </Button>
+      </div>
+    </form>
+  );
+}

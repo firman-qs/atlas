@@ -1,0 +1,151 @@
+import { Check, Circle, Trophy } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type {
+  LearningObjectiveConceptProgress,
+  LearningRecordProgress,
+} from "@/features/student-course/types";
+import { cn } from "@/lib/utils";
+
+interface LearningProgressProps {
+  progress: LearningRecordProgress;
+}
+
+function formatSoloCode(code: string) {
+  return code
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function masteredLevelIndex(concept: LearningObjectiveConceptProgress) {
+  if (!concept.mastered_loc_level_id) {
+    return -1;
+  }
+
+  return concept.levels.findIndex(
+    (level) => level.loc_level_id === concept.mastered_loc_level_id,
+  );
+}
+
+export function LearningProgress({ progress }: LearningProgressProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="space-y-1">
+          <CardTitle>Learning Progress</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Concept mastery across the configured learning objectives and SOLO
+            levels.
+          </p>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {progress.learning_objectives.map((lo) => (
+          <section key={lo.id} className="rounded-lg border p-4">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline">{lo.code.toUpperCase()}</Badge>
+
+                  {lo.mastered_at && (
+                    <Badge>
+                      <Trophy className="size-3" />
+                      Mastered
+                    </Badge>
+                  )}
+                </div>
+
+                <p className="text-sm text-muted-foreground">
+                  {lo.description}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-4">
+              {lo.concepts.map((concept) => {
+                const masteredIndex = masteredLevelIndex(concept);
+
+                return (
+                  <div
+                    key={concept.learning_objective_concept_id}
+                    className="rounded-md bg-muted/40 p-4"
+                  >
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium">{concept.concept.name}</p>
+
+                          <Badge variant="secondary" className="font-mono">
+                            {concept.concept.code}
+                          </Badge>
+
+                          {!concept.is_required && (
+                            <Badge variant="outline">Optional</Badge>
+                          )}
+
+                          {concept.mastered_at && (
+                            <Badge>
+                              <Check className="size-3" />
+                              Concept mastered
+                            </Badge>
+                          )}
+                        </div>
+
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {concept.concept.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                      {concept.levels.map((level, index) => {
+                        const mastered = index <= masteredIndex;
+
+                        return (
+                          <div
+                            key={level.loc_level_id}
+                            className={cn(
+                              "flex items-start gap-3 rounded-md border bg-background p-3",
+                              mastered && "border-foreground/20",
+                            )}
+                          >
+                            <div className="mt-0.5">
+                              {mastered ? (
+                                <span className="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                  <Check className="size-3" />
+                                </span>
+                              ) : (
+                                <Circle className="size-5 text-muted-foreground" />
+                              )}
+                            </div>
+
+                            <div className="min-w-0 space-y-1">
+                              <p className="text-sm font-medium">
+                                {formatSoloCode(level.solo_level.code)}
+                              </p>
+
+                              <p className="text-xs text-muted-foreground">
+                                {level.solo_level.description}
+                              </p>
+
+                              <p className="text-xs text-muted-foreground">
+                                Mastery threshold{" "}
+                                {Math.round(level.mastery_threshold * 100)}%
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
