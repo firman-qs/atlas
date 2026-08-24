@@ -113,6 +113,7 @@ export function SortableMcqOption({
           <AtlasRichTextEditor
             value={value}
             onChange={onChange}
+            mediaPurpose="authoring"
             disabled={disabled}
             placeholder={`Write option ${label}...`}
             className="min-h-24"

@@ -1,5 +1,10 @@
 "use client";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
+import { Button } from "@/components/ui/button";
+import { mediaUrl, uploadMedia } from "@/features/media/api/media-client";
+import type { MediaPurpose } from "@/features/media/types";
+import { cn } from "@/lib/utils";
 import {
   defaultValueCtx,
   Editor,
@@ -17,9 +22,8 @@ import {
   useEditor,
   useInstance,
 } from "@milkdown/react";
+import { Eye, EyeOff, ImagePlus, LoaderCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-import { cn } from "@/lib/utils";
 
 export interface AtlasRichTextEditorProps {
   value: string;
@@ -27,6 +31,7 @@ export interface AtlasRichTextEditorProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  mediaPurpose?: MediaPurpose;
 }
 
 interface AtlasMilkdownEditorProps {
@@ -142,6 +147,7 @@ export function AtlasRichTextEditor({
   placeholder,
   disabled = false,
   className,
+  mediaPurpose,
 }: AtlasRichTextEditorProps) {
   /*
    * Capture only the value used to create the Milkdown document.
@@ -151,6 +157,46 @@ export function AtlasRichTextEditor({
    * to be recreated when the parent value changes.
    */
   const [initialValue] = useState(() => value);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+
+  async function handleImageSelected(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const file = event.target.files?.[0];
+
+    // Allow selecting the same file again after this attempt.
+    event.target.value = "";
+
+    if (!file || !mediaPurpose || disabled) {
+      return;
+    }
+
+    setImageUploadError(null);
+    setIsUploadingImage(true);
+
+    try {
+      const media = await uploadMedia(file, mediaPurpose);
+
+      const altText = file.name.replace(/\.[^.]+$/, "").trim() || "Figure";
+
+      const imageMarkdown = `![${altText}](${mediaUrl(media.id)})`;
+
+      const nextValue = value.trimEnd()
+        ? `${value.trimEnd()}\n\n${imageMarkdown}`
+        : imageMarkdown;
+
+      onChange(nextValue);
+    } catch (error) {
+      setImageUploadError(
+        error instanceof Error ? error.message : "Unable to upload image.",
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  }
 
   return (
     <div
@@ -161,6 +207,58 @@ export function AtlasRichTextEditor({
       )}
       aria-disabled={disabled}
     >
+      <div className="flex flex-wrap items-center justify-end gap-1 border-b bg-muted/20 px-2 py-1.5">
+        {mediaPurpose && (
+          <>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="sr-only"
+              disabled={disabled || isUploadingImage}
+              onChange={handleImageSelected}
+              aria-label="Choose image"
+            />
+
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              disabled={disabled || isUploadingImage}
+              onClick={() => imageInputRef.current?.click()}
+            >
+              {isUploadingImage ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <ImagePlus />
+              )}
+
+              {isUploadingImage ? "Uploading..." : "Add image"}
+            </Button>
+          </>
+        )}
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsPreviewVisible((visible) => !visible)}
+          aria-expanded={isPreviewVisible}
+        >
+          {isPreviewVisible ? <EyeOff /> : <Eye />}
+
+          {isPreviewVisible ? "Hide preview" : "Preview"}
+        </Button>
+      </div>
+
+      {imageUploadError && (
+        <div
+          role="alert"
+          className="border-b bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        >
+          {imageUploadError}
+        </div>
+      )}
+
       <MilkdownProvider>
         <AtlasMilkdownEditor
           initialValue={initialValue}
@@ -171,6 +269,22 @@ export function AtlasRichTextEditor({
 
         <EditorStateSynchronizer value={value} disabled={disabled} />
       </MilkdownProvider>
+
+      {isPreviewVisible && (
+        <div className="border-t bg-muted/10 p-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Rendered preview
+          </p>
+
+          {value.trim() ? (
+            <AtlasRichTextViewer value={value} />
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Nothing to preview yet.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

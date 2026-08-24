@@ -34,6 +34,7 @@ export function QuestionCommonFields({
               value={field.value}
               onChange={field.onChange}
               disabled={disabled}
+              mediaPurpose="authoring"
               placeholder="Write the question prompt..."
               className="min-h-40"
             />
@@ -58,6 +59,7 @@ export function QuestionCommonFields({
           render={({ field }) => (
             <AtlasRichTextEditor
               value={field.value}
+              mediaPurpose="authoring"
               onChange={field.onChange}
               disabled={disabled}
               placeholder="Optional feedback shown or generated around this question..."

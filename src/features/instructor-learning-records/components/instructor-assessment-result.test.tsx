@@ -66,7 +66,7 @@ describe("InstructorAssessmentResult", () => {
                           options: [
                             {
                               id: "option-1",
-                              text: "Electric flux",
+                              text: "$\\Phi_E = q / \\epsilon_0$",
                             },
                             {
                               id: "option-2",
@@ -75,13 +75,14 @@ describe("InstructorAssessmentResult", () => {
                           ],
                         },
                         prompt:
-                          "What quantity is represented by electric flux?",
+                          "What quantity is represented by **electric flux** $\\Phi_E$?",
                         answer: {
                           option_id: "option-1",
                         },
                         is_correct: true,
                         score: 1,
-                        feedback: "Correct.",
+                        feedback:
+                          "Correct. **Gauss's law** gives $\\Phi_E = q / \\epsilon_0$.",
                         evaluation_metadata: null,
                         submitted_at: "2026-08-20T08:10:00+07:00",
                         evaluated_at: "2026-08-20T08:10:01+07:00",
@@ -95,12 +96,12 @@ describe("InstructorAssessmentResult", () => {
                         },
                         prompt: "Explain electric flux through a surface.",
                         answer: {
-                          text: "Electric flux measures the electric field passing through a surface.",
+                          text: "The field scales as **$1/r^2$** over the spherical surface.",
                         },
                         is_correct: null,
                         score: 0.7,
                         feedback:
-                          "Good explanation, but expand the role of surface orientation.",
+                          "Good explanation, but expand the **surface orientation** argument.",
                         evaluation_metadata: null,
                         submitted_at: "2026-08-20T08:20:00+07:00",
                         evaluated_at: "2026-08-20T08:20:05+07:00",
@@ -117,7 +118,7 @@ describe("InstructorAssessmentResult", () => {
   });
 
   it("renders persisted assessment evidence for the instructor", () => {
-    render(
+    const { container } = render(
       <InstructorAssessmentResult
         courseOfferingId="offering-1"
         learningRecordId="learning-record-1"
@@ -139,46 +140,43 @@ describe("InstructorAssessmentResult", () => {
     expect(screen.getByText("Main Question Bank")).toBeInTheDocument();
 
     expect(screen.getByText("Electric Flux")).toBeInTheDocument();
-
     expect(screen.getByText("em-c001")).toBeInTheDocument();
-
     expect(screen.getByText("Unistructural")).toBeInTheDocument();
 
     expect(screen.getByText("Cycle 1")).toBeInTheDocument();
-
     expect(screen.getByText("Score 50%")).toBeInTheDocument();
-
     expect(screen.getByText("Required 80%")).toBeInTheDocument();
-
     expect(screen.getByText("Not mastered")).toBeInTheDocument();
-
-    expect(
-      screen.getByText("What quantity is represented by electric flux?"),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("Electric flux", {
-        selector: "p",
-      }),
-    ).toBeInTheDocument();
 
     expect(
       screen.getByText("Explain electric flux through a surface."),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(
-        "Electric flux measures the electric field passing through a surface.",
-      ),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(
-        "Good explanation, but expand the role of surface orientation.",
-      ),
-    ).toBeInTheDocument();
-
     expect(screen.getAllByText("Student answer")).toHaveLength(2);
+
+    // Markdown in the persisted question prompt.
+    expect(screen.getByText("electric flux")).toHaveProperty(
+      "tagName",
+      "STRONG",
+    );
+
+    // Markdown in persisted evaluation feedback.
+    expect(screen.getByText("Gauss's law")).toHaveProperty("tagName", "STRONG");
+
+    expect(screen.getByText("surface orientation")).toHaveProperty(
+      "tagName",
+      "STRONG",
+    );
+
+    expect(
+      Array.from(
+        container.querySelectorAll(".atlas-rich-text-viewer strong"),
+      ).some((element) => element.querySelector(".katex") !== null),
+    ).toBe(true);
+
+    // Question prompt, MCQ answer, feedback, and essay answer contain
+    // mathematical notation rendered through KaTeX.
+    expect(container.querySelectorAll(".katex").length).toBeGreaterThan(0);
 
     expect(
       screen.getByRole("button", {

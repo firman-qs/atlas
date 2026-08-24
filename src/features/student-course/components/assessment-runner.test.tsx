@@ -75,6 +75,30 @@ vi.mock(
   }),
 );
 
+vi.mock("@/components/rich-text/atlas-rich-text-editor", () => ({
+  AtlasRichTextEditor: ({
+    value,
+    onChange,
+    placeholder,
+    disabled,
+    mediaPurpose,
+  }: {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    disabled?: boolean;
+    mediaPurpose?: "authoring" | "attempt";
+  }) => (
+    <textarea
+      aria-label={placeholder ?? "Rich text editor"}
+      value={value}
+      disabled={disabled}
+      data-media-purpose={mediaPurpose}
+      onChange={(event) => onChange(event.target.value)}
+    />
+  ),
+}));
+
 import { AssessmentRunner } from "@/features/student-course/components/assessment-runner";
 import { ApiError } from "@/lib/api/api-error";
 
@@ -167,6 +191,83 @@ describe("AssessmentRunner", () => {
     );
   });
 
+  it("renders Markdown and mathematical notation in assessment content", async () => {
+    getQueryData.mockReturnValue({
+      id: "question-1",
+      prompt:
+        "Calculate **electric flux** using $\\Phi_E = \\int_S \\mathbf{E} \\cdot d\\mathbf{a}$.",
+      content: {
+        type: "mcq",
+        options: [
+          {
+            id: "option-1",
+            option_text: "$\\Phi_E = q / \\epsilon_0$",
+          },
+        ],
+      },
+    });
+
+    submitMutate.mockImplementation(
+      (
+        _request: unknown,
+        options: {
+          onSuccess: (result: unknown) => void;
+        },
+      ) => {
+        options.onSuccess({
+          attempt_id: "attempt-1",
+          question_id: "question-1",
+          cycle_number: 1,
+          is_correct: true,
+          score: 1,
+          feedback:
+            "Correct. **Gauss's law** gives $\\Phi_E = q / \\epsilon_0$.",
+          evaluated_at: "2026-08-23T00:00:00Z",
+          cycle_completed: false,
+          cycle_score: null,
+          mastery_threshold: 0.8,
+          level_mastered: false,
+          assessment_status: "running",
+          current_loc_level_id: "level-1",
+        });
+      },
+    );
+
+    const { container } = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
+
+    expect(screen.getByText("electric flux")).toHaveProperty(
+      "tagName",
+      "STRONG",
+    );
+
+    expect(container.querySelectorAll(".katex").length).toBeGreaterThan(0);
+
+    const mathOptionButton = Array.from(
+      container.querySelectorAll("button"),
+    ).find((button) => button.querySelector(".katex"));
+
+    expect(mathOptionButton).toBeDefined();
+
+    fireEvent.click(mathOptionButton!);
+
+    const submitButton = Array.from(container.querySelectorAll("button")).find(
+      (button) => button.textContent?.includes("Submit answer"),
+    );
+
+    expect(submitButton).toBeDefined();
+
+    fireEvent.click(submitButton!);
+
+    expect(await screen.findByText("Gauss's law")).toHaveProperty(
+      "tagName",
+      "STRONG",
+    );
+
+    expect(container.querySelectorAll(".katex").length).toBeGreaterThan(1);
+  });
+
   it("issues the authoritative current question when no question is cached", () => {
     getQueryData.mockReturnValue(undefined);
 
@@ -216,11 +317,19 @@ describe("AssessmentRunner", () => {
 
     render(<AssessmentRunner assessmentId="assessment-1" />);
 
-    const textarea = screen.getByPlaceholderText(/write your answer here/i);
+    const editor = screen.getByRole("textbox", {
+      name: /write your answer here/i,
+    });
 
-    fireEvent.change(textarea, {
+    const answer = [
+      "Because the spherical area and field magnitude compensate.",
+      "",
+      "![derivation](/api/media/media-attempt-1)",
+    ].join("\n");
+
+    fireEvent.change(editor, {
       target: {
-        value: "Because the spherical area and field magnitude compensate.",
+        value: answer,
       },
     });
 
@@ -233,7 +342,7 @@ describe("AssessmentRunner", () => {
     expect(submitMutate).toHaveBeenCalledWith(
       {
         answer: {
-          text: "Because the spherical area and field magnitude compensate.",
+          text: answer,
         },
       },
       expect.objectContaining({
@@ -242,9 +351,7 @@ describe("AssessmentRunner", () => {
       }),
     );
 
-    expect(textarea).toHaveValue(
-      "Because the spherical area and field magnitude compensate.",
-    );
+    expect(editor).toHaveValue(answer);
   });
 
   it("preserves feedback until the student requests the next question", async () => {
@@ -419,5 +526,23 @@ describe("AssessmentRunner", () => {
     });
 
     expect(screen.queryByText("Old question")).not.toBeInTheDocument();
+  });
+
+  it("configures the essay editor for attempt media uploads", () => {
+    getQueryData.mockReturnValue({
+      id: "question-essay",
+      prompt: "Explain electric flux.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveAttribute("data-media-purpose", "attempt");
   });
 });

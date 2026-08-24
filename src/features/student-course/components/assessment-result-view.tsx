@@ -3,6 +3,7 @@
 import { ArrowLeft, CheckCircle2, CircleX } from "lucide-react";
 import Link from "next/link";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -175,76 +176,93 @@ export function AssessmentResultView({
                       </div>
 
                       <div className="mt-4 space-y-3">
-                        {cycle.attempts.map((attempt, index) => (
-                          <div
-                            key={attempt.attempt_id}
-                            className="rounded-md border bg-background p-4"
-                          >
-                            <div className="flex flex-wrap items-center gap-2">
-                              <Badge variant="outline">
-                                Question {index + 1}
-                              </Badge>
+                        {cycle.attempts.map((attempt, index) => {
+                          const answerText =
+                            attempt.question_type === "essay"
+                              ? getEssayAnswer(attempt.answer)
+                              : getMcqSelectedOptionText(
+                                  attempt.question_content,
+                                  attempt.answer,
+                                );
 
-                              <Badge variant="secondary">
-                                {attempt.question_type === "mcq"
-                                  ? "MCQ"
-                                  : "Essay"}
-                              </Badge>
-
-                              {attempt.is_correct !== null && (
-                                <Badge
-                                  variant={
-                                    attempt.is_correct
-                                      ? "default"
-                                      : "destructive"
-                                  }
-                                >
-                                  {attempt.is_correct ? "Correct" : "Incorrect"}
-                                </Badge>
-                              )}
-
-                              {attempt.score !== null && (
+                          const unavailableAnswer =
+                            attempt.question_type === "essay"
+                              ? "Submitted answer is unavailable."
+                              : "Selected option is unavailable.";
+                          return (
+                            <div
+                              key={attempt.attempt_id}
+                              className="rounded-md border bg-background p-4"
+                            >
+                              <div className="flex flex-wrap items-center gap-2">
                                 <Badge variant="outline">
-                                  {percent(attempt.score)}
+                                  Question {index + 1}
                                 </Badge>
-                              )}
-                            </div>
 
-                            <p className="mt-3 whitespace-pre-wrap text-sm leading-6">
-                              {attempt.prompt}
-                            </p>
+                                <Badge variant="secondary">
+                                  {attempt.question_type === "mcq"
+                                    ? "MCQ"
+                                    : "Essay"}
+                                </Badge>
 
-                            <div className="mt-4 rounded-md border bg-muted/20 p-3">
-                              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                Your answer
-                              </p>
+                                {attempt.is_correct !== null && (
+                                  <Badge
+                                    variant={
+                                      attempt.is_correct
+                                        ? "default"
+                                        : "destructive"
+                                    }
+                                  >
+                                    {attempt.is_correct
+                                      ? "Correct"
+                                      : "Incorrect"}
+                                  </Badge>
+                                )}
 
-                              {attempt.question_type === "essay" ? (
-                                <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
-                                  {getEssayAnswer(attempt.answer) ??
-                                    "Submitted answer is unavailable."}
-                                </p>
-                              ) : (
-                                <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
-                                  {getMcqSelectedOptionText(
-                                    attempt.question_content,
-                                    attempt.answer,
-                                  ) ?? "Selected option is unavailable."}
-                                </p>
-                              )}
-                            </div>
-
-                            {attempt.feedback && (
-                              <div className="mt-4 border-t pt-4">
-                                <p className="text-sm font-medium">Feedback</p>
-
-                                <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
-                                  {attempt.feedback}
-                                </p>
+                                {attempt.score !== null && (
+                                  <Badge variant="outline">
+                                    {percent(attempt.score)}
+                                  </Badge>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        ))}
+
+                              <AtlasRichTextViewer
+                                value={attempt.prompt}
+                                className="mt-3 text-sm leading-6"
+                              />
+
+                              <div className="mt-4 rounded-md border bg-muted/20 p-3">
+                                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                  Your answer
+                                </p>
+
+                                {answerText ? (
+                                  <AtlasRichTextViewer
+                                    value={answerText}
+                                    className="mt-2 text-sm leading-6"
+                                  />
+                                ) : (
+                                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                    {unavailableAnswer}
+                                  </p>
+                                )}
+                              </div>
+
+                              {attempt.feedback && (
+                                <div className="mt-4 border-t pt-4">
+                                  <p className="text-sm font-medium">
+                                    Feedback
+                                  </p>
+
+                                  <AtlasRichTextViewer
+                                    value={attempt.feedback}
+                                    className="mt-1 text-sm leading-6 text-muted-foreground"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}

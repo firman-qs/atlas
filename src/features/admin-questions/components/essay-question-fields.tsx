@@ -29,6 +29,7 @@ export function EssayQuestionFields({
             <AtlasRichTextEditor
               value={field.value}
               onChange={field.onChange}
+              mediaPurpose="authoring"
               disabled={disabled}
               placeholder="Define the criteria the response must satisfy..."
               className="min-h-40"
@@ -55,6 +56,7 @@ export function EssayQuestionFields({
             <AtlasRichTextEditor
               value={field.value}
               onChange={field.onChange}
+              mediaPurpose="authoring"
               disabled={disabled}
               placeholder="Write a representative high-quality answer..."
               className="min-h-48"

@@ -11,12 +11,13 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { AtlasRichTextEditor } from "@/components/rich-text/atlas-rich-text-editor";
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
 import {
   studentAssessmentKeys,
@@ -407,9 +408,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <p className="whitespace-pre-wrap text-base leading-7">
-              {question.prompt}
-            </p>
+            <AtlasRichTextViewer
+              value={question.prompt}
+              className="text-base leading-7"
+            />
 
             {question.content.type === "mcq" ? (
               <div className="space-y-3">
@@ -427,7 +429,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                       onClick={() => setSelectedOptionId(option.id)}
                       className="h-auto w-full justify-start whitespace-normal p-4 text-left"
                     >
-                      <span className="flex-1">{option.option_text}</span>
+                      <div className="min-w-0 flex-1">
+                        <AtlasRichTextViewer
+                          value={option.option_text}
+                          className="text-left text-sm leading-6"
+                        />
+                      </div>
 
                       {selected && <Badge variant="secondary">Selected</Badge>}
                     </Button>
@@ -451,13 +458,13 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               </div>
             ) : (
               <div className="space-y-3">
-                <Textarea
+                <AtlasRichTextEditor
                   value={essayAnswer}
-                  onChange={(event) => setEssayAnswer(event.target.value)}
+                  onChange={setEssayAnswer}
                   disabled={submitAttempt.isPending || attemptResult !== null}
                   placeholder="Write your answer here..."
-                  rows={8}
-                  className="resize-y"
+                  mediaPurpose="attempt"
+                  className="min-h-48"
                 />
 
                 {!attemptResult && (
@@ -517,9 +524,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                   <div>
                     <p className="text-sm font-medium">Feedback</p>
 
-                    <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
-                      {attemptResult.feedback}
-                    </p>
+                    <AtlasRichTextViewer
+                      value={attemptResult.feedback}
+                      className="mt-1 text-sm leading-6 text-muted-foreground"
+                    />
                   </div>
                 )}
 
