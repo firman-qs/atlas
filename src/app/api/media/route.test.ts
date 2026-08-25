@@ -175,6 +175,58 @@ describe("POST /api/media", () => {
     });
   });
 
+  it("forwards chat media using the requested purpose", async () => {
+    const backendResult = {
+      response: {
+        status: 200,
+        ok: true,
+        payload: {
+          success: true,
+          message: "Success",
+          data: {
+            id: "media-chat-1",
+            purpose: "chat",
+            original_filename: "diagram.png",
+            mime_type: "image/png",
+            size_bytes: 11,
+          },
+        },
+      },
+    };
+
+    authenticatedBackendRequest.mockResolvedValue(backendResult);
+
+    authenticatedJsonResponse.mockReturnValue(
+      NextResponse.json(backendResult.response.payload, {
+        status: 200,
+      }),
+    );
+
+    const req = request("chat");
+
+    await POST(req);
+
+    expect(req.formData).toHaveBeenCalledTimes(1);
+
+    expect(authenticatedBackendRequest).toHaveBeenCalledWith(
+      req,
+      "/media?purpose=chat",
+      expect.objectContaining({
+        method: "POST",
+      }),
+    );
+
+    const [, , options] = authenticatedBackendRequest.mock.calls[0];
+
+    const forwardedFile = options.body.get("file");
+
+    expect(forwardedFile).toMatchObject({
+      name: "figure.png",
+      type: "image/png",
+      size: 11,
+    });
+  });
+
   it("rejects a missing purpose before parsing multipart data", async () => {
     const req = request();
 

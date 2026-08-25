@@ -7,7 +7,7 @@ import { authenticatedJsonResponse } from "@/lib/auth/authenticated-response";
 import type { MediaPurpose, UploadedMedia } from "@/features/media/types";
 
 function isMediaPurpose(value: string | null): value is MediaPurpose {
-  return value === "authoring" || value === "attempt";
+  return value === "authoring" || value === "attempt" || value === "chat";
 }
 
 export async function POST(request: NextRequest) {

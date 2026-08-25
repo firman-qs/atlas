@@ -1,15 +1,16 @@
 "use client";
 
-import { ArrowLeft, BookOpen, LoaderCircle } from "lucide-react";
+import { ArrowLeft, BookOpen, Bot, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AssessmentOptionsPanel } from "@/features/student-course/components/assessment-options";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AssessmentOptionsPanel } from "@/features/student-course/components/assessment-options";
 
+import { buttonVariants } from "@/components/ui/button";
 import { LearningProgress } from "@/features/student-course/components/learning-progress";
 import {
   useAssessmentOptions,
@@ -17,7 +18,6 @@ import {
   useLearningRecordProgress,
   useStudentEnrollment,
 } from "@/features/student-course/queries";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface CourseWorkspaceProps {
@@ -31,11 +31,13 @@ function formatSemester(value: string) {
 }
 
 interface ActiveLearningWorkspaceProps {
+  enrollmentId: string;
   learningRecordId: string;
   startedAt: string;
 }
 
 function ActiveLearningWorkspace({
+  enrollmentId,
   learningRecordId,
   startedAt,
 }: ActiveLearningWorkspaceProps) {
@@ -56,6 +58,30 @@ function ActiveLearningWorkspace({
           <p className="text-sm text-muted-foreground">
             Started {new Date(startedAt).toLocaleString()}
           </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bot className="size-5" />
+            AI Tutor
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Ask questions about this course and get guidance grounded in the
+            curriculum and your current learning progress.
+          </p>
+
+          <Link
+            href={`/student/courses/${enrollmentId}/chat`}
+            className={buttonVariants()}
+          >
+            <Bot />
+            Open AI Tutor
+          </Link>
         </CardContent>
       </Card>
 
@@ -221,6 +247,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
         ) : (
           <div className="lg:col-span-2">
             <ActiveLearningWorkspace
+              enrollmentId={enrollmentId}
               learningRecordId={learningRecord.id}
               startedAt={learningRecord.started_at}
             />

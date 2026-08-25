@@ -1,4 +1,4 @@
-export type MediaPurpose = "authoring" | "attempt";
+export type MediaPurpose = "authoring" | "attempt" | "chat";
 
 export interface UploadedMedia {
   id: string;
