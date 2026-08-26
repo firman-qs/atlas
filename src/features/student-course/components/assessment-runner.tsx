@@ -25,6 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   ClipboardCheck,
   LoaderCircle,
   RefreshCw,
@@ -283,27 +284,29 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           )}
         </div>
 
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">{formatMode(assessment.mode)}</Badge>
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {learningObjectiveLabel(
+                assessment.learning_objective.code,
+                assessment.learning_objective.display_order,
+              )}
+            </h1>
 
-            <Badge variant="outline">{assessment.status}</Badge>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <Badge variant="secondary">{formatMode(assessment.mode)}</Badge>
 
-            {assessment.current_cycle_number !== null && (
-              <Badge variant="outline">
-                Cycle {assessment.current_cycle_number}
-              </Badge>
-            )}
+              <Badge variant="outline">{assessment.status}</Badge>
+
+              {assessment.current_cycle_number !== null && (
+                <Badge variant="outline">
+                  Cycle {assessment.current_cycle_number}
+                </Badge>
+              )}
+            </div>
           </div>
 
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {learningObjectiveLabel(
-              assessment.learning_objective.code,
-              assessment.learning_objective.display_order,
-            )}
-          </h1>
-
-          <p className="max-w-3xl text-muted-foreground">
+          <p className="max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base">
             {assessment.learning_objective.description}
           </p>
         </div>
@@ -411,13 +414,11 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-7">
-            <div className="rounded-lg bg-muted/25 p-4 sm:p-5">
-              <AtlasRichTextViewer
-                value={question.prompt}
-                className="text-base leading-7"
-              />
-            </div>
+          <CardContent className="space-y-6">
+            <AtlasRichTextViewer
+              value={question.prompt}
+              className="text-base leading-7"
+            />
 
             {question.content.type === "mcq" ? (
               <div className="space-y-3">
@@ -435,19 +436,29 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                       }
                       onClick={() => setSelectedOptionId(option.id)}
                       className={cn(
-                        "h-auto w-full justify-start whitespace-normal rounded-lg p-4 text-left transition-colors",
+                        "h-auto w-full justify-start gap-3 whitespace-normal rounded-lg p-4 text-left transition-colors",
                         selected &&
                           "border-primary/40 bg-primary/6 ring-1 ring-primary/20 hover:bg-primary/8",
                       )}
                     >
+                      <span
+                        className={cn(
+                          "flex size-5 shrink-0 items-center justify-center rounded-full border",
+                          selected
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-muted-foreground/40",
+                        )}
+                        aria-hidden="true"
+                      >
+                        {selected && <Check className="size-3" />}
+                      </span>
+
                       <div className="min-w-0 flex-1">
                         <AtlasRichTextViewer
                           value={option.option_text}
                           className="text-left text-sm leading-6"
                         />
                       </div>
-
-                      {selected && <Badge className="shrink-0">Selected</Badge>}
                     </Button>
                   );
                 })}
@@ -481,20 +492,23 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 />
 
                 {!attemptResult && (
-                  <Button
-                    onClick={() => handleSubmit(question)}
-                    disabled={
-                      essayAnswer.trim().length === 0 || submitAttempt.isPending
-                    }
-                  >
-                    {submitAttempt.isPending && (
-                      <LoaderCircle className="animate-spin" />
-                    )}
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={() => handleSubmit(question)}
+                      disabled={
+                        essayAnswer.trim().length === 0 ||
+                        submitAttempt.isPending
+                      }
+                    >
+                      {submitAttempt.isPending && (
+                        <LoaderCircle className="animate-spin" />
+                      )}
 
-                    {submitAttempt.isPending
-                      ? "Evaluating..."
-                      : "Submit answer"}
-                  </Button>
+                      {submitAttempt.isPending
+                        ? "Evaluating..."
+                        : "Submit answer"}
+                    </Button>
+                  </div>
                 )}
               </div>
             )}
@@ -512,7 +526,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             )}
 
             {attemptResult && (
-              <div className="space-y-5 rounded-lg border bg-muted/25 p-4 sm:p-5">
+              <div className="animate-in space-y-5 rounded-lg border bg-muted/20 p-4 duration-200 fade-in-0 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-base font-semibold">Answer evaluated</p>
 
@@ -534,7 +548,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 </div>
 
                 {attemptResult.feedback && (
-                  <div className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10">
+                  <div className="rounded-lg bg-background p-4 ring-1 ring-foreground/10">
                     <p className="text-sm font-medium">Feedback</p>
 
                     <AtlasRichTextViewer
@@ -555,11 +569,6 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                           {Math.round(attemptResult.cycle_score * 100)}%
                         </Badge>
                       )}
-
-                      <Badge variant="outline">
-                        Required{" "}
-                        {Math.round(attemptResult.mastery_threshold * 100)}%
-                      </Badge>
 
                       <Badge
                         variant={

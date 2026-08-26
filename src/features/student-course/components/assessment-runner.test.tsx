@@ -550,4 +550,66 @@ describe("AssessmentRunner", () => {
       }),
     ).toHaveAttribute("data-media-purpose", "attempt");
   });
+
+  it("shows cycle outcome without exposing the configured mastery threshold", async () => {
+    getQueryData.mockReturnValue({
+      id: "question-1",
+      prompt: "What is electric flux?",
+      content: {
+        type: "mcq",
+        options: [
+          {
+            id: "option-1",
+            option_text: "Surface integral",
+          },
+        ],
+      },
+    });
+
+    submitMutate.mockImplementation(
+      (
+        _request: unknown,
+        options: {
+          onSuccess: (result: unknown) => void;
+        },
+      ) => {
+        options.onSuccess({
+          attempt_id: "attempt-1",
+          question_id: "question-1",
+          cycle_number: 1,
+          is_correct: true,
+          score: 1,
+          feedback: "Correct.",
+          evaluated_at: "2026-08-23T00:00:00Z",
+          cycle_completed: true,
+          cycle_score: 1,
+          mastery_threshold: 0.8,
+          level_mastered: true,
+          assessment_status: "running",
+          current_loc_level_id: "level-2",
+        });
+      },
+    );
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /surface integral/i,
+      }),
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /submit answer/i,
+      }),
+    );
+
+    expect(await screen.findByText("Cycle complete")).toBeInTheDocument();
+    expect(screen.getByText("Cycle score 100%")).toBeInTheDocument();
+    expect(screen.getByText("Level mastered")).toBeInTheDocument();
+
+    expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("80%")).not.toBeInTheDocument();
+  });
 });

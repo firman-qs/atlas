@@ -132,5 +132,8 @@ describe("AssessmentResultView", () => {
         name: "Learning Objective 1",
       }),
     ).toBeInTheDocument();
+
+    expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("80%")).not.toBeInTheDocument();
   });
 });

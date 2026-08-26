@@ -151,16 +151,12 @@ export function AssessmentResultView({
                         className="rounded-lg bg-muted/25 p-4 sm:p-5"
                       >
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-semibold">
+                          <p className="mr-1 text-sm font-semibold">
                             Cycle {cycle.cycle_number}
                           </p>
 
                           <Badge variant="outline">
                             Score {percent(cycle.score)}
-                          </Badge>
-
-                          <Badge variant="outline">
-                            Required {percent(cycle.mastery_threshold)}
                           </Badge>
 
                           {cycle.passed === true && (
