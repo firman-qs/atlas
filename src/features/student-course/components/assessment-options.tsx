@@ -38,6 +38,12 @@ function modeLabel(mode: "progress" | "review") {
   return mode === "progress" ? "Progress" : "Review";
 }
 
+function formatSoloCode(code: string) {
+  return code
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 export function AssessmentOptionsPanel({
   options,
   learningRecordId,
@@ -161,26 +167,38 @@ export function AssessmentOptionsPanel({
 
       <CardContent className="space-y-6">
         {options.progress ? (
-          <section className="space-y-4">
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-              <div className="space-y-2">
+          <section
+            data-testid="progress-assessment"
+            className="rounded-xl border bg-background/60 p-4 sm:p-5"
+          >
+            <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">
+              <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <ClipboardCheck className="size-5" />
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <ClipboardCheck className="size-4" />
+                  </div>
 
-                  <p className="font-medium">Progress assessment</p>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium">Progress assessment</p>
+                      <Badge>Available</Badge>
+                    </div>
 
-                  <Badge>Available</Badge>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Your next mastery assessment
+                    </p>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-sm font-medium">
+                <div className="mt-4">
+                  <Badge variant="outline">
                     {learningObjectiveLabel(
                       options.progress.learning_objective.code,
                       options.progress.learning_objective.display_order,
                     )}
-                  </p>
+                  </Badge>
 
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
                     {options.progress.learning_objective.description}
                   </p>
                 </div>
@@ -221,7 +239,10 @@ export function AssessmentOptionsPanel({
             )}
           </section>
         ) : (
-          <section className="rounded-lg bg-muted/30 p-4">
+          <section
+            data-testid="progress-assessment"
+            className="rounded-xl border bg-muted/25 p-4 sm:p-5"
+          >
             <p className="font-medium">Progress assessment unavailable</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
@@ -231,10 +252,13 @@ export function AssessmentOptionsPanel({
           </section>
         )}
 
-        <div className="border-t" />
+        <div className="border-t" aria-hidden="true" />
 
         {options.review.length === 0 ? (
-          <section className="rounded-lg bg-muted/30 p-4">
+          <section
+            data-testid="review-assessments"
+            className="rounded-xl border bg-muted/25 p-4 sm:p-5"
+          >
             <div className="flex gap-3">
               <div className="mt-0.5">
                 <LockKeyhole className="size-5 text-muted-foreground" />
@@ -254,185 +278,233 @@ export function AssessmentOptionsPanel({
             </div>
           </section>
         ) : (
-          <section className="space-y-5">
-            <div className="flex items-center gap-2">
-              <RotateCcw className="size-5" />
+          <section data-testid="review-assessments" className="space-y-5">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <RotateCcw className="size-4" />
+                  </div>
 
-              <p className="font-medium">Review assessments</p>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium">Review assessments</p>
 
-              <Badge variant="outline">
-                {options.review.length} learning objective
-                {options.review.length === 1 ? "" : "s"}
-              </Badge>
+                      <Badge variant="outline">
+                        {options.review.length} learning objective
+                        {options.review.length === 1 ? "" : "s"}
+                      </Badge>
+                    </div>
+
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Revisit material you have already mastered.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-3 rounded-lg bg-muted/30 p-4">
-              <div>
-                <p className="text-sm font-medium">Question source</p>
+            <div className="rounded-xl border bg-muted/20 p-4 sm:p-5">
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,20rem)] lg:items-end">
+                <div>
+                  <p className="text-sm font-medium">Question source</p>
 
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Choose whether this review uses all eligible published
-                  questions or a specific student-selectable question bank.
-                </p>
+                  <p className="mt-1 max-w-2xl text-xs leading-5 text-muted-foreground">
+                    Use all eligible published questions or choose a specific
+                    student-selectable question bank for this review.
+                  </p>
+                </div>
+
+                <div className="min-w-0">
+                  {questionBanksQuery.isError ? (
+                    <Alert variant="destructive">
+                      <AlertDescription>
+                        {questionBanksQuery.error instanceof Error
+                          ? questionBanksQuery.error.message
+                          : "Unable to load question banks."}
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <Select
+                      value={selectedQuestionBankId}
+                      onValueChange={(value) => {
+                        if (value) {
+                          setSelectedQuestionBankId(value);
+                        }
+                      }}
+                      disabled={questionBanksQuery.isPending}
+                    >
+                      <SelectTrigger className="w-full">
+                        <span className="truncate">
+                          {questionBanksQuery.isPending
+                            ? "Loading question banks..."
+                            : selectedQuestionBankLabel}
+                        </span>
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectItem value="all">
+                          All available questions
+                        </SelectItem>
+
+                        {questionBanksQuery.data?.items.map((bank) => (
+                          <SelectItem key={bank.id} value={bank.id}>
+                            {bank.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
               </div>
 
-              {questionBanksQuery.isError ? (
-                <Alert variant="destructive">
-                  <AlertDescription>
-                    {questionBanksQuery.error instanceof Error
-                      ? questionBanksQuery.error.message
-                      : "Unable to load question banks."}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Select
-                  value={selectedQuestionBankId}
-                  onValueChange={(value) => {
-                    if (value) {
-                      setSelectedQuestionBankId(value);
-                    }
-                  }}
-                  disabled={questionBanksQuery.isPending}
-                >
-                  <SelectTrigger className="w-full">
-                    <span className="truncate">
-                      {questionBanksQuery.isPending
-                        ? "Loading question banks..."
-                        : selectedQuestionBankLabel}
-                    </span>
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectItem value="all">All available questions</SelectItem>
-
-                    {questionBanksQuery.data?.items.map((bank) => (
-                      <SelectItem key={bank.id} value={bank.id}>
-                        {bank.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-
               {selectedQuestionBankId !== "all" && (
-                <p className="text-xs text-muted-foreground">
-                  This assessment will use only eligible published questions
-                  contained in the selected question bank.
+                <p className="mt-3 text-xs text-muted-foreground lg:text-right">
+                  This review will use only eligible published questions from
+                  the selected question bank.
                 </p>
               )}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {options.review.map((review) => (
                 <section
                   key={review.learning_objective.id}
-                  className="space-y-3 border-t pt-4 first:border-t-0 first:pt-0"
+                  className="overflow-hidden rounded-xl border bg-background/60"
                 >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline">
-                      {learningObjectiveLabel(
-                        review.learning_objective.code,
-                        review.learning_objective.display_order,
-                      )}
-                    </Badge>
+                  <div className="flex flex-col justify-between gap-4 border-b bg-muted/20 p-4 sm:flex-row sm:items-start sm:p-5">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="outline">
+                          {learningObjectiveLabel(
+                            review.learning_objective.code,
+                            review.learning_objective.display_order,
+                          )}
+                        </Badge>
+
+                        {review.can_review_learning_objective && (
+                          <Badge>Whole objective available</Badge>
+                        )}
+                      </div>
+
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {review.learning_objective.description}
+                      </p>
+                    </div>
 
                     {review.can_review_learning_objective && (
-                      <>
-                        <Badge>Whole learning objective available</Badge>
-
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() =>
-                            createReviewAssessment.mutate({
-                              learningObjectiveId: review.learning_objective.id,
-                              reviewTarget: {
-                                scope: "learning_objective",
-                              },
-                              questionBankId: selectedQuestionBank,
-                            })
-                          }
-                          disabled={createReviewAssessment.isPending}
-                        >
-                          <RotateCcw />
-                          Review learning objective
-                        </Button>
-                      </>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="shrink-0"
+                        onClick={() =>
+                          createReviewAssessment.mutate({
+                            learningObjectiveId: review.learning_objective.id,
+                            reviewTarget: {
+                              scope: "learning_objective",
+                            },
+                            questionBankId: selectedQuestionBank,
+                          })
+                        }
+                        disabled={createReviewAssessment.isPending}
+                      >
+                        <RotateCcw />
+                        Review learning objective
+                      </Button>
                     )}
                   </div>
 
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {review.learning_objective.description}
-                  </p>
-
                   {review.concepts.length > 0 && (
-                    <div className="mt-3 space-y-2">
+                    <div className="divide-y px-4 sm:px-5">
                       {review.concepts.map((concept) => (
                         <div
                           key={concept.learning_objective_concept_id}
-                          className="rounded-lg bg-background/70 p-3 ring-1 ring-foreground/10"
+                          className="py-4 first:pt-4 last:pb-4 sm:py-5"
                         >
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="text-sm font-medium">
-                              {concept.concept.name}
-                            </p>
+                          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className="font-medium">
+                                  {concept.concept.name}
+                                </p>
 
-                            {concept.can_review_concept && (
-                              <>
-                                <Badge variant="secondary">
-                                  Concept review
+                                <Badge
+                                  variant="secondary"
+                                  className="font-mono"
+                                >
+                                  {concept.concept.code}
                                 </Badge>
 
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() =>
-                                    createReviewAssessment.mutate({
-                                      learningObjectiveId:
-                                        review.learning_objective.id,
-                                      reviewTarget: {
-                                        scope: "concept",
-                                        learning_objective_concept_id:
-                                          concept.learning_objective_concept_id,
-                                      },
-                                      questionBankId: selectedQuestionBank,
-                                    })
-                                  }
-                                  disabled={createReviewAssessment.isPending}
-                                >
-                                  <RotateCcw />
-                                  Review concept
-                                </Button>
-                              </>
+                                {concept.can_review_concept && (
+                                  <Badge variant="outline">
+                                    Concept review
+                                  </Badge>
+                                )}
+                              </div>
+
+                              <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+                                {concept.concept.description}
+                              </p>
+                            </div>
+
+                            {concept.can_review_concept && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="shrink-0"
+                                onClick={() =>
+                                  createReviewAssessment.mutate({
+                                    learningObjectiveId:
+                                      review.learning_objective.id,
+                                    reviewTarget: {
+                                      scope: "concept",
+                                      learning_objective_concept_id:
+                                        concept.learning_objective_concept_id,
+                                    },
+                                    questionBankId: selectedQuestionBank,
+                                  })
+                                }
+                                disabled={createReviewAssessment.isPending}
+                              >
+                                <RotateCcw />
+                                Review concept
+                              </Button>
                             )}
                           </div>
 
                           {concept.mastered_levels.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {concept.mastered_levels.map((level) => (
-                                <Button
-                                  key={level.loc_level_id}
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() =>
-                                    createReviewAssessment.mutate({
-                                      learningObjectiveId:
-                                        review.learning_objective.id,
-                                      reviewTarget: {
-                                        scope: "level",
-                                        learning_objective_concept_id:
-                                          concept.learning_objective_concept_id,
-                                        loc_level_id: level.loc_level_id,
-                                      },
-                                      questionBankId: selectedQuestionBank,
-                                    })
-                                  }
-                                  disabled={createReviewAssessment.isPending}
-                                >
-                                  <RotateCcw />
-                                  {level.solo_code}
-                                </Button>
-                              ))}
+                            <div className="mt-4">
+                              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                Review by SOLO level
+                              </p>
+
+                              <div className="flex flex-wrap gap-2">
+                                {concept.mastered_levels.map((level) => (
+                                  <Button
+                                    key={level.loc_level_id}
+                                    size="sm"
+                                    variant="ghost"
+                                    className="border bg-muted/25"
+                                    onClick={() =>
+                                      createReviewAssessment.mutate({
+                                        learningObjectiveId:
+                                          review.learning_objective.id,
+                                        reviewTarget: {
+                                          scope: "level",
+                                          learning_objective_concept_id:
+                                            concept.learning_objective_concept_id,
+                                          loc_level_id: level.loc_level_id,
+                                        },
+                                        questionBankId: selectedQuestionBank,
+                                      })
+                                    }
+                                    disabled={createReviewAssessment.isPending}
+                                  >
+                                    <RotateCcw />
+                                    {formatSoloCode(level.solo_code)}
+                                  </Button>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </div>

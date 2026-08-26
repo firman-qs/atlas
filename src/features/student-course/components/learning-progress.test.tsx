@@ -166,11 +166,29 @@ describe("LearningProgress", () => {
 
     render(<LearningProgress progress={progress} />);
 
-    expect(screen.getByText("Learning Objectives")).toBeInTheDocument();
-    expect(screen.getByText("1 of 2 mastered")).toBeInTheDocument();
+    const learningObjectiveSummary = screen.getByTestId(
+      "learning-objective-summary",
+    );
 
-    expect(screen.getByText("Required Concepts")).toBeInTheDocument();
-    expect(screen.getByText("1 of 2 mastered")).toBeInTheDocument();
+    expect(
+      within(learningObjectiveSummary).getByText("Learning Objectives"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(learningObjectiveSummary).getByText("1 of 2 mastered"),
+    ).toBeInTheDocument();
+
+    const requiredConceptSummary = screen.getByTestId(
+      "required-concept-summary",
+    );
+
+    expect(
+      within(requiredConceptSummary).getByText("Required Concepts"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(requiredConceptSummary).getByText("1 of 2 mastered"),
+    ).toBeInTheDocument();
 
     expect(screen.getByText("Optional Extension")).toBeInTheDocument();
     expect(screen.getByText("Optional")).toBeInTheDocument();
