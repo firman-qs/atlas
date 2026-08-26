@@ -44,6 +44,6 @@ describe("ForgotPasswordPage", () => {
 
     render(<ForgotPasswordPage />);
 
-    expect(replace).toHaveBeenCalledWith("/");
+    expect(replace).toHaveBeenCalledWith("/dashboard");
   });
 });

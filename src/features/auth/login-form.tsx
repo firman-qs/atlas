@@ -46,7 +46,7 @@ export function LoginForm() {
   async function onSubmit(values: LoginFormValues) {
     try {
       await loginMutation.mutateAsync(values);
-      router.replace("/");
+      router.replace("/dashboard");
     } catch {
       // Rendered below from mutation state.
     }

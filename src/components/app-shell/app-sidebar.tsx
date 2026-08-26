@@ -49,7 +49,7 @@ const navigation = {
       items: [
         {
           label: "Dashboard",
-          href: "/",
+          href: "/dashboard",
           icon: LayoutDashboard,
         },
         {
@@ -72,7 +72,7 @@ const navigation = {
       items: [
         {
           label: "Dashboard",
-          href: "/",
+          href: "/dashboard",
           icon: LayoutDashboard,
         },
         {
@@ -95,7 +95,7 @@ const navigation = {
       items: [
         {
           label: "Dashboard",
-          href: "/",
+          href: "/dashboard",
           icon: LayoutDashboard,
         },
       ],
@@ -159,10 +159,6 @@ const navigation = {
 } as const;
 
 function isNavigationItemActive(pathname: string, href: string) {
-  if (href === "/") {
-    return pathname === "/";
-  }
-
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -200,7 +196,7 @@ export function AppSidebar() {
               size="lg"
               tooltip="ATLAS"
               className="hover:bg-transparent active:bg-transparent"
-              render={<Link href="/" />}
+              render={<Link href="/dashboard" />}
             >
               <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-xs">
                 A

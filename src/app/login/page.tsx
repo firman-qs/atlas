@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { LoginForm } from "@/features/auth/login-form";
 import { useAuth } from "@/features/auth/auth-provider";
+import { LoginForm } from "@/features/auth/login-form";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace("/");
+      router.replace("/dashboard");
     }
   }, [isAuthenticated, isLoading, router]);
 

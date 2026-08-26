@@ -44,6 +44,6 @@ describe("RegisterPage", () => {
 
     render(<RegisterPage />);
 
-    expect(replace).toHaveBeenCalledWith("/");
+    expect(replace).toHaveBeenCalledWith("/dashboard");
   });
 });

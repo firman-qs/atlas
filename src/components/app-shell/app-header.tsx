@@ -44,7 +44,7 @@ interface BreadcrumbEntry {
 }
 
 function getBreadcrumbs(pathname: string): BreadcrumbEntry[] {
-  if (pathname === "/") {
+  if (pathname === "/dashboard") {
     return [{ label: "Dashboard" }];
   }
 
@@ -219,7 +219,7 @@ export function AppHeader() {
                     key={role}
                     onClick={() => {
                       setActiveRole(role);
-                      router.push("/");
+                      router.push("/dashboard");
                     }}
                   >
                     <span className="flex-1">{roleLabels[role]}</span>

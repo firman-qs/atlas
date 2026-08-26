@@ -76,6 +76,6 @@ describe("AppHeader", () => {
     );
 
     expect(mockedSetActiveRole).toHaveBeenCalledWith("student");
-    expect(mockedPush).toHaveBeenCalledWith("/");
+    expect(mockedPush).toHaveBeenCalledWith("/dashboard");
   });
 });

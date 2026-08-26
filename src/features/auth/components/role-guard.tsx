@@ -26,7 +26,7 @@ export function RoleGuard({ role, children }: RoleGuardProps) {
     }
 
     if (!hasRole) {
-      router.replace("/");
+      router.replace("/dashboard");
       return;
     }
 
