@@ -155,7 +155,7 @@ export function AppHeader() {
   }
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur md:px-6">
+    <header className="absolute inset-x-0 top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-md supports-backdrop-filter:bg-background/65 md:px-6">
       <div className="flex min-w-0 items-center gap-3">
         <SidebarTrigger />
 

@@ -18,10 +18,10 @@ export async function AppShell({ children }: AppShellProps) {
     <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <AppSidebar />
 
-      <SidebarInset className="h-svh min-w-0 overflow-hidden">
+      <SidebarInset className="relative h-svh min-w-0 overflow-hidden">
         <AppHeader />
 
-        <main className="min-h-0 flex-1 overflow-y-auto bg-muted/20 p-4 md:p-6">
+        <main className="min-h-0 flex-1 overflow-y-auto bg-muted/20 px-4 pb-4 pt-20 md:px-6 md:pb-6 md:pt-22">
           {children}
         </main>
       </SidebarInset>

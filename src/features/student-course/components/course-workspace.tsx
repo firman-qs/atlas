@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentOptionsPanel } from "@/features/student-course/components/assessment-options";
 import { LearningProgress } from "@/features/student-course/components/learning-progress";
 import {
@@ -39,55 +40,77 @@ function ActiveLearningWorkspace({
   const assessmentOptionsQuery = useAssessmentOptions(learningRecordId);
 
   return (
-    <div className="space-y-6">
-      {progressQuery.isPending ? (
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-44" />
-          </CardHeader>
+    <Tabs defaultValue="progress" className="min-w-0">
+      <TabsList className="mb-4">
+        <TabsTrigger value="progress">Learning Progress</TabsTrigger>
 
-          <CardContent className="space-y-4">
-            <Skeleton className="h-28 w-full" />
-            <Skeleton className="h-28 w-full" />
-          </CardContent>
-        </Card>
-      ) : progressQuery.isError ? (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {progressQuery.error instanceof Error
-              ? progressQuery.error.message
-              : "Unable to load learning progress."}
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <LearningProgress progress={progressQuery.data} />
-      )}
+        <TabsTrigger value="assessments">
+          Assessments
+          {!assessmentOptionsQuery.isPending &&
+            !assessmentOptionsQuery.isError &&
+            assessmentOptionsQuery.data.active_assessment && (
+              <Badge
+                variant="secondary"
+                className="h-4 min-w-4 rounded-full px-1 text-[10px]"
+              >
+                1
+              </Badge>
+            )}
+        </TabsTrigger>
+      </TabsList>
 
-      {assessmentOptionsQuery.isPending ? (
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-36" />
-          </CardHeader>
+      <TabsContent value="progress">
+        {progressQuery.isPending ? (
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-44" />
+            </CardHeader>
 
-          <CardContent>
-            <Skeleton className="h-32 w-full" />
-          </CardContent>
-        </Card>
-      ) : assessmentOptionsQuery.isError ? (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {assessmentOptionsQuery.error instanceof Error
-              ? assessmentOptionsQuery.error.message
-              : "Unable to load assessment options."}
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <AssessmentOptionsPanel
-          options={assessmentOptionsQuery.data}
-          learningRecordId={learningRecordId}
-        />
-      )}
-    </div>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+            </CardContent>
+          </Card>
+        ) : progressQuery.isError ? (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {progressQuery.error instanceof Error
+                ? progressQuery.error.message
+                : "Unable to load learning progress."}
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <LearningProgress progress={progressQuery.data} />
+        )}
+      </TabsContent>
+
+      <TabsContent value="assessments">
+        {assessmentOptionsQuery.isPending ? (
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-36" />
+            </CardHeader>
+
+            <CardContent>
+              <Skeleton className="h-32 w-full" />
+            </CardContent>
+          </Card>
+        ) : assessmentOptionsQuery.isError ? (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {assessmentOptionsQuery.error instanceof Error
+                ? assessmentOptionsQuery.error.message
+                : "Unable to load assessment options."}
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <AssessmentOptionsPanel
+            options={assessmentOptionsQuery.data}
+            learningRecordId={learningRecordId}
+          />
+        )}
+      </TabsContent>
+    </Tabs>
   );
 }
 

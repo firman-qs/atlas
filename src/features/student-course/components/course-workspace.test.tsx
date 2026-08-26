@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CourseWorkspace } from "@/features/student-course/components/course-workspace";
@@ -123,5 +123,61 @@ describe("CourseWorkspace", () => {
     ).not.toBeInTheDocument();
 
     expect(screen.getByText("Started")).toBeInTheDocument();
+  });
+
+  it("switches between learning progress and assessments without scrolling through both sections", () => {
+    render(<CourseWorkspace enrollmentId="enrollment-1" />);
+
+    expect(
+      screen.getByRole("tab", {
+        name: /learning progress/i,
+      }),
+    ).toHaveAttribute("aria-selected", "true");
+
+    expect(screen.getByText("Learning progress")).toBeInTheDocument();
+    expect(screen.queryByText("Assessment options")).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("tab", {
+        name: /assessments/i,
+      }),
+    );
+
+    expect(
+      screen.getByRole("tab", {
+        name: /assessments/i,
+      }),
+    ).toHaveAttribute("aria-selected", "true");
+
+    expect(screen.getByText("Assessment options")).toBeInTheDocument();
+    expect(screen.queryByText("Learning progress")).not.toBeInTheDocument();
+  });
+
+  it("marks the assessments tab when an assessment is active", () => {
+    useAssessmentOptions.mockReturnValue({
+      data: {
+        learning_record_id: "learning-record-1",
+
+        active_assessment: {
+          id: "assessment-1",
+          mode: "progress",
+          status: "running",
+        },
+
+        progress: null,
+        review: [],
+      },
+      isPending: false,
+      isError: false,
+      error: null,
+    });
+
+    render(<CourseWorkspace enrollmentId="enrollment-1" />);
+
+    const assessmentsTab = screen.getByRole("tab", {
+      name: /assessments/i,
+    });
+
+    expect(assessmentsTab).toHaveTextContent("1");
   });
 });
