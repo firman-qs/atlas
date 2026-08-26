@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -611,5 +612,122 @@ describe("AssessmentRunner", () => {
 
     expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
     expect(screen.queryByText("80%")).not.toBeInTheDocument();
+  });
+
+  it("separates the assessment question from the student answer workspace", () => {
+    getQueryData.mockReturnValue({
+      id: "question-1",
+      prompt: "What is electric flux?",
+      content: {
+        type: "mcq",
+        options: [
+          {
+            id: "option-1",
+            option_text: "Surface integral of E dot da",
+          },
+          {
+            id: "option-2",
+            option_text: "Line integral of E dot dl",
+          },
+        ],
+      },
+    });
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    const questionWorkspace = screen.getByTestId("question-workspace");
+    const answerSection = screen.getByTestId("answer-section");
+
+    expect(
+      within(questionWorkspace).getByText("What is electric flux?"),
+    ).toBeInTheDocument();
+
+    expect(within(answerSection).getByText("Your answer")).toBeInTheDocument();
+
+    expect(
+      within(answerSection).getByRole("button", {
+        name: /surface integral of e dot da/i,
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      within(answerSection).getByRole("button", {
+        name: /submit answer/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("separates answer evaluation from the cycle outcome", () => {
+    getQueryData.mockReturnValue({
+      id: "question-1",
+      prompt: "What is electric flux?",
+      content: {
+        type: "mcq",
+        options: [
+          {
+            id: "option-1",
+            option_text: "Surface integral of E dot da",
+          },
+          {
+            id: "option-2",
+            option_text: "Line integral of E dot dl",
+          },
+        ],
+      },
+    });
+
+    submitMutate.mockImplementation(
+      (
+        _request: unknown,
+        options: {
+          onSuccess: (result: unknown) => void;
+        },
+      ) => {
+        options.onSuccess({
+          attempt_id: "attempt-1",
+          question_id: "question-1",
+          cycle_number: 1,
+          is_correct: true,
+          score: 1,
+          feedback: "Correct. Electric flux is the surface integral.",
+          evaluated_at: "2026-08-23T00:00:00Z",
+          cycle_completed: true,
+          cycle_score: 1,
+          mastery_threshold: 0.8,
+          level_mastered: true,
+          assessment_status: "running",
+          current_loc_level_id: "level-2",
+        });
+      },
+    );
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /surface integral of e dot da/i,
+      }),
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /submit answer/i,
+      }),
+    );
+
+    const evaluationSection = screen.getByTestId("evaluation-section");
+
+    expect(evaluationSection).toHaveTextContent("Answer evaluated");
+    expect(evaluationSection).toHaveTextContent("Correct");
+    expect(evaluationSection).toHaveTextContent("Score 100%");
+    expect(evaluationSection).toHaveTextContent(
+      "Correct. Electric flux is the surface integral.",
+    );
+
+    const cycleOutcome = screen.getByTestId("cycle-outcome");
+
+    expect(cycleOutcome).toHaveTextContent("Cycle complete");
+    expect(cycleOutcome).toHaveTextContent("Cycle score 100%");
+    expect(cycleOutcome).toHaveTextContent("Level mastered");
   });
 });

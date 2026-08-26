@@ -406,7 +406,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         <Card className="overflow-visible">
           <CardHeader className="border-b">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <CardTitle className="text-lg">Question</CardTitle>
+              <CardTitle className="text-lg">Assessment question</CardTitle>
 
               <Badge variant="secondary">
                 {question.content.type === "mcq" ? "Multiple choice" : "Essay"}
@@ -414,104 +414,125 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <AtlasRichTextViewer
-              value={question.prompt}
-              className="text-base leading-7"
-            />
+          <CardContent className="space-y-7">
+            <section
+              data-testid="question-workspace"
+              className="rounded-xl border bg-muted/20 p-4 sm:p-5"
+            >
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Question
+              </p>
 
-            {question.content.type === "mcq" ? (
-              <div className="space-y-3">
-                {question.content.options.map((option) => {
-                  const selected = selectedOptionId === option.id;
+              <AtlasRichTextViewer
+                value={question.prompt}
+                className="text-base leading-7"
+              />
+            </section>
 
-                  return (
-                    <Button
-                      key={option.id}
-                      type="button"
-                      variant="outline"
-                      aria-pressed={selected}
-                      disabled={
-                        submitAttempt.isPending || attemptResult !== null
-                      }
-                      onClick={() => setSelectedOptionId(option.id)}
-                      className={cn(
-                        "h-auto w-full justify-start gap-3 whitespace-normal rounded-lg p-4 text-left transition-colors",
-                        selected &&
-                          "border-primary/40 bg-primary/6 ring-1 ring-primary/20 hover:bg-primary/8",
-                      )}
-                    >
-                      <span
+            <section data-testid="answer-section" className="space-y-4">
+              <div>
+                <p className="font-medium">Your answer</p>
+
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  {question.content.type === "mcq"
+                    ? "Choose the best answer, then submit your response."
+                    : "Write your response below. You can include supporting images when needed."}
+                </p>
+              </div>
+
+              {question.content.type === "mcq" ? (
+                <div className="space-y-3">
+                  {question.content.options.map((option) => {
+                    const selected = selectedOptionId === option.id;
+
+                    return (
+                      <Button
+                        key={option.id}
+                        type="button"
+                        variant="outline"
+                        aria-pressed={selected}
+                        disabled={
+                          submitAttempt.isPending || attemptResult !== null
+                        }
+                        onClick={() => setSelectedOptionId(option.id)}
                         className={cn(
-                          "flex size-5 shrink-0 items-center justify-center rounded-full border",
-                          selected
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted-foreground/40",
+                          "h-auto w-full justify-start gap-3 whitespace-normal rounded-lg p-4 text-left transition-colors",
+                          selected &&
+                            "border-primary/40 bg-primary/6 ring-1 ring-primary/20 hover:bg-primary/8",
                         )}
-                        aria-hidden="true"
                       >
-                        {selected && <Check className="size-3" />}
-                      </span>
+                        <span
+                          className={cn(
+                            "flex size-5 shrink-0 items-center justify-center rounded-full border",
+                            selected
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-muted-foreground/40",
+                          )}
+                          aria-hidden="true"
+                        >
+                          {selected && <Check className="size-3" />}
+                        </span>
 
-                      <div className="min-w-0 flex-1">
-                        <AtlasRichTextViewer
-                          value={option.option_text}
-                          className="text-left text-sm leading-6"
-                        />
-                      </div>
-                    </Button>
-                  );
-                })}
+                        <div className="min-w-0 flex-1">
+                          <AtlasRichTextViewer
+                            value={option.option_text}
+                            className="text-left text-sm leading-6"
+                          />
+                        </div>
+                      </Button>
+                    );
+                  })}
 
-                {!attemptResult && (
-                  <div className="flex justify-end pt-2">
-                    <Button
-                      onClick={() => handleSubmit(question)}
-                      disabled={!selectedOptionId || submitAttempt.isPending}
-                    >
-                      {submitAttempt.isPending && (
-                        <LoaderCircle className="animate-spin" />
-                      )}
+                  {!attemptResult && (
+                    <div className="flex justify-end pt-2">
+                      <Button
+                        onClick={() => handleSubmit(question)}
+                        disabled={!selectedOptionId || submitAttempt.isPending}
+                      >
+                        {submitAttempt.isPending && (
+                          <LoaderCircle className="animate-spin" />
+                        )}
 
-                      {submitAttempt.isPending
-                        ? "Submitting..."
-                        : "Submit answer"}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <AtlasRichTextEditor
-                  value={essayAnswer}
-                  onChange={setEssayAnswer}
-                  disabled={submitAttempt.isPending || attemptResult !== null}
-                  placeholder="Write your answer here..."
-                  mediaPurpose="attempt"
-                  className="min-h-48"
-                />
+                        {submitAttempt.isPending
+                          ? "Submitting..."
+                          : "Submit answer"}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AtlasRichTextEditor
+                    value={essayAnswer}
+                    onChange={setEssayAnswer}
+                    disabled={submitAttempt.isPending || attemptResult !== null}
+                    placeholder="Write your answer here..."
+                    mediaPurpose="attempt"
+                    className="min-h-48"
+                  />
 
-                {!attemptResult && (
-                  <div className="flex justify-end">
-                    <Button
-                      onClick={() => handleSubmit(question)}
-                      disabled={
-                        essayAnswer.trim().length === 0 ||
-                        submitAttempt.isPending
-                      }
-                    >
-                      {submitAttempt.isPending && (
-                        <LoaderCircle className="animate-spin" />
-                      )}
+                  {!attemptResult && (
+                    <div className="flex justify-end">
+                      <Button
+                        onClick={() => handleSubmit(question)}
+                        disabled={
+                          essayAnswer.trim().length === 0 ||
+                          submitAttempt.isPending
+                        }
+                      >
+                        {submitAttempt.isPending && (
+                          <LoaderCircle className="animate-spin" />
+                        )}
 
-                      {submitAttempt.isPending
-                        ? "Evaluating..."
-                        : "Submit answer"}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+                        {submitAttempt.isPending
+                          ? "Evaluating..."
+                          : "Submit answer"}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
 
             {submitAttempt.isError && !attemptResult && (
               <Alert variant="destructive">
@@ -526,40 +547,45 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             )}
 
             {attemptResult && (
-              <div className="animate-in space-y-5 rounded-lg border bg-muted/20 p-4 duration-200 fade-in-0 sm:p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-base font-semibold">Answer evaluated</p>
+              <div className="animate-in space-y-5 rounded-xl border bg-muted/20 p-4 duration-200 fade-in-0 sm:p-5">
+                <section data-testid="evaluation-section" className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-base font-semibold">Answer evaluated</p>
 
-                  {attemptResult.is_correct !== null && (
-                    <Badge
-                      variant={
-                        attemptResult.is_correct ? "default" : "destructive"
-                      }
-                    >
-                      {attemptResult.is_correct ? "Correct" : "Incorrect"}
-                    </Badge>
-                  )}
+                    {attemptResult.is_correct !== null && (
+                      <Badge
+                        variant={
+                          attemptResult.is_correct ? "default" : "destructive"
+                        }
+                      >
+                        {attemptResult.is_correct ? "Correct" : "Incorrect"}
+                      </Badge>
+                    )}
 
-                  {attemptResult.score !== null && (
-                    <Badge variant="outline">
-                      Score {Math.round(attemptResult.score * 100)}%
-                    </Badge>
-                  )}
-                </div>
-
-                {attemptResult.feedback && (
-                  <div className="rounded-lg bg-background p-4 ring-1 ring-foreground/10">
-                    <p className="text-sm font-medium">Feedback</p>
-
-                    <AtlasRichTextViewer
-                      value={attemptResult.feedback}
-                      className="mt-1 text-sm leading-6 text-muted-foreground"
-                    />
+                    {attemptResult.score !== null && (
+                      <Badge variant="outline">
+                        Score {Math.round(attemptResult.score * 100)}%
+                      </Badge>
+                    )}
                   </div>
-                )}
+
+                  {attemptResult.feedback && (
+                    <div className="rounded-lg bg-background p-4 ring-1 ring-foreground/10">
+                      <p className="text-sm font-medium">Feedback</p>
+
+                      <AtlasRichTextViewer
+                        value={attemptResult.feedback}
+                        className="mt-1 text-sm leading-6 text-muted-foreground"
+                      />
+                    </div>
+                  )}
+                </section>
 
                 {attemptResult.cycle_completed && (
-                  <div className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10">
+                  <section
+                    data-testid="cycle-outcome"
+                    className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10"
+                  >
                     <p className="text-sm font-medium">Cycle complete</p>
 
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -580,7 +606,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                           : "Level not yet mastered"}
                       </Badge>
                     </div>
-                  </div>
+                  </section>
                 )}
 
                 {attemptResult.assessment_status === "completed" ? (
