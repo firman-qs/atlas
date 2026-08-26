@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const push = vi.hoisted(() => vi.fn());
@@ -166,8 +172,57 @@ describe("AssessmentHistory", () => {
     expect(screen.getByText("Learning Objective 3")).toBeInTheDocument();
     expect(screen.getByText("Learning Objective 4")).toBeInTheDocument();
 
+    const createdAssessment = screen.getByTestId(
+      "assessment-history-assessment-created",
+    );
+
+    const runningAssessment = screen.getByTestId(
+      "assessment-history-assessment-running",
+    );
+
+    const completedAssessment = screen.getByTestId(
+      "assessment-history-assessment-completed",
+    );
+
+    const canceledAssessment = screen.getByTestId(
+      "assessment-history-assessment-canceled",
+    );
+
+    expect(createdAssessment).toHaveAttribute("data-assessment-state", "ready");
+
+    expect(runningAssessment).toHaveAttribute(
+      "data-assessment-state",
+      "active",
+    );
+
+    expect(completedAssessment).toHaveAttribute(
+      "data-assessment-state",
+      "historical",
+    );
+
+    expect(canceledAssessment).toHaveAttribute(
+      "data-assessment-state",
+      "historical",
+    );
+
     expect(
-      screen.getByRole("button", {
+      within(createdAssessment).getByText("Ready to start"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(runningAssessment).getByText("In progress"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(completedAssessment).getByText("Completed"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(canceledAssessment).getByText("Canceled"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(createdAssessment).getByRole("button", {
         name: /start assessment/i,
       }),
     ).toBeInTheDocument();
@@ -178,13 +233,13 @@ describe("AssessmentHistory", () => {
     );
 
     expect(
-      screen.getByRole("button", {
+      within(runningAssessment).getByRole("button", {
         name: /^continue$/i,
       }),
     ).toHaveAttribute("href", "/student/assessments/assessment-running");
 
     expect(
-      screen.getByRole("button", {
+      within(completedAssessment).getByRole("button", {
         name: /view result/i,
       }),
     ).toHaveAttribute(
@@ -192,8 +247,15 @@ describe("AssessmentHistory", () => {
       "/student/assessments/assessment-completed/result",
     );
 
-    // Canceled assessments are evidence/history only and expose no action.
-    expect(screen.getAllByText("canceled")).toHaveLength(1);
+    expect(
+      within(canceledAssessment).queryByRole("button"),
+    ).not.toBeInTheDocument();
+
+    expect(
+      within(completedAssessment).queryByRole("button", {
+        name: /start|continue|cancel/i,
+      }),
+    ).not.toBeInTheDocument();
 
     expect(screen.getByText("Showing 4 of 4 assessments.")).toBeInTheDocument();
   });

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AssessmentResultView } from "@/features/student-course/components/assessment-result-view";
@@ -135,5 +135,58 @@ describe("AssessmentResultView", () => {
 
     expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
     expect(screen.queryByText("80%")).not.toBeInTheDocument();
+  });
+
+  it("presents persisted attempts using the runner question, answer, and evaluation hierarchy", () => {
+    render(<AssessmentResultView assessmentId="assessment-1" />);
+
+    const cycle = screen
+      .getByText("Cycle 1")
+      .closest('[data-testid="assessment-cycle"]');
+
+    expect(cycle).not.toBeNull();
+
+    const cycleHeading = within(cycle as HTMLElement).getByText("Cycle 1");
+    const cycleSummary = cycleHeading.parentElement;
+
+    expect(cycleSummary).not.toBeNull();
+
+    expect(
+      within(cycleSummary as HTMLElement).getByText("Score 100%"),
+    ).toBeInTheDocument();
+
+    expect(
+      within(cycleSummary as HTMLElement).getByText("Mastered"),
+    ).toBeInTheDocument();
+
+    const mcqAttempt = screen.getByTestId("assessment-attempt-attempt-mcq");
+
+    expect(within(mcqAttempt).getByText("Question 1")).toBeInTheDocument();
+
+    expect(within(mcqAttempt).getByText("Multiple choice")).toBeInTheDocument();
+
+    expect(
+      within(mcqAttempt).getByText("Assessment question"),
+    ).toBeInTheDocument();
+
+    expect(within(mcqAttempt).getByText("Your answer")).toBeInTheDocument();
+
+    const mcqEvaluation = within(mcqAttempt).getByTestId("evaluation-section");
+
+    expect(mcqEvaluation).toHaveTextContent("Answer evaluated");
+    expect(mcqEvaluation).toHaveTextContent("Correct");
+    expect(mcqEvaluation).toHaveTextContent("Score 100%");
+
+    const essayAttempt = screen.getByTestId("assessment-attempt-attempt-essay");
+
+    expect(within(essayAttempt).getByText("Question 2")).toBeInTheDocument();
+
+    expect(within(essayAttempt).getByText("Essay")).toBeInTheDocument();
+
+    const essayEvaluation =
+      within(essayAttempt).getByTestId("evaluation-section");
+
+    expect(essayEvaluation).toHaveTextContent("Answer evaluated");
+    expect(essayEvaluation).toHaveTextContent("Score 100%");
   });
 });

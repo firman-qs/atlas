@@ -12,9 +12,42 @@ import {
   useStartAssessment,
 } from "@/features/student-course/queries";
 import type { Assessment } from "@/features/student-course/types";
+import { cn } from "@/lib/utils";
 import { ArrowRight, ClipboardCheck, LoaderCircle, Play } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+type AssessmentPresentationState = "ready" | "active" | "historical";
+
+function assessmentPresentationState(
+  status: Assessment["status"],
+): AssessmentPresentationState {
+  if (status === "created") {
+    return "ready";
+  }
+
+  if (status === "running") {
+    return "active";
+  }
+
+  return "historical";
+}
+
+function assessmentStatusLabel(status: Assessment["status"]) {
+  switch (status) {
+    case "created":
+      return "Ready to start";
+
+    case "running":
+      return "In progress";
+
+    case "completed":
+      return "Completed";
+
+    case "canceled":
+      return "Canceled";
+  }
+}
 
 function AssessmentActions({ assessment }: { assessment: Assessment }) {
   const router = useRouter();
@@ -149,40 +182,80 @@ export function AssessmentHistory() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {data.items.map((assessment) => (
-            <Card key={assessment.id}>
-              <CardHeader>
-                <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
-                  <div className="min-w-0 space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <CardTitle>
-                        {learningObjectiveLabel(
-                          assessment.learning_objective.code,
-                          assessment.learning_objective.display_order,
-                        )}
-                      </CardTitle>
+          {data.items.map((assessment) => {
+            const presentationState = assessmentPresentationState(
+              assessment.status,
+            );
 
-                      <Badge variant="secondary">
-                        {assessment.mode === "progress" ? "Progress" : "Review"}
-                      </Badge>
+            return (
+              <Card
+                key={assessment.id}
+                data-testid={`assessment-history-${assessment.id}`}
+                data-assessment-state={presentationState}
+                className={cn(
+                  "transition-colors",
+                  presentationState === "active" &&
+                    "bg-primary/3 ring-primary/25",
+                  presentationState === "historical" && "bg-muted/15",
+                )}
+              >
+                <CardHeader>
+                  <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
+                    <div className="min-w-0 space-y-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <CardTitle>
+                          {learningObjectiveLabel(
+                            assessment.learning_objective.code,
+                            assessment.learning_objective.display_order,
+                          )}
+                        </CardTitle>
 
-                      <Badge variant="outline" className="capitalize">
-                        {assessment.status}
-                      </Badge>
+                        <Badge variant="secondary">
+                          {assessment.mode === "progress"
+                            ? "Progress"
+                            : "Review"}
+                        </Badge>
+
+                        <Badge
+                          variant={
+                            presentationState === "active"
+                              ? "default"
+                              : presentationState === "ready"
+                                ? "secondary"
+                                : "outline"
+                          }
+                        >
+                          {assessmentStatusLabel(assessment.status)}
+                        </Badge>
+                      </div>
+
+                      <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {assessment.learning_objective.description}
+                      </p>
+
+                      {presentationState === "active" && (
+                        <p className="text-xs font-medium text-primary">
+                          Continue your current assessment from where you left
+                          off.
+                        </p>
+                      )}
+
+                      {presentationState === "ready" && (
+                        <p className="text-xs text-muted-foreground">
+                          This assessment has been created and is ready to
+                          begin.
+                        </p>
+                      )}
                     </div>
 
-                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                      {assessment.learning_objective.description}
-                    </p>
+                    <div className="shrink-0 sm:pt-0.5">
+                      <AssessmentActions assessment={assessment} />
+                    </div>
                   </div>
-
-                  <div className="shrink-0 sm:pt-0.5">
-                    <AssessmentActions assessment={assessment} />
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
-          ))}
+                </CardHeader>
+              </Card>
+            );
+          })}
         </div>
       )}
 

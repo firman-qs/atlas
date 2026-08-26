@@ -148,33 +148,36 @@ export function AssessmentResultView({
                     {level.cycles.map((cycle) => (
                       <section
                         key={cycle.cycle_number}
-                        className="rounded-lg bg-muted/25 p-4 sm:p-5"
+                        data-testid="assessment-cycle"
+                        className="overflow-hidden rounded-xl border bg-background/60"
                       >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="mr-1 text-sm font-semibold">
-                            Cycle {cycle.cycle_number}
-                          </p>
+                        <div className="flex flex-col justify-between gap-3 border-b bg-muted/20 p-4 sm:flex-row sm:items-center sm:p-5">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="mr-1 font-semibold">
+                              Cycle {cycle.cycle_number}
+                            </p>
 
-                          <Badge variant="outline">
-                            Score {percent(cycle.score)}
-                          </Badge>
-
-                          {cycle.passed === true && (
-                            <Badge>
-                              <CheckCircle2 />
-                              Mastered
+                            <Badge variant="outline">
+                              Score {percent(cycle.score)}
                             </Badge>
-                          )}
 
-                          {cycle.passed === false && (
-                            <Badge variant="secondary">
-                              <CircleX />
-                              Not mastered
-                            </Badge>
-                          )}
+                            {cycle.passed === true && (
+                              <Badge>
+                                <CheckCircle2 />
+                                Mastered
+                              </Badge>
+                            )}
+
+                            {cycle.passed === false && (
+                              <Badge variant="secondary">
+                                <CircleX />
+                                Not mastered
+                              </Badge>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="mt-4 space-y-3">
+                        <div className="divide-y">
                           {cycle.attempts.map((attempt, index) => {
                             const answerText =
                               attempt.question_type === "essay"
@@ -188,79 +191,100 @@ export function AssessmentResultView({
                               attempt.question_type === "essay"
                                 ? "Submitted answer is unavailable."
                                 : "Selected option is unavailable.";
+
                             return (
                               <article
                                 key={attempt.attempt_id}
-                                className="rounded-lg bg-background p-4 ring-1 ring-foreground/10"
+                                data-testid={`assessment-attempt-${attempt.attempt_id}`}
+                                className="space-y-5 p-4 sm:p-5"
                               >
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <Badge variant="outline">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                  <p className="font-medium">
                                     Question {index + 1}
-                                  </Badge>
+                                  </p>
 
                                   <Badge variant="secondary">
                                     {attempt.question_type === "mcq"
-                                      ? "MCQ"
+                                      ? "Multiple choice"
                                       : "Essay"}
                                   </Badge>
-
-                                  {attempt.is_correct !== null && (
-                                    <Badge
-                                      variant={
-                                        attempt.is_correct
-                                          ? "default"
-                                          : "destructive"
-                                      }
-                                    >
-                                      {attempt.is_correct
-                                        ? "Correct"
-                                        : "Incorrect"}
-                                    </Badge>
-                                  )}
-
-                                  {attempt.score !== null && (
-                                    <Badge variant="outline">
-                                      {percent(attempt.score)}
-                                    </Badge>
-                                  )}
                                 </div>
 
-                                <div className="mt-4 rounded-lg bg-muted/20 p-3">
-                                  <AtlasRichTextViewer
-                                    value={attempt.prompt}
-                                    className="text-sm leading-6"
-                                  />
-                                </div>
-
-                                <div className="mt-3 rounded-lg bg-muted/30 p-3">
+                                <section className="space-y-2">
                                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                    Assessment question
+                                  </p>
+
+                                  <div className="rounded-xl border bg-muted/20 p-4">
+                                    <AtlasRichTextViewer
+                                      value={attempt.prompt}
+                                      className="text-sm leading-6 sm:text-base sm:leading-7"
+                                    />
+                                  </div>
+                                </section>
+
+                                <section className="space-y-2">
+                                  <p className="text-sm font-medium">
                                     Your answer
                                   </p>
 
-                                  {answerText ? (
-                                    <AtlasRichTextViewer
-                                      value={answerText}
-                                      className="mt-2 text-sm leading-6"
-                                    />
-                                  ) : (
-                                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                                      {unavailableAnswer}
-                                    </p>
-                                  )}
-                                </div>
-
-                                {attempt.feedback && (
-                                  <div className="mt-3 rounded-lg bg-muted/20 p-3">
-                                    <p className="text-sm font-medium">
-                                      Feedback
-                                    </p>
-
-                                    <AtlasRichTextViewer
-                                      value={attempt.feedback}
-                                      className="mt-1 text-sm leading-6 text-muted-foreground"
-                                    />
+                                  <div className="rounded-xl border bg-background p-4">
+                                    {answerText ? (
+                                      <AtlasRichTextViewer
+                                        value={answerText}
+                                        className="text-sm leading-6"
+                                      />
+                                    ) : (
+                                      <p className="text-sm leading-6 text-muted-foreground">
+                                        {unavailableAnswer}
+                                      </p>
+                                    )}
                                   </div>
-                                )}
+                                </section>
+
+                                <section
+                                  data-testid="evaluation-section"
+                                  className="rounded-xl border bg-muted/20 p-4 sm:p-5"
+                                >
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <p className="text-base font-semibold">
+                                      Answer evaluated
+                                    </p>
+
+                                    {attempt.is_correct !== null && (
+                                      <Badge
+                                        variant={
+                                          attempt.is_correct
+                                            ? "default"
+                                            : "destructive"
+                                        }
+                                      >
+                                        {attempt.is_correct
+                                          ? "Correct"
+                                          : "Incorrect"}
+                                      </Badge>
+                                    )}
+
+                                    {attempt.score !== null && (
+                                      <Badge variant="outline">
+                                        Score {percent(attempt.score)}
+                                      </Badge>
+                                    )}
+                                  </div>
+
+                                  {attempt.feedback && (
+                                    <div className="mt-4 rounded-lg bg-background p-4 ring-1 ring-foreground/10">
+                                      <p className="text-sm font-medium">
+                                        Feedback
+                                      </p>
+
+                                      <AtlasRichTextViewer
+                                        value={attempt.feedback}
+                                        className="mt-1 text-sm leading-6 text-muted-foreground"
+                                      />
+                                    </div>
+                                  )}
+                                </section>
                               </article>
                             );
                           })}
