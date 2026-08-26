@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { learningObjectiveLabel } from "@/features/student-course/labels";
 import { useAssessmentResult } from "@/features/student-course/queries";
 import type {
   AssessmentResultAnswer,
@@ -90,17 +91,17 @@ export function AssessmentResultView({
         Assessment history
       </Button>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
-          <Badge>{result.mode === "progress" ? "Progress" : "Review"}</Badge>
-
+          <Badge variant="secondary">
+            {result.mode === "progress" ? "Progress" : "Review"}
+          </Badge>
           <Badge variant="outline">{result.status}</Badge>
-
-          <Badge variant="secondary">{result.total_attempts} attempts</Badge>
+          <Badge variant="outline">{result.total_attempts} attempts</Badge>
         </div>
 
         <h1 className="text-3xl font-semibold tracking-tight">
-          {result.learning_objective.code.toUpperCase()}
+          {learningObjectiveLabel(result.learning_objective.code)}
         </h1>
 
         <p className="max-w-3xl text-muted-foreground">
@@ -110,165 +111,170 @@ export function AssessmentResultView({
 
       {result.concepts.map((concept) => (
         <Card key={concept.learning_objective_concept_id}>
-          <CardHeader>
+          <CardHeader className="border-b">
             <div className="space-y-1">
-              <CardTitle>{concept.concept_name}</CardTitle>
-
+              <CardTitle className="text-lg">{concept.concept_name}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 {concept.concept_code}
               </p>
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            {concept.levels.map((level) => (
-              <div
-                key={level.loc_level_id}
-                className="space-y-4 rounded-lg border p-4"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="font-medium capitalize">{level.solo_code}</p>
+          <CardContent>
+            <div className="divide-y">
+              {concept.levels.map((level) => (
+                <section
+                  key={level.loc_level_id}
+                  className="space-y-4 py-6 first:pt-0 last:pb-0"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-medium capitalize">
+                        {level.solo_code}
+                      </p>
 
-                    <p className="text-xs text-muted-foreground">
-                      SOLO level {level.solo_level}
-                    </p>
+                      <p className="text-xs text-muted-foreground">
+                        SOLO level {level.solo_level}
+                      </p>
+                    </div>
+
+                    <Badge variant="outline">
+                      {level.cycles.length} cycle
+                      {level.cycles.length === 1 ? "" : "s"}
+                    </Badge>
                   </div>
 
-                  <Badge variant="outline">
-                    {level.cycles.length} cycle
-                    {level.cycles.length === 1 ? "" : "s"}
-                  </Badge>
-                </div>
+                  <div className="space-y-4">
+                    {level.cycles.map((cycle) => (
+                      <section
+                        key={cycle.cycle_number}
+                        className="rounded-lg bg-muted/25 p-4 sm:p-5"
+                      >
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-sm font-semibold">
+                            Cycle {cycle.cycle_number}
+                          </p>
 
-                <div className="space-y-4">
-                  {level.cycles.map((cycle) => (
-                    <div
-                      key={cycle.cycle_number}
-                      className="rounded-md bg-muted/30 p-4"
-                    >
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium">
-                          Cycle {cycle.cycle_number}
-                        </p>
-
-                        <Badge variant="outline">
-                          Score {percent(cycle.score)}
-                        </Badge>
-
-                        <Badge variant="outline">
-                          Required {percent(cycle.mastery_threshold)}
-                        </Badge>
-
-                        {cycle.passed === true && (
-                          <Badge>
-                            <CheckCircle2 />
-                            Mastered
+                          <Badge variant="outline">
+                            Score {percent(cycle.score)}
                           </Badge>
-                        )}
 
-                        {cycle.passed === false && (
-                          <Badge variant="secondary">
-                            <CircleX />
-                            Not mastered
+                          <Badge variant="outline">
+                            Required {percent(cycle.mastery_threshold)}
                           </Badge>
-                        )}
-                      </div>
 
-                      <div className="mt-4 space-y-3">
-                        {cycle.attempts.map((attempt, index) => {
-                          const answerText =
-                            attempt.question_type === "essay"
-                              ? getEssayAnswer(attempt.answer)
-                              : getMcqSelectedOptionText(
-                                  attempt.question_content,
-                                  attempt.answer,
-                                );
+                          {cycle.passed === true && (
+                            <Badge>
+                              <CheckCircle2 />
+                              Mastered
+                            </Badge>
+                          )}
 
-                          const unavailableAnswer =
-                            attempt.question_type === "essay"
-                              ? "Submitted answer is unavailable."
-                              : "Selected option is unavailable.";
-                          return (
-                            <div
-                              key={attempt.attempt_id}
-                              className="rounded-md border bg-background p-4"
-                            >
-                              <div className="flex flex-wrap items-center gap-2">
-                                <Badge variant="outline">
-                                  Question {index + 1}
-                                </Badge>
+                          {cycle.passed === false && (
+                            <Badge variant="secondary">
+                              <CircleX />
+                              Not mastered
+                            </Badge>
+                          )}
+                        </div>
 
-                                <Badge variant="secondary">
-                                  {attempt.question_type === "mcq"
-                                    ? "MCQ"
-                                    : "Essay"}
-                                </Badge>
+                        <div className="mt-4 space-y-3">
+                          {cycle.attempts.map((attempt, index) => {
+                            const answerText =
+                              attempt.question_type === "essay"
+                                ? getEssayAnswer(attempt.answer)
+                                : getMcqSelectedOptionText(
+                                    attempt.question_content,
+                                    attempt.answer,
+                                  );
 
-                                {attempt.is_correct !== null && (
-                                  <Badge
-                                    variant={
-                                      attempt.is_correct
-                                        ? "default"
-                                        : "destructive"
-                                    }
-                                  >
-                                    {attempt.is_correct
-                                      ? "Correct"
-                                      : "Incorrect"}
-                                  </Badge>
-                                )}
-
-                                {attempt.score !== null && (
+                            const unavailableAnswer =
+                              attempt.question_type === "essay"
+                                ? "Submitted answer is unavailable."
+                                : "Selected option is unavailable.";
+                            return (
+                              <article
+                                key={attempt.attempt_id}
+                                className="rounded-lg bg-background p-4 ring-1 ring-foreground/10"
+                              >
+                                <div className="flex flex-wrap items-center gap-2">
                                   <Badge variant="outline">
-                                    {percent(attempt.score)}
+                                    Question {index + 1}
                                   </Badge>
-                                )}
-                              </div>
 
-                              <AtlasRichTextViewer
-                                value={attempt.prompt}
-                                className="mt-3 text-sm leading-6"
-                              />
+                                  <Badge variant="secondary">
+                                    {attempt.question_type === "mcq"
+                                      ? "MCQ"
+                                      : "Essay"}
+                                  </Badge>
 
-                              <div className="mt-4 rounded-md border bg-muted/20 p-3">
-                                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                  Your answer
-                                </p>
+                                  {attempt.is_correct !== null && (
+                                    <Badge
+                                      variant={
+                                        attempt.is_correct
+                                          ? "default"
+                                          : "destructive"
+                                      }
+                                    >
+                                      {attempt.is_correct
+                                        ? "Correct"
+                                        : "Incorrect"}
+                                    </Badge>
+                                  )}
 
-                                {answerText ? (
+                                  {attempt.score !== null && (
+                                    <Badge variant="outline">
+                                      {percent(attempt.score)}
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                <div className="mt-4 rounded-lg bg-muted/20 p-3">
                                   <AtlasRichTextViewer
-                                    value={answerText}
-                                    className="mt-2 text-sm leading-6"
-                                  />
-                                ) : (
-                                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                                    {unavailableAnswer}
-                                  </p>
-                                )}
-                              </div>
-
-                              {attempt.feedback && (
-                                <div className="mt-4 border-t pt-4">
-                                  <p className="text-sm font-medium">
-                                    Feedback
-                                  </p>
-
-                                  <AtlasRichTextViewer
-                                    value={attempt.feedback}
-                                    className="mt-1 text-sm leading-6 text-muted-foreground"
+                                    value={attempt.prompt}
+                                    className="text-sm leading-6"
                                   />
                                 </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+
+                                <div className="mt-3 rounded-lg bg-muted/30 p-3">
+                                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                    Your answer
+                                  </p>
+
+                                  {answerText ? (
+                                    <AtlasRichTextViewer
+                                      value={answerText}
+                                      className="mt-2 text-sm leading-6"
+                                    />
+                                  ) : (
+                                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                      {unavailableAnswer}
+                                    </p>
+                                  )}
+                                </div>
+
+                                {attempt.feedback && (
+                                  <div className="mt-3 rounded-lg bg-muted/20 p-3">
+                                    <p className="text-sm font-medium">
+                                      Feedback
+                                    </p>
+
+                                    <AtlasRichTextViewer
+                                      value={attempt.feedback}
+                                      className="mt-1 text-sm leading-6 text-muted-foreground"
+                                    />
+                                  </div>
+                                )}
+                              </article>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           </CardContent>
         </Card>
       ))}

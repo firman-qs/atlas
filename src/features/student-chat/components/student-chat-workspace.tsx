@@ -1,12 +1,19 @@
 "use client";
 
-import { ArrowLeft, Bot } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { ChatConversation } from "@/features/student-chat/components/chat-conversation";
 import { ChatEmptyState } from "@/features/student-chat/components/chat-empty-state";
@@ -15,10 +22,9 @@ import {
   useChatSessions,
   useCreateChatSession,
 } from "@/features/student-chat/queries";
-
 import { useStudentEnrollment } from "@/features/student-course/queries";
-
 import { cn } from "@/lib/utils";
+import { useChatFullscreen } from "./chat-fullscreen-provider";
 
 interface StudentChatWorkspaceProps {
   enrollmentId: string;
@@ -30,8 +36,14 @@ export function StudentChatWorkspace({
   selectedChatSessionId,
 }: StudentChatWorkspaceProps) {
   const router = useRouter();
+
+  const [sessionsOpen, setSessionsOpen] = useState(false);
+  const { isFullscreen, toggleFullscreen } = useChatFullscreen();
+
   const enrollmentQuery = useStudentEnrollment(enrollmentId);
+
   const learningRecordId = enrollmentQuery.data?.learning_record?.id ?? "";
+
   const sessionsQuery = useChatSessions(learningRecordId);
   const createSession = useCreateChatSession(learningRecordId);
 
@@ -42,14 +54,15 @@ export function StudentChatWorkspace({
 
     const session = await createSession.mutateAsync();
 
+    setSessionsOpen(false);
+
     router.push(`/student/courses/${enrollmentId}/chat/${session.id}`);
   }
 
   if (enrollmentQuery.isPending) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-9 w-32" />
-        <Skeleton className="h-[38rem] w-full" />
+      <div className="flex min-h-0 flex-1 flex-col">
+        <Skeleton className="min-h-0 flex-1 rounded-xl" />
       </div>
     );
   }
@@ -109,42 +122,42 @@ export function StudentChatWorkspace({
 
   const course = enrollment.course_offering.course;
 
+  const sessions =
+    sessionsQuery.data?.pages.flatMap((page) => page.items) ?? [];
+
+  const sessionSidebar = sessionsQuery.isPending ? (
+    <div className="h-full space-y-3 bg-muted/20 p-4">
+      <Skeleton className="h-9 w-full" />
+      <Skeleton className="h-8 w-full" />
+      <Skeleton className="h-8 w-4/5" />
+      <Skeleton className="h-8 w-3/4" />
+    </div>
+  ) : (
+    <ChatSessionSidebar
+      enrollmentId={enrollmentId}
+      sessions={sessions}
+      selectedChatSessionId={selectedChatSessionId}
+      isCreating={createSession.isPending}
+      hasMoreSessions={sessionsQuery.hasNextPage}
+      isLoadingMoreSessions={sessionsQuery.isFetchingNextPage}
+      onLoadMoreSessions={() => {
+        void sessionsQuery.fetchNextPage();
+      }}
+      onCreateSession={() => {
+        void handleCreateSession();
+      }}
+    />
+  );
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <Link
-            href={`/student/courses/${enrollmentId}`}
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                size: "icon",
-              }),
-              "mt-0.5",
-            )}
-            aria-label="Back to course"
-          >
-            <ArrowLeft />
-          </Link>
-
-          <div>
-            <div className="flex items-center gap-2">
-              <Bot className="size-5" />
-
-              <h1 className="text-2xl font-semibold tracking-tight">
-                AI Tutor
-              </h1>
-            </div>
-
-            <p className="mt-1 text-sm text-muted-foreground">
-              {course.code} · {course.title}
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div
+      className={cn(
+        "flex min-h-0 min-w-0 flex-1 flex-col",
+        isFullscreen && "fixed inset-0 z-40 bg-background p-2 sm:p-4",
+      )}
+    >
       {createSession.isError && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="mb-3 shrink-0">
           <AlertDescription>
             {createSession.error instanceof Error
               ? createSession.error.message
@@ -153,30 +166,16 @@ export function StudentChatWorkspace({
         </Alert>
       )}
 
-      <div className="grid min-h-[38rem] overflow-hidden rounded-xl border bg-background md:grid-cols-[17rem_minmax(0,1fr)]">
-        {sessionsQuery.isPending ? (
-          <div className="space-y-3 border-r p-4">
-            <Skeleton className="h-9 w-full" />
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-4/5" />
-            <Skeleton className="h-8 w-3/4" />
-          </div>
-        ) : (
-          <ChatSessionSidebar
-            enrollmentId={enrollmentId}
-            sessions={sessionsQuery.data.pages.flatMap((page) => page.items)}
-            selectedChatSessionId={selectedChatSessionId}
-            isCreating={createSession.isPending}
-            hasMoreSessions={sessionsQuery.hasNextPage}
-            isLoadingMoreSessions={sessionsQuery.isFetchingNextPage}
-            onLoadMoreSessions={() => {
-              void sessionsQuery.fetchNextPage();
-            }}
-            onCreateSession={() => {
-              void handleCreateSession();
-            }}
-          />
+      <div
+        className={cn(
+          "flex min-h-0 min-w-0 flex-1 overflow-hidden border bg-background shadow-xs",
+          "transition-[border-radius,box-shadow] duration-200 ease-out motion-reduce:transition-none",
+          isFullscreen ? "rounded-lg shadow-lg" : "rounded-xl",
         )}
+      >
+        <div className="hidden w-64 shrink-0 border-r xl:block">
+          {sessionSidebar}
+        </div>
 
         {selectedChatSessionId ? (
           <ChatConversation
@@ -184,16 +183,45 @@ export function StudentChatWorkspace({
             enrollmentId={enrollmentId}
             chatSessionId={selectedChatSessionId}
             learningRecordId={learningRecord.id}
+            courseTitle={course.title}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
+            onOpenSessions={() => {
+              setSessionsOpen(true);
+            }}
           />
         ) : (
           <ChatEmptyState
+            courseTitle={course.title}
             isCreating={createSession.isPending}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
+            onOpenSessions={() => {
+              setSessionsOpen(true);
+            }}
             onCreateSession={() => {
               void handleCreateSession();
             }}
           />
         )}
       </div>
+
+      <Sheet open={sessionsOpen} onOpenChange={setSessionsOpen}>
+        <SheetContent
+          side="left"
+          className="w-[min(20rem,calc(100vw-2rem))] gap-0 p-0 xl:hidden"
+        >
+          <SheetHeader className="border-b">
+            <SheetTitle>Chats</SheetTitle>
+
+            <SheetDescription>
+              Your AI Tutor conversations for {course.title}.
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="min-h-0 flex-1">{sessionSidebar}</div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

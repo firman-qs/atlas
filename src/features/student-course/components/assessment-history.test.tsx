@@ -161,10 +161,10 @@ describe("AssessmentHistory", () => {
       }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText("LO1")).toBeInTheDocument();
-    expect(screen.getByText("LO2")).toBeInTheDocument();
-    expect(screen.getByText("LO3")).toBeInTheDocument();
-    expect(screen.getByText("LO4")).toBeInTheDocument();
+    expect(screen.getByText("Learning Objective 1")).toBeInTheDocument();
+    expect(screen.getByText("Learning Objective 2")).toBeInTheDocument();
+    expect(screen.getByText("Learning Objective 3")).toBeInTheDocument();
+    expect(screen.getByText("Learning Objective 4")).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", {

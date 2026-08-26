@@ -182,13 +182,18 @@ describe("AssessmentRunner", () => {
     render(<AssessmentRunner assessmentId="assessment-1" />);
 
     expect(screen.getByText("What is electric flux?")).toBeInTheDocument();
-
     expect(screen.getByText("Cycle 1")).toBeInTheDocument();
 
     expect(screen.getByTestId("cancel-assessment")).toHaveAttribute(
       "data-learning-record-id",
       "lr-1",
     );
+
+    expect(
+      screen.getByRole("heading", {
+        name: "Learning Objective 1",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("renders Markdown and mathematical notation in assessment content", async () => {

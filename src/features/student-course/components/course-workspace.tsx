@@ -5,12 +5,10 @@ import Link from "next/link";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AssessmentOptionsPanel } from "@/features/student-course/components/assessment-options";
-
-import { buttonVariants } from "@/components/ui/button";
 import { LearningProgress } from "@/features/student-course/components/learning-progress";
 import {
   useAssessmentOptions,
@@ -31,60 +29,17 @@ function formatSemester(value: string) {
 }
 
 interface ActiveLearningWorkspaceProps {
-  enrollmentId: string;
   learningRecordId: string;
-  startedAt: string;
 }
 
 function ActiveLearningWorkspace({
-  enrollmentId,
   learningRecordId,
-  startedAt,
 }: ActiveLearningWorkspaceProps) {
   const progressQuery = useLearningRecordProgress(learningRecordId);
-
   const assessmentOptionsQuery = useAssessmentOptions(learningRecordId);
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Learning workspace</CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-2">
-          <p className="font-medium">Learning record active</p>
-
-          <p className="text-sm text-muted-foreground">
-            Started {new Date(startedAt).toLocaleString()}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bot className="size-5" />
-            AI Tutor
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          <p className="text-sm leading-6 text-muted-foreground">
-            Ask questions about this course and get guidance grounded in the
-            curriculum and your current learning progress.
-          </p>
-
-          <Link
-            href={`/student/courses/${enrollmentId}/chat`}
-            className={buttonVariants()}
-          >
-            <Bot />
-            Open AI Tutor
-          </Link>
-        </CardContent>
-      </Card>
-
       {progressQuery.isPending ? (
         <Card>
           <CardHeader>
@@ -138,7 +93,6 @@ function ActiveLearningWorkspace({
 
 export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
   const enrollmentQuery = useStudentEnrollment(enrollmentId);
-
   const createLearningRecord = useCreateLearningRecord(enrollmentId);
 
   if (enrollmentQuery.isPending) {
@@ -184,7 +138,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
       </Link>
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-medium text-muted-foreground">
             {course.code}
           </p>
@@ -198,21 +152,24 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
           </p>
         </div>
 
-        <Badge variant={learningRecord ? "outline" : "secondary"}>
+        <Badge
+          className="shrink-0"
+          variant={learningRecord ? "outline" : "secondary"}
+        >
           {learningRecord ? "Learning started" : "Not started"}
         </Badge>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {!learningRecord ? (
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Learning workspace</CardTitle>
-            </CardHeader>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]">
+        <div className="min-w-0">
+          {!learningRecord ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Start learning</CardTitle>
+              </CardHeader>
 
-            <CardContent>
-              <div className="space-y-4">
-                <p className="text-muted-foreground">
+              <CardContent className="space-y-4">
+                <p className="max-w-2xl text-muted-foreground">
                   Start your learning record to begin tracking conceptual
                   progress and formative assessments for this course.
                 </p>
@@ -241,48 +198,82 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
                     ? "Starting..."
                     : "Start Learning"}
                 </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <ActiveLearningWorkspace learningRecordId={learningRecord.id} />
+          )}
+        </div>
+
+        <aside className="space-y-4 lg:sticky lg:top-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Course details</CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-4 text-sm">
+              <div>
+                <p className="text-muted-foreground">Instructor</p>
+                <p className="mt-0.5 font-medium">
+                  {offering.instructor.full_name}
+                </p>
               </div>
+
+              <div>
+                <p className="text-muted-foreground">Academic term</p>
+
+                <p className="mt-0.5 font-medium">
+                  {formatSemester(offering.academic_term.semester)}{" "}
+                  {offering.academic_term.year}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-muted-foreground">Enrollment</p>
+
+                <p className="mt-0.5 font-medium">
+                  {new Date(enrollment.enrolled_at).toLocaleDateString()}
+                </p>
+              </div>
+
+              {learningRecord && (
+                <div>
+                  <p className="text-muted-foreground">Started</p>
+
+                  <p className="mt-0.5 font-medium">
+                    {new Date(learningRecord.started_at).toLocaleString()}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
-        ) : (
-          <div className="lg:col-span-2">
-            <ActiveLearningWorkspace
-              enrollmentId={enrollmentId}
-              learningRecordId={learningRecord.id}
-              startedAt={learningRecord.started_at}
-            />
-          </div>
-        )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Course details</CardTitle>
-          </CardHeader>
+          {learningRecord && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bot className="size-5" />
+                  AI Tutor
+                </CardTitle>
+              </CardHeader>
 
-          <CardContent className="space-y-3 text-sm">
-            <div>
-              <p className="text-muted-foreground">Instructor</p>
-              <p className="font-medium">{offering.instructor.full_name}</p>
-            </div>
+              <CardContent className="space-y-4">
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Ask questions about this course and get guidance grounded in
+                  the curriculum and your current learning progress.
+                </p>
 
-            <div>
-              <p className="text-muted-foreground">Academic term</p>
-
-              <p className="font-medium">
-                {formatSemester(offering.academic_term.semester)}{" "}
-                {offering.academic_term.year}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-muted-foreground">Enrollment</p>
-
-              <p className="font-medium">
-                {new Date(enrollment.enrolled_at).toLocaleDateString()}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+                <Link
+                  href={`/student/courses/${enrollmentId}/chat`}
+                  className={cn(buttonVariants(), "w-full")}
+                >
+                  <Bot />
+                  Open AI Tutor
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </aside>
       </div>
     </div>
   );

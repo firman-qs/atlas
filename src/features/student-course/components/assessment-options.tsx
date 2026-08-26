@@ -4,6 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { learningObjectiveLabel } from "@/features/student-course/labels";
 import {
   ArrowRight,
   ClipboardCheck,
@@ -69,7 +70,7 @@ export function AssessmentOptionsPanel({
         </CardHeader>
 
         <CardContent>
-          <div className="rounded-lg border p-4">
+          <div className="rounded-lg bg-muted/30 p-4">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
@@ -158,9 +159,9 @@ export function AssessmentOptionsPanel({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         {options.progress ? (
-          <div className="rounded-lg border p-4">
+          <section className="space-y-4">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
@@ -173,7 +174,10 @@ export function AssessmentOptionsPanel({
 
                 <div>
                   <p className="text-sm font-medium">
-                    {options.progress.learning_objective.code.toUpperCase()}
+                    {learningObjectiveLabel(
+                      options.progress.learning_objective.code,
+                      options.progress.learning_objective.display_order,
+                    )}
                   </p>
 
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -215,20 +219,22 @@ export function AssessmentOptionsPanel({
                 </AlertDescription>
               </Alert>
             )}
-          </div>
+          </section>
         ) : (
-          <div className="rounded-lg border p-4">
+          <section className="rounded-lg bg-muted/30 p-4">
             <p className="font-medium">Progress assessment unavailable</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
               There is currently no progress assessment available for this
               learning record.
             </p>
-          </div>
+          </section>
         )}
 
+        <div className="border-t" />
+
         {options.review.length === 0 ? (
-          <div className="rounded-lg border border-dashed bg-muted/30 p-4">
+          <section className="rounded-lg bg-muted/30 p-4">
             <div className="flex gap-3">
               <div className="mt-0.5">
                 <LockKeyhole className="size-5 text-muted-foreground" />
@@ -246,9 +252,9 @@ export function AssessmentOptionsPanel({
                 </p>
               </div>
             </div>
-          </div>
+          </section>
         ) : (
-          <div className="space-y-3 rounded-lg border p-4">
+          <section className="space-y-5">
             <div className="flex items-center gap-2">
               <RotateCcw className="size-5" />
 
@@ -260,7 +266,7 @@ export function AssessmentOptionsPanel({
               </Badge>
             </div>
 
-            <div className="space-y-2 rounded-md border bg-background p-3">
+            <div className="space-y-3 rounded-lg bg-muted/30 p-4">
               <div>
                 <p className="text-sm font-medium">Question source</p>
 
@@ -318,18 +324,21 @@ export function AssessmentOptionsPanel({
 
             <div className="space-y-3">
               {options.review.map((review) => (
-                <div
+                <section
                   key={review.learning_objective.id}
-                  className="rounded-md bg-muted/40 p-3"
+                  className="space-y-3 border-t pt-4 first:border-t-0 first:pt-0"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline">
-                      {review.learning_objective.code.toUpperCase()}
+                      {learningObjectiveLabel(
+                        review.learning_objective.code,
+                        review.learning_objective.display_order,
+                      )}
                     </Badge>
 
                     {review.can_review_learning_objective && (
                       <>
-                        <Badge>Whole LO review available</Badge>
+                        <Badge>Whole learning objective available</Badge>
 
                         <Button
                           size="sm"
@@ -346,7 +355,7 @@ export function AssessmentOptionsPanel({
                           disabled={createReviewAssessment.isPending}
                         >
                           <RotateCcw />
-                          Review LO
+                          Review learning objective
                         </Button>
                       </>
                     )}
@@ -361,7 +370,7 @@ export function AssessmentOptionsPanel({
                       {review.concepts.map((concept) => (
                         <div
                           key={concept.learning_objective_concept_id}
-                          className="rounded-md border bg-background p-3"
+                          className="rounded-lg bg-background/70 p-3 ring-1 ring-foreground/10"
                         >
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="text-sm font-medium">
@@ -430,7 +439,7 @@ export function AssessmentOptionsPanel({
                       ))}
                     </div>
                   )}
-                </div>
+                </section>
               ))}
             </div>
 
@@ -443,7 +452,7 @@ export function AssessmentOptionsPanel({
                 </AlertDescription>
               </Alert>
             )}
-          </div>
+          </section>
         )}
       </CardContent>
     </Card>

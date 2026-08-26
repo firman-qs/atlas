@@ -39,7 +39,10 @@ import {
   Archive,
   Bot,
   LoaderCircle,
+  Maximize2,
+  Minimize2,
   MoreHorizontal,
+  PanelLeft,
   Pencil,
   User,
 } from "lucide-react";
@@ -53,12 +56,20 @@ interface ChatConversationProps {
   enrollmentId: string;
   chatSessionId: string;
   learningRecordId: string;
+  courseTitle: string;
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
+  onOpenSessions: () => void;
 }
 
 export function ChatConversation({
   enrollmentId,
   chatSessionId,
   learningRecordId,
+  courseTitle,
+  isFullscreen,
+  onToggleFullscreen,
+  onOpenSessions,
 }: ChatConversationProps) {
   const router = useRouter();
 
@@ -222,7 +233,7 @@ export function ChatConversation({
 
   if (sessionQuery.isPending || messagesQuery.isPending) {
     return (
-      <section className="flex min-w-0 flex-col">
+      <section className="flex min-h-0 min-w-0 flex-1 flex-col">
         <div className="border-b px-5 py-4">
           <Skeleton className="h-6 w-48" />
         </div>
@@ -271,46 +282,77 @@ export function ChatConversation({
     .flatMap((page) => page.items);
 
   return (
-    <section className="flex min-w-0 flex-col">
-      <div className="flex items-center justify-between gap-3 border-b px-5 py-3">
-        <h2 className="min-w-0 truncate font-semibold tracking-tight">
-          {session.title}
-        </h2>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Chat session actions"
-              />
-            }
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
+        <div className="flex min-w-0 items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="xl:hidden"
+            aria-label="Open chats"
+            onClick={onOpenSessions}
           >
-            <MoreHorizontal />
-          </DropdownMenuTrigger>
+            <PanelLeft />
+          </Button>
 
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                setTitle(session.title);
-                setRenameOpen(true);
-              }}
+          <div className="min-w-0">
+            <h2 className="truncate font-semibold tracking-tight">
+              {session.title}
+            </h2>
+
+            <p className="truncate text-xs text-muted-foreground">
+              {courseTitle} · AI Tutor
+            </p>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            onClick={onToggleFullscreen}
+          >
+            {isFullscreen ? <Minimize2 /> : <Maximize2 />}
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Chat session actions"
+                />
+              }
             >
-              <Pencil />
-              Rename
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => {
-                setArchiveOpen(true);
-              }}
-            >
-              <Archive />
-              Archive
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <MoreHorizontal />
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  setTitle(session.title);
+                  setRenameOpen(true);
+                }}
+              >
+                <Pencil />
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => {
+                  setArchiveOpen(true);
+                }}
+              >
+                <Archive />
+                Archive
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <div

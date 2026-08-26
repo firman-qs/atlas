@@ -13,11 +13,9 @@ export default async function StudentChatSessionPage({
   const { enrollment_id, chat_session_id } = await params;
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <StudentChatWorkspace
-        enrollmentId={enrollment_id}
-        selectedChatSessionId={chat_session_id}
-      />
-    </div>
+    <StudentChatWorkspace
+      enrollmentId={enrollment_id}
+      selectedChatSessionId={chat_session_id}
+    />
   );
 }

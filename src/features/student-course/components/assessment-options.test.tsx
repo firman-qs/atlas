@@ -193,7 +193,7 @@ describe("AssessmentOptionsPanel", () => {
 
     expect(screen.getByText("Progress assessment")).toBeInTheDocument();
 
-    expect(screen.getByText("LO1")).toBeInTheDocument();
+    expect(screen.getByText("Learning Objective 1")).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {
@@ -279,13 +279,15 @@ describe("AssessmentOptionsPanel", () => {
       <AssessmentOptionsPanel options={options} learningRecordId="lr-1" />,
     );
 
-    expect(screen.getByText("Whole LO review available")).toBeInTheDocument();
+    expect(
+      screen.getByText("Whole learning objective available"),
+    ).toBeInTheDocument();
 
     expect(screen.getByText("Electric Flux")).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {
-        name: /review lo/i,
+        name: /review learning objective/i,
       }),
     );
 

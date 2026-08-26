@@ -112,4 +112,16 @@ describe("CourseWorkspace", () => {
       "/student/courses/enrollment-1/chat",
     );
   });
+
+  it("moves active learning metadata into course details without a redundant workspace status card", () => {
+    render(<CourseWorkspace enrollmentId="enrollment-1" />);
+
+    expect(screen.getByText("Course details")).toBeInTheDocument();
+
+    expect(
+      screen.queryByText("Learning record active"),
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText("Started")).toBeInTheDocument();
+  });
 });

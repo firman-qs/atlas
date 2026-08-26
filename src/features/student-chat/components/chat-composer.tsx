@@ -131,7 +131,7 @@ export function ChatComposer({
   }
 
   return (
-    <div className="border-t bg-background p-4">
+    <div className="shrink-0 bg-linear-to-t from-background via-background/95 to-transparent px-3 pb-3 pt-5 sm:px-4">
       {createMessage.isError && (
         <Alert variant="destructive" className="mb-3">
           <AlertDescription>
@@ -148,44 +148,7 @@ export function ChatComposer({
         </Alert>
       )}
 
-      {attachments.length > 0 && (
-        <div className="mb-3 flex flex-wrap gap-2">
-          {attachments.map((attachment) => (
-            <div
-              key={attachment.media.id}
-              className="flex min-w-0 items-center gap-3 rounded-lg border bg-muted/30 p-2"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={attachment.url}
-                alt={attachment.alt}
-                className="size-14 rounded-md border object-cover"
-              />
-
-              <div className="min-w-0 max-w-40">
-                <p className="truncate text-sm font-medium">
-                  {attachment.media.original_filename}
-                </p>
-
-                <p className="text-xs text-muted-foreground">Image attached</p>
-              </div>
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label={`Remove ${attachment.alt}`}
-                onClick={() => removeAttachment(attachment.media.id)}
-                disabled={createMessage.isPending}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="flex items-end gap-2">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
         <input
           ref={fileInputRef}
           type="file"
@@ -197,64 +160,126 @@ export function ChatComposer({
           }}
         />
 
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          aria-label="Choose image"
-          disabled={
-            isUploading || createMessage.isPending || attachments.length >= 2
-          }
-          onClick={() => {
-            fileInputRef.current?.click();
-          }}
+        <div
+          className="
+            overflow-hidden rounded-2xl border bg-background/95 shadow-sm
+            backdrop-blur-sm
+            transition-[border-color,box-shadow] duration-150
+            focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/20
+            motion-reduce:transition-none
+          "
         >
-          {isUploading ? (
-            <LoaderCircle className="animate-spin" />
-          ) : (
-            <ImagePlus />
-          )}
-        </Button>
+          {attachments.length > 0 && (
+            <div className="flex flex-wrap gap-2 px-3 pt-3">
+              {attachments.map((attachment) => (
+                <div
+                  key={attachment.media.id}
+                  className="group relative overflow-hidden rounded-xl border bg-muted/30"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={attachment.url}
+                    alt={attachment.alt}
+                    className="size-20 object-cover"
+                  />
 
-        <Textarea
-          aria-label="Message your ATLAS tutor"
-          placeholder="Ask about what you're learning..."
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          maxLength={4000}
-          disabled={createMessage.isPending}
-          className="min-h-20 resize-none"
-        />
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="icon-sm"
+                    aria-label={`Remove ${attachment.alt}`}
+                    className="absolute right-1 top-1 size-6 rounded-full shadow-sm"
+                    onClick={() => removeAttachment(attachment.media.id)}
+                    disabled={createMessage.isPending}
+                  >
+                    <X />
+                  </Button>
 
-        <Button
-          type="submit"
-          size="icon"
-          aria-label="Send message"
-          disabled={!canSend}
-        >
-          {createMessage.isPending ? (
-            <LoaderCircle className="animate-spin" />
-          ) : (
-            <Send />
+                  <div className="max-w-20 px-2 py-1.5">
+                    <p className="truncate text-[11px] text-muted-foreground">
+                      {attachment.media.original_filename}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
-        </Button>
+
+          <Textarea
+            aria-label="Message your ATLAS tutor"
+            placeholder="Ask about what you're learning..."
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            maxLength={4000}
+            disabled={createMessage.isPending}
+            className="
+              max-h-36 min-h-12 resize-none overflow-y-auto
+              border-0 bg-transparent px-4 pb-1 pt-3 shadow-none
+              focus-visible:border-transparent focus-visible:ring-0
+              dark:bg-transparent
+            "
+          />
+
+          <div className="flex items-center justify-between gap-3 px-2.5 pb-2">
+            <div className="flex min-w-0 items-center gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Choose image"
+                disabled={
+                  isUploading ||
+                  createMessage.isPending ||
+                  attachments.length >= 2
+                }
+                onClick={() => {
+                  fileInputRef.current?.click();
+                }}
+              >
+                {isUploading ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <ImagePlus />
+                )}
+              </Button>
+
+              <span className="hidden truncate text-xs text-muted-foreground sm:block">
+                Add up to 2 images
+              </span>
+            </div>
+
+            <Button
+              type="submit"
+              size="icon"
+              aria-label="Send message"
+              disabled={!canSend}
+              className="rounded-full"
+            >
+              {createMessage.isPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Send />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-1 flex items-center justify-between gap-3 px-2 text-[10px] text-muted-foreground/80">
+          <p className="truncate">
+            ATLAS uses your course curriculum and learning progress as context.
+          </p>
+
+          <span
+            className={
+              messageContent.length > MAX_CHAT_MESSAGE_CHARS
+                ? "shrink-0 text-destructive"
+                : "shrink-0"
+            }
+          >
+            {messageContent.length}/{MAX_CHAT_MESSAGE_CHARS}
+          </span>
+        </div>
       </form>
-
-      <div className="mt-2 flex items-center justify-between gap-3 text-xs text-muted-foreground">
-        <p>
-          ATLAS uses your course curriculum and learning progress as context.
-        </p>
-
-        <span
-          className={
-            messageContent.length > MAX_CHAT_MESSAGE_CHARS
-              ? "text-destructive"
-              : undefined
-          }
-        >
-          {messageContent.length}/{MAX_CHAT_MESSAGE_CHARS}
-        </span>
-      </div>
     </div>
   );
 }

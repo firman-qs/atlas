@@ -127,5 +127,10 @@ describe("AssessmentResultView", () => {
     );
 
     expect(container.querySelectorAll(".katex").length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", {
+        name: "Learning Objective 1",
+      }),
+    ).toBeInTheDocument();
   });
 });

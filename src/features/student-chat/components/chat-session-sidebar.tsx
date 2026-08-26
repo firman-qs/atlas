@@ -30,7 +30,7 @@ export function ChatSessionSidebar({
   onCreateSession,
 }: ChatSessionSidebarProps) {
   return (
-    <aside className="flex min-h-0 flex-col border-r bg-muted/20">
+    <aside className="flex min-h-0 h-full flex-col bg-muted/20">
       <div className="p-4">
         <Button
           type="button"

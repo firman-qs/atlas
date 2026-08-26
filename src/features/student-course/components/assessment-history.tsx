@@ -1,20 +1,20 @@
 "use client";
 
-import { ArrowRight, ClipboardCheck, LoaderCircle, Play } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
+import { learningObjectiveLabel } from "@/features/student-course/labels";
 import {
   useAssessments,
   useStartAssessment,
 } from "@/features/student-course/queries";
 import type { Assessment } from "@/features/student-course/types";
+import { ArrowRight, ClipboardCheck, LoaderCircle, Play } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function AssessmentActions({ assessment }: { assessment: Assessment }) {
   const router = useRouter();
@@ -148,30 +148,35 @@ export function AssessmentHistory() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {data.items.map((assessment) => (
             <Card key={assessment.id}>
               <CardHeader>
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                  <div className="space-y-2">
+                <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
+                  <div className="min-w-0 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <CardTitle>
-                        {assessment.learning_objective.code.toUpperCase()}
+                        {learningObjectiveLabel(
+                          assessment.learning_objective.code,
+                          assessment.learning_objective.display_order,
+                        )}
                       </CardTitle>
 
-                      <Badge>
+                      <Badge variant="secondary">
                         {assessment.mode === "progress" ? "Progress" : "Review"}
                       </Badge>
 
-                      <Badge variant="outline">{assessment.status}</Badge>
+                      <Badge variant="outline" className="capitalize">
+                        {assessment.status}
+                      </Badge>
                     </div>
 
-                    <p className="max-w-2xl text-sm text-muted-foreground">
+                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
                       {assessment.learning_objective.description}
                     </p>
                   </div>
 
-                  <div className="shrink-0">
+                  <div className="shrink-0 sm:pt-0.5">
                     <AssessmentActions assessment={assessment} />
                   </div>
                 </div>
@@ -181,7 +186,7 @@ export function AssessmentHistory() {
         </div>
       )}
 
-      <p className="text-sm text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         Showing {data.items.length} of {data.total} assessments.
       </p>
     </div>

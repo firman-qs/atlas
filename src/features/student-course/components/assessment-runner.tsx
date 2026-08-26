@@ -1,16 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ClipboardCheck,
-  LoaderCircle,
-  RefreshCw,
-} from "lucide-react";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-
 import { AtlasRichTextEditor } from "@/components/rich-text/atlas-rich-text-editor";
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -19,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
+import { learningObjectiveLabel } from "@/features/student-course/labels";
 import {
   studentAssessmentKeys,
   useAssessment,
@@ -30,6 +20,17 @@ import type {
   SubmitAttemptResult,
 } from "@/features/student-course/types";
 import { ApiError } from "@/lib/api/api-error";
+import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ClipboardCheck,
+  LoaderCircle,
+  RefreshCw,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 interface AssessmentRunnerProps {
   assessmentId: string;
@@ -254,8 +255,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <Button
             variant="ghost"
             nativeButton={false}
@@ -282,24 +283,27 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           )}
         </div>
 
-        <div>
+        <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge>{formatMode(assessment.mode)}</Badge>
+            <Badge variant="secondary">{formatMode(assessment.mode)}</Badge>
 
             <Badge variant="outline">{assessment.status}</Badge>
 
             {assessment.current_cycle_number !== null && (
-              <Badge variant="secondary">
+              <Badge variant="outline">
                 Cycle {assessment.current_cycle_number}
               </Badge>
             )}
           </div>
 
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-            {assessment.learning_objective.code.toUpperCase()}
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {learningObjectiveLabel(
+              assessment.learning_objective.code,
+              assessment.learning_objective.display_order,
+            )}
           </h1>
 
-          <p className="mt-2 text-muted-foreground">
+          <p className="max-w-3xl text-muted-foreground">
             {assessment.learning_objective.description}
           </p>
         </div>
@@ -396,10 +400,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           </CardContent>
         </Card>
       ) : question ? (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between gap-4">
-              <CardTitle>Question</CardTitle>
+        <Card className="overflow-visible">
+          <CardHeader className="border-b">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <CardTitle className="text-lg">Question</CardTitle>
 
               <Badge variant="secondary">
                 {question.content.type === "mcq" ? "Multiple choice" : "Essay"}
@@ -407,11 +411,13 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <AtlasRichTextViewer
-              value={question.prompt}
-              className="text-base leading-7"
-            />
+          <CardContent className="space-y-7">
+            <div className="rounded-lg bg-muted/25 p-4 sm:p-5">
+              <AtlasRichTextViewer
+                value={question.prompt}
+                className="text-base leading-7"
+              />
+            </div>
 
             {question.content.type === "mcq" ? (
               <div className="space-y-3">
@@ -422,12 +428,17 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                     <Button
                       key={option.id}
                       type="button"
-                      variant={selected ? "secondary" : "outline"}
+                      variant="outline"
+                      aria-pressed={selected}
                       disabled={
                         submitAttempt.isPending || attemptResult !== null
                       }
                       onClick={() => setSelectedOptionId(option.id)}
-                      className="h-auto w-full justify-start whitespace-normal p-4 text-left"
+                      className={cn(
+                        "h-auto w-full justify-start whitespace-normal rounded-lg p-4 text-left transition-colors",
+                        selected &&
+                          "border-primary/40 bg-primary/6 ring-1 ring-primary/20 hover:bg-primary/8",
+                      )}
                     >
                       <div className="min-w-0 flex-1">
                         <AtlasRichTextViewer
@@ -436,24 +447,26 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                         />
                       </div>
 
-                      {selected && <Badge variant="secondary">Selected</Badge>}
+                      {selected && <Badge className="shrink-0">Selected</Badge>}
                     </Button>
                   );
                 })}
 
                 {!attemptResult && (
-                  <Button
-                    onClick={() => handleSubmit(question)}
-                    disabled={!selectedOptionId || submitAttempt.isPending}
-                  >
-                    {submitAttempt.isPending && (
-                      <LoaderCircle className="animate-spin" />
-                    )}
+                  <div className="flex justify-end pt-2">
+                    <Button
+                      onClick={() => handleSubmit(question)}
+                      disabled={!selectedOptionId || submitAttempt.isPending}
+                    >
+                      {submitAttempt.isPending && (
+                        <LoaderCircle className="animate-spin" />
+                      )}
 
-                    {submitAttempt.isPending
-                      ? "Submitting..."
-                      : "Submit answer"}
-                  </Button>
+                      {submitAttempt.isPending
+                        ? "Submitting..."
+                        : "Submit answer"}
+                    </Button>
+                  </div>
                 )}
               </div>
             ) : (
@@ -499,9 +512,9 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             )}
 
             {attemptResult && (
-              <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
+              <div className="space-y-5 rounded-lg border bg-muted/25 p-4 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-medium">Answer evaluated</p>
+                  <p className="text-base font-semibold">Answer evaluated</p>
 
                   {attemptResult.is_correct !== null && (
                     <Badge
@@ -521,7 +534,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 </div>
 
                 {attemptResult.feedback && (
-                  <div>
+                  <div className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10">
                     <p className="text-sm font-medium">Feedback</p>
 
                     <AtlasRichTextViewer
@@ -532,7 +545,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 )}
 
                 {attemptResult.cycle_completed && (
-                  <div className="rounded-md border bg-background p-3">
+                  <div className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10">
                     <p className="text-sm font-medium">Cycle complete</p>
 
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -585,6 +598,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                   </div>
                 ) : (
                   <Button
+                    className="min-w-36"
                     onClick={handleNextQuestion}
                     disabled={issueQuestion.isPending}
                   >

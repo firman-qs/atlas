@@ -1,6 +1,14 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  screen,
+  render as testingLibraryRender,
+  waitFor,
+  within,
+} from "@testing-library/react";
+import type { ReactElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { ChatFullscreenProvider } from "@/features/student-chat/components/chat-fullscreen-provider";
 import { StudentChatWorkspace } from "@/features/student-chat/components/student-chat-workspace";
 
 const push = vi.hoisted(() => vi.fn());
@@ -80,6 +88,12 @@ const enrollment = {
     active_assessment: null,
   },
 };
+
+function render(ui: ReactElement) {
+  return testingLibraryRender(ui, {
+    wrapper: ChatFullscreenProvider,
+  });
+}
 
 describe("StudentChatWorkspace", () => {
   beforeEach(() => {
@@ -265,9 +279,7 @@ describe("StudentChatWorkspace", () => {
       }),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/UM032EM000\s*·\s*Electromagnetics/),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Electromagnetics")).toBeInTheDocument();
     expect(screen.getByText("Maxwell equations")).toBeInTheDocument();
     expect(screen.getByText("Electric flux")).toBeInTheDocument();
 
@@ -1768,5 +1780,69 @@ describe("StudentChatWorkspace", () => {
 
     scrollHeightSpy.mockRestore();
     clientHeightSpy.mockRestore();
+  });
+
+  it("opens chat session navigation from the conversation header", () => {
+    render(
+      <StudentChatWorkspace
+        enrollmentId="enrollment-1"
+        selectedChatSessionId="chat-session-2"
+      />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Open chats",
+      }),
+    );
+
+    const chatsDialog = screen.getByRole("dialog", {
+      name: "Chats",
+    });
+
+    expect(chatsDialog).toBeInTheDocument();
+
+    expect(
+      within(chatsDialog).getByText("Maxwell equations"),
+    ).toBeInTheDocument();
+
+    expect(within(chatsDialog).getByText("Electric flux")).toBeInTheDocument();
+
+    expect(
+      within(chatsDialog).getByRole("button", {
+        name: "New chat",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("enters and exits chat fullscreen mode", () => {
+    render(
+      <StudentChatWorkspace
+        enrollmentId="enrollment-1"
+        selectedChatSessionId="chat-session-2"
+      />,
+    );
+
+    const enterFullscreen = screen.getByRole("button", {
+      name: "Enter fullscreen",
+    });
+
+    fireEvent.click(enterFullscreen);
+
+    expect(
+      screen.getByRole("button", {
+        name: "Exit fullscreen",
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.keyDown(document, {
+      key: "Escape",
+    });
+
+    expect(
+      screen.getByRole("button", {
+        name: "Enter fullscreen",
+      }),
+    ).toBeInTheDocument();
   });
 });
