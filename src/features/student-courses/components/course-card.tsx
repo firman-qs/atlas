@@ -1,6 +1,6 @@
-import { ArrowRight, BookOpen, ClipboardCheck } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ArrowRight, BookOpen, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -46,8 +46,8 @@ export function CourseCard({ enrollment }: CourseCardProps) {
   return (
     <Card className="flex h-full flex-col">
       <CardHeader className="space-y-3">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0 flex-1 basis-48">
             <p className="text-sm font-medium text-muted-foreground">
               {course.code}
             </p>
@@ -55,7 +55,9 @@ export function CourseCard({ enrollment }: CourseCardProps) {
             <CardTitle className="mt-1 text-xl">{course.title}</CardTitle>
           </div>
 
-          <Badge variant={stateVariant}>{stateLabel}</Badge>
+          <Badge className="max-w-full" variant={stateVariant}>
+            {stateLabel}
+          </Badge>
         </div>
       </CardHeader>
 

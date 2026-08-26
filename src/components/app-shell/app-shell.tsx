@@ -1,18 +1,30 @@
+import { cookies } from "next/headers";
+
 import { AppHeader } from "@/components/app-shell/app-header";
 import { AppSidebar } from "@/components/app-shell/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 interface AppShellProps {
   children: React.ReactNode;
 }
 
-export function AppShell({ children }: AppShellProps) {
+export async function AppShell({ children }: AppShellProps) {
+  const cookieStore = await cookies();
+  const sidebarState = cookieStore.get("sidebar_state")?.value;
+
+  const defaultSidebarOpen = sidebarState !== "false";
+
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <AppSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
+
+      <SidebarInset className="h-svh min-w-0 overflow-hidden">
         <AppHeader />
-        <main className="flex-1 p-4 md:p-6">{children}</main>
-      </div>
-    </div>
+
+        <main className="min-h-0 flex-1 overflow-y-auto bg-muted/20 p-4 md:p-6">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
