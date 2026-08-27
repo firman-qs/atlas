@@ -48,7 +48,7 @@ describe("Landing Components Integration", () => {
 
     expect(screen.getAllByText(/ATLAS/i).length).toBeGreaterThan(0);
     expect(screen.getByText("Video Guides")).toBeInTheDocument();
-    expect(screen.getByText("The people behind ATLAS")).toBeInTheDocument();
+    expect(screen.getByText("ATLAS Development Team")).toBeInTheDocument();
     expect(screen.getByText("Firman Qashdus Sabil")).toBeInTheDocument();
     expect(screen.getByText("Student / Developer")).toBeInTheDocument();
     expect(screen.getByText("Publication Status")).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe("Landing Components Integration", () => {
 
     expect(screen.getAllByText(/ATLAS/i).length).toBeGreaterThan(0);
     expect(screen.getByText("Panduan Video")).toBeInTheDocument();
-    expect(screen.getByText("Sosok di balik ATLAS")).toBeInTheDocument();
+    expect(screen.getByText("Tim Pengembang ATLAS")).toBeInTheDocument();
     expect(screen.getByText("Firman Qashdus Sabil")).toBeInTheDocument();
     expect(screen.getAllByText("Mahasiswa").length).toBeGreaterThan(0);
     expect(screen.getByText("Status Publikasi")).toBeInTheDocument();
