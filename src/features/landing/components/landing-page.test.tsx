@@ -52,7 +52,7 @@ describe("Landing Components Integration", () => {
     expect(screen.getByText("Firman Qashdus Sabil")).toBeInTheDocument();
     expect(screen.getByText("Student / Developer")).toBeInTheDocument();
     expect(screen.getByText("Publication Status")).toBeInTheDocument();
-    expect(screen.getByText("Funding Acknowledgement")).toBeInTheDocument();
+    expect(screen.getByText("Funding")).toBeInTheDocument();
     expect(screen.getByText("© 2026 ATLAS. All rights reserved.")).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe("Landing Components Integration", () => {
     expect(screen.getByText("Firman Qashdus Sabil")).toBeInTheDocument();
     expect(screen.getAllByText("Mahasiswa").length).toBeGreaterThan(0);
     expect(screen.getByText("Status Publikasi")).toBeInTheDocument();
-    expect(screen.getByText("Pengakuan Pendanaan")).toBeInTheDocument();
+    expect(screen.getByText("Pendanaan")).toBeInTheDocument();
     expect(screen.getByText("© 2026 ATLAS. Hak cipta dilindungi undang-undang.")).toBeInTheDocument();
   });
 });

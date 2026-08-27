@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import {
   BookOpenText,
   Building2,
-  Landmark,
   User,
 } from "lucide-react";
 
@@ -165,34 +164,37 @@ export function ProjectSection() {
           </ScrollReveal>
         </div>
 
-        {/* 3. Funding Acknowledgement (Vertical Layout Below Publication, Not in a Card) */}
+        {/* 3. Funding (Center-aligned with special Blue highlighting) */}
         <div className="border-t border-border/70 pt-14">
           <ScrollReveal delayMs={100}>
-            <div className="flex flex-col gap-3.5">
-              <div className="flex items-center gap-2">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Landmark className="size-4.5" />
+            <div className="relative overflow-hidden rounded-2xl border border-blue-500/30 bg-gradient-to-b from-blue-500/10 via-blue-500/5 to-transparent p-8 sm:p-10 text-center shadow-xs backdrop-blur-md dark:border-blue-500/25 dark:from-blue-950/40 dark:via-blue-950/20 dark:to-transparent">
+              {/* Soft ambient background glow */}
+              <div
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-80 rounded-full bg-blue-500/15 blur-3xl"
+                aria-hidden="true"
+              />
+
+              <div className="relative flex flex-col items-center gap-3 text-center">
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-blue-950 dark:text-blue-100">
+                  {t("funding.title")}
+                </h3>
+
+                <div className="text-base sm:text-lg font-medium text-foreground">
+                  <span>{t("funding.institution")}</span>
+                  <span className="mx-2 text-muted-foreground/60 hidden sm:inline">·</span>
+                  <span className="block sm:inline text-sm sm:text-base text-muted-foreground mt-0.5 sm:mt-0">
+                    {t("funding.department")}
+                  </span>
                 </div>
-                <Badge variant="secondary" className="text-xs sm:text-sm">{t("funding.badge")}</Badge>
+
+                <p className="text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400">
+                  {t("funding.type")}
+                </p>
+
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground max-w-2xl mx-auto">
+                  {t("funding.description")}
+                </p>
               </div>
-
-              <h3 className="text-2xl font-semibold tracking-tight text-foreground">
-                {t("funding.title")}
-              </h3>
-
-              <div className="text-base font-medium text-foreground">
-                {t("funding.institution")}
-                <span className="mx-2 text-muted-foreground/60">·</span>
-                <span className="text-sm font-normal text-muted-foreground">{t("funding.department")}</span>
-              </div>
-
-              <p className="text-sm font-medium text-primary">
-                {t("funding.type")}
-              </p>
-
-              <p className="text-sm sm:text-base leading-relaxed text-muted-foreground max-w-3xl">
-                {t("funding.description")}
-              </p>
             </div>
           </ScrollReveal>
         </div>

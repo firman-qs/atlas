@@ -1418,8 +1418,7 @@
         "description": "Research findings and evaluation data from the electromagnetics pilot implementation will be published."
       },
       "funding": {
-        "badge": "Institutional Grant",
-        "title": "Funding Acknowledgement",
+        "title": "Funding",
         "institution": "Universitas Negeri Malang",
         "type": "Internal Non-PNBP Research Funding",
         "department": "Department of Physics, Faculty of Mathematics and Natural Sciences",
