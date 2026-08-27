@@ -20,7 +20,7 @@ export function LandingHero() {
           {/* Left Column: Clear, High-Contrast Typography & CTA */}
           <div className="text-left lg:col-span-7">
             <ScrollReveal delayMs={50}>
-              <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur-xs">
+              <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-4 py-1.5 text-sm font-medium text-muted-foreground backdrop-blur-xs">
                 <span className="flex size-2 rounded-full bg-primary animate-pulse" />
                 <span>{t("badge")}</span>
               </div>
