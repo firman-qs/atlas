@@ -1,0 +1,10 @@
+{
+  "metadata": {"description": "Adaptive formative assessment for conceptual learning"},
+  "common": {"save": "Save", "cancel": "Cancel"},
+  "language": {
+    "label": "Language",
+    "change": "Change language",
+    "english": "English",
+    "indonesian": "Bahasa Indonesia"
+  }
+}

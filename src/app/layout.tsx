@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { AppProvider } from "@/components/providers/app-provider";
@@ -17,15 +20,21 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "ATLAS",
-  description: "Adaptive formative assessment for conceptual learning",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+  return {
+    title: "ATLAS",
+    description: t("description"),
+  };
+}
+
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={cn(
         "h-full",
         "antialiased",
@@ -37,14 +46,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AppProvider>{children}</AppProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Jakarta">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AppProvider>{children}</AppProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

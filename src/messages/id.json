@@ -1,0 +1,10 @@
+{
+  "metadata": {"description": "Asesmen formatif adaptif untuk pembelajaran konseptual"},
+  "common": {"save": "Simpan", "cancel": "Batalkan"},
+  "language": {
+    "label": "Bahasa",
+    "change": "Ubah bahasa",
+    "english": "English",
+    "indonesian": "Bahasa Indonesia"
+  }
+}
