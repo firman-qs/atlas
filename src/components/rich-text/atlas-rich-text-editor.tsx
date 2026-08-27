@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Button } from "@/components/ui/button";
 import { mediaUrl, uploadMedia } from "@/features/media/api/media-client";
@@ -47,6 +48,7 @@ function AtlasMilkdownEditor({
   placeholder,
   disabled,
 }: AtlasMilkdownEditorProps) {
+  const t = useTranslations("richText");
   const onChangeRef = useRef(onChange);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ function AtlasMilkdownEditor({
             attributes: {
               ...previous.attributes,
               class: "atlas-prosemirror",
-              "aria-label": placeholder ?? "Rich text editor",
+              "aria-label": placeholder ?? t("editorAriaLabel"),
               "data-placeholder": placeholder ?? "",
             },
           }));
@@ -82,7 +84,7 @@ function AtlasMilkdownEditor({
         .use(commonmark)
         .use(history)
         .use(listener),
-    [],
+    [disabled, initialValue, placeholder, t],
   );
 
   return <Milkdown />;
@@ -149,6 +151,7 @@ export function AtlasRichTextEditor({
   className,
   mediaPurpose,
 }: AtlasRichTextEditorProps) {
+  const t = useTranslations("richText");
   /*
    * Capture only the value used to create the Milkdown document.
    *
@@ -191,7 +194,7 @@ export function AtlasRichTextEditor({
       onChange(nextValue);
     } catch (error) {
       setImageUploadError(
-        error instanceof Error ? error.message : "Unable to upload image.",
+        error instanceof Error ? error.message : t("uploadError"),
       );
     } finally {
       setIsUploadingImage(false);
@@ -217,7 +220,7 @@ export function AtlasRichTextEditor({
               className="sr-only"
               disabled={disabled || isUploadingImage}
               onChange={handleImageSelected}
-              aria-label="Choose image"
+              aria-label={t("chooseImage")}
             />
 
             <Button
@@ -233,7 +236,7 @@ export function AtlasRichTextEditor({
                 <ImagePlus />
               )}
 
-              {isUploadingImage ? "Uploading..." : "Add image"}
+              {isUploadingImage ? t("uploading") : t("addImage")}
             </Button>
           </>
         )}
@@ -246,7 +249,7 @@ export function AtlasRichTextEditor({
         >
           {isPreviewVisible ? <EyeOff /> : <Eye />}
 
-          {isPreviewVisible ? "Hide preview" : "Preview"}
+          {isPreviewVisible ? t("hidePreview") : t("preview")}
         </Button>
       </div>
 
@@ -273,14 +276,14 @@ export function AtlasRichTextEditor({
       {isPreviewVisible && (
         <div className="border-t bg-muted/10 p-4">
           <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Rendered preview
+            {t("renderedPreview")}
           </p>
 
           {value.trim() ? (
             <AtlasRichTextViewer value={value} />
           ) : (
             <p className="text-sm text-muted-foreground">
-              Nothing to preview yet.
+              {t("nothingToPreview")}
             </p>
           )}
         </div>

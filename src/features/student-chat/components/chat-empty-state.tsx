@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   Bot,
   Maximize2,
@@ -25,6 +26,8 @@ export function ChatEmptyState({
   onOpenSessions,
   onToggleFullscreen,
 }: ChatEmptyStateProps) {
+  const t = useTranslations("chat");
+
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col">
       <div className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
@@ -34,14 +37,14 @@ export function ChatEmptyState({
             variant="ghost"
             size="icon-sm"
             className="xl:hidden"
-            aria-label="Open chats"
+            aria-label={t("actions.openChats")}
             onClick={onOpenSessions}
           >
             <PanelLeft />
           </Button>
 
           <div className="min-w-0">
-            <h2 className="font-semibold tracking-tight">AI Tutor</h2>
+            <h2 className="font-semibold tracking-tight">{t("aiTutor")}</h2>
 
             <p className="truncate text-xs text-muted-foreground">
               {courseTitle}
@@ -53,7 +56,7 @@ export function ChatEmptyState({
           type="button"
           variant="ghost"
           size="icon"
-          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          aria-label={isFullscreen ? t("actions.exitFullscreen") : t("actions.enterFullscreen")}
           onClick={onToggleFullscreen}
         >
           {isFullscreen ? <Minimize2 /> : <Maximize2 />}
@@ -67,12 +70,11 @@ export function ChatEmptyState({
           </div>
 
           <h3 className="mt-4 text-xl font-semibold">
-            Learn with your ATLAS tutor
+            {t("learnWithTutor")}
           </h3>
 
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Ask questions about this course, explore concepts you are learning,
-            and continue earlier conversations with course-aware guidance.
+            {t("learnWithTutorPrompt")}
           </p>
 
           <Button
@@ -83,7 +85,7 @@ export function ChatEmptyState({
           >
             <MessageSquarePlus />
 
-            {isCreating ? "Creating..." : "Start a new chat"}
+            {isCreating ? t("creating") : t("startNewChat")}
           </Button>
         </div>
       </div>

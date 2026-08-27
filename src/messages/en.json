@@ -353,6 +353,76 @@
       "canceling": "Canceling..."
     }
   },
+  "chat": {
+    "aiTutor": "AI Tutor",
+    "chats": "Chats",
+    "chatsDescription": "Your AI Tutor conversations for {courseTitle}.",
+    "newChat": "New chat",
+    "creating": "Creating...",
+    "startNewChat": "Start a new chat",
+    "startConversation": "Start this conversation",
+    "startConversationPrompt": "Ask about concepts from this course. Your ATLAS tutor will use the course curriculum and your learning progress as context.",
+    "learnWithTutor": "Learn with your ATLAS tutor",
+    "learnWithTutorPrompt": "Ask questions about this course, explore concepts you are learning, and continue earlier conversations with course-aware guidance.",
+    "recentChats": "Recent chats",
+    "noConversations": "No conversations yet.",
+    "loadMoreChats": "Load more chats",
+    "loadOlderMessages": "Load older messages",
+    "backToCourse": "Back to course",
+    "startLearningFirst": "Start learning in this course before using the AI Tutor.",
+    "composer": {
+      "placeholder": "Ask about what you're learning...",
+      "ariaLabel": "Message your ATLAS tutor",
+      "attachImage": "Attach image",
+      "chooseImage": "Choose image",
+      "addImageHint": "Add up to 2 images",
+      "removeImage": "Remove {name}",
+      "sendMessage": "Send message",
+      "contextHint": "ATLAS uses your course curriculum and learning progress as context.",
+      "maxImagesError": "A chat message can include at most 2 images.",
+      "uploadError": "Unable to upload this image.",
+      "sendError": "Unable to send your message."
+    },
+    "actions": {
+      "openChats": "Open chats",
+      "enterFullscreen": "Enter fullscreen",
+      "exitFullscreen": "Exit fullscreen",
+      "sessionActions": "Chat session actions",
+      "rename": "Rename",
+      "archive": "Archive"
+    },
+    "rename": {
+      "title": "Rename chat",
+      "description": "Choose a title that makes this conversation easy to find later.",
+      "inputLabel": "Chat title",
+      "save": "Save",
+      "error": "Unable to rename this chat."
+    },
+    "archive": {
+      "title": "Archive chat?",
+      "description": "This chat will be removed from your recent chats. You will no longer be able to open it from the student chat workspace.",
+      "confirm": "Archive chat",
+      "error": "Unable to archive this chat."
+    },
+    "errors": {
+      "loadCourse": "Unable to load this course.",
+      "loadSessions": "Unable to load your chat sessions.",
+      "createSession": "Unable to create a new chat session.",
+      "loadSession": "Unable to load this chat session.",
+      "loadMessages": "Unable to load chat messages."
+    }
+  },
+  "richText": {
+    "editorAriaLabel": "Rich text editor",
+    "chooseImage": "Choose image",
+    "addImage": "Add image",
+    "uploading": "Uploading...",
+    "preview": "Preview",
+    "hidePreview": "Hide preview",
+    "renderedPreview": "Rendered preview",
+    "nothingToPreview": "Nothing to preview yet.",
+    "uploadError": "Unable to upload image."
+  },
   "errors": {
     "dashboard": "Unable to load your dashboard.",
     "courses": "Unable to load your courses.",

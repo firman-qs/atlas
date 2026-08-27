@@ -46,6 +46,7 @@ import {
   Pencil,
   User,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChatComposer } from "./chat-composer";
@@ -71,6 +72,8 @@ export function ChatConversation({
   onToggleFullscreen,
   onOpenSessions,
 }: ChatConversationProps) {
+  const t = useTranslations("chat");
+  const common = useTranslations("common");
   const router = useRouter();
 
   const sessionQuery = useChatSession(chatSessionId);
@@ -253,7 +256,7 @@ export function ChatConversation({
           <AlertDescription>
             {sessionQuery.error instanceof Error
               ? sessionQuery.error.message
-              : "Unable to load this chat session."}
+              : t("errors.loadSession")}
           </AlertDescription>
         </Alert>
       </section>
@@ -267,7 +270,7 @@ export function ChatConversation({
           <AlertDescription>
             {messagesQuery.error instanceof Error
               ? messagesQuery.error.message
-              : "Unable to load chat messages."}
+              : t("errors.loadMessages")}
           </AlertDescription>
         </Alert>
       </section>
@@ -290,7 +293,7 @@ export function ChatConversation({
             variant="ghost"
             size="icon-sm"
             className="xl:hidden"
-            aria-label="Open chats"
+            aria-label={t("actions.openChats")}
             onClick={onOpenSessions}
           >
             <PanelLeft />
@@ -302,7 +305,7 @@ export function ChatConversation({
             </h2>
 
             <p className="truncate text-xs text-muted-foreground">
-              {courseTitle} · AI Tutor
+              {courseTitle} · {t("aiTutor")}
             </p>
           </div>
         </div>
@@ -312,7 +315,7 @@ export function ChatConversation({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            aria-label={isFullscreen ? t("actions.exitFullscreen") : t("actions.enterFullscreen")}
             onClick={onToggleFullscreen}
           >
             {isFullscreen ? <Minimize2 /> : <Maximize2 />}
@@ -324,7 +327,7 @@ export function ChatConversation({
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Chat session actions"
+                  aria-label={t("actions.sessionActions")}
                 />
               }
             >
@@ -339,7 +342,7 @@ export function ChatConversation({
                 }}
               >
                 <Pencil />
-                Rename
+                {t("actions.rename")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 variant="destructive"
@@ -348,7 +351,7 @@ export function ChatConversation({
                 }}
               >
                 <Archive />
-                Archive
+                {t("actions.archive")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -374,7 +377,7 @@ export function ChatConversation({
               {messagesQuery.isFetchingNextPage && (
                 <LoaderCircle className="animate-spin" />
               )}
-              Load older messages
+              {t("loadOlderMessages")}
             </Button>
           </div>
         )}
@@ -384,11 +387,10 @@ export function ChatConversation({
             <div className="max-w-md">
               <Bot className="mx-auto size-8 text-muted-foreground" />
 
-              <p className="mt-3 font-medium">Start this conversation</p>
+              <p className="mt-3 font-medium">{t("startConversation")}</p>
 
               <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                Ask about concepts from this course. Your ATLAS tutor will use
-                the course curriculum and your learning progress as context.
+                {t("startConversationPrompt")}
               </p>
             </div>
           </div>
@@ -443,11 +445,10 @@ export function ChatConversation({
       <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Archive chat?</AlertDialogTitle>
+            <AlertDialogTitle>{t("archive.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              This chat will be removed from your recent chats. You will no
-              longer be able to open it from the student chat workspace.
+              {t("archive.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -456,14 +457,14 @@ export function ChatConversation({
               <AlertDescription>
                 {archiveSession.error instanceof Error
                   ? archiveSession.error.message
-                  : "Unable to archive this chat."}
+                  : t("archive.error")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={archiveSession.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -476,7 +477,7 @@ export function ChatConversation({
               {archiveSession.isPending && (
                 <LoaderCircle className="animate-spin" />
               )}
-              Archive chat
+              {t("archive.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -494,10 +495,10 @@ export function ChatConversation({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rename chat</DialogTitle>
+            <DialogTitle>{t("rename.title")}</DialogTitle>
 
             <DialogDescription>
-              Choose a title that makes this conversation easy to find later.
+              {t("rename.description")}
             </DialogDescription>
           </DialogHeader>
 
@@ -506,13 +507,13 @@ export function ChatConversation({
               <AlertDescription>
                 {updateSession.error instanceof Error
                   ? updateSession.error.message
-                  : "Unable to rename this chat."}
+                  : t("rename.error")}
               </AlertDescription>
             </Alert>
           )}
 
           <Input
-            aria-label="Chat title"
+            aria-label={t("rename.inputLabel")}
             value={title}
             maxLength={255}
             disabled={updateSession.isPending}
@@ -536,7 +537,7 @@ export function ChatConversation({
                 setRenameOpen(false);
               }}
             >
-              Cancel
+              {common("cancel")}
             </Button>
 
             <Button
@@ -549,7 +550,7 @@ export function ChatConversation({
               {updateSession.isPending && (
                 <LoaderCircle className="animate-spin" />
               )}
-              Save
+              {t("rename.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

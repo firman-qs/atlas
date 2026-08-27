@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ImagePlus, LoaderCircle, Send, X } from "lucide-react";
 import { ChangeEvent, SubmitEvent, useRef, useState } from "react";
 
@@ -48,6 +49,7 @@ export function ChatComposer({
   chatSessionId,
   learningRecordId,
 }: ChatComposerProps) {
+  const t = useTranslations("chat.composer");
   const [content, setContent] = useState("");
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -74,7 +76,7 @@ export function ChatComposer({
     }
 
     if (attachments.length >= 2) {
-      setUploadError("A chat message can include at most 2 images.");
+      setUploadError(t("maxImagesError"));
 
       return;
     }
@@ -96,7 +98,7 @@ export function ChatComposer({
       ]);
     } catch (error) {
       setUploadError(
-        error instanceof Error ? error.message : "Unable to upload this image.",
+        error instanceof Error ? error.message : t("uploadError"),
       );
     } finally {
       setIsUploading(false);
@@ -137,7 +139,7 @@ export function ChatComposer({
           <AlertDescription>
             {createMessage.error instanceof Error
               ? createMessage.error.message
-              : "Unable to send your message."}
+              : t("sendError")}
           </AlertDescription>
         </Alert>
       )}
@@ -153,7 +155,7 @@ export function ChatComposer({
           ref={fileInputRef}
           type="file"
           accept="image/png,image/jpeg,image/webp"
-          aria-label="Attach image"
+          aria-label={t("attachImage")}
           className="sr-only"
           onChange={(event) => {
             void handleAttachmentChange(event);
@@ -187,7 +189,7 @@ export function ChatComposer({
                     type="button"
                     variant="secondary"
                     size="icon-sm"
-                    aria-label={`Remove ${attachment.alt}`}
+                    aria-label={t("removeImage", { name: attachment.alt })}
                     className="absolute right-1 top-1 size-6 rounded-full shadow-sm"
                     onClick={() => removeAttachment(attachment.media.id)}
                     disabled={createMessage.isPending}
@@ -206,8 +208,8 @@ export function ChatComposer({
           )}
 
           <Textarea
-            aria-label="Message your ATLAS tutor"
-            placeholder="Ask about what you're learning..."
+            aria-label={t("ariaLabel")}
+            placeholder={t("placeholder")}
             value={content}
             onChange={(event) => setContent(event.target.value)}
             maxLength={4000}
@@ -226,7 +228,7 @@ export function ChatComposer({
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label="Choose image"
+                aria-label={t("chooseImage")}
                 disabled={
                   isUploading ||
                   createMessage.isPending ||
@@ -244,14 +246,14 @@ export function ChatComposer({
               </Button>
 
               <span className="hidden truncate text-xs text-muted-foreground sm:block">
-                Add up to 2 images
+                {t("addImageHint")}
               </span>
             </div>
 
             <Button
               type="submit"
               size="icon"
-              aria-label="Send message"
+              aria-label={t("sendMessage")}
               disabled={!canSend}
               className="rounded-full"
             >
@@ -266,7 +268,7 @@ export function ChatComposer({
 
         <div className="mt-1 flex items-center justify-between gap-3 px-2 text-[10px] text-muted-foreground/80">
           <p className="truncate">
-            ATLAS uses your course curriculum and learning progress as context.
+            {t("contextHint")}
           </p>
 
           <span

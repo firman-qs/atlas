@@ -353,6 +353,76 @@
       "canceling": "Membatalkan..."
     }
   },
+  "chat": {
+    "aiTutor": "Tutor AI",
+    "chats": "Percakapan",
+    "chatsDescription": "Percakapan Tutor AI Anda untuk {courseTitle}.",
+    "newChat": "Percakapan baru",
+    "creating": "Membuat...",
+    "startNewChat": "Mulai percakapan baru",
+    "startConversation": "Mulai percakapan ini",
+    "startConversationPrompt": "Tanyakan konsep dari mata kuliah ini. Tutor ATLAS Anda akan menggunakan kurikulum mata kuliah dan progres belajar Anda sebagai konteks.",
+    "learnWithTutor": "Belajar bersama tutor ATLAS Anda",
+    "learnWithTutorPrompt": "Ajukan pertanyaan seputar mata kuliah ini, pelajari konsep yang sedang Anda pelajari, dan lanjutkan percakapan sebelumnya dengan bimbingan yang selaras dengan mata kuliah.",
+    "recentChats": "Percakapan terbaru",
+    "noConversations": "Belum ada percakapan.",
+    "loadMoreChats": "Muat percakapan lainnya",
+    "loadOlderMessages": "Muat pesan sebelumnya",
+    "backToCourse": "Kembali ke mata kuliah",
+    "startLearningFirst": "Mulai belajar pada mata kuliah ini sebelum menggunakan Tutor AI.",
+    "composer": {
+      "placeholder": "Tanyakan tentang materi yang sedang Anda pelajari...",
+      "ariaLabel": "Ketik pesan untuk tutor ATLAS Anda",
+      "attachImage": "Lampirkan gambar",
+      "chooseImage": "Pilih gambar",
+      "addImageHint": "Tambahkan hingga 2 gambar",
+      "removeImage": "Hapus {name}",
+      "sendMessage": "Kirim pesan",
+      "contextHint": "ATLAS menggunakan kurikulum mata kuliah dan progres pembelajaran Anda sebagai konteks.",
+      "maxImagesError": "Pesan percakapan hanya dapat memuat maksimal 2 gambar.",
+      "uploadError": "Gagal mengunggah gambar ini.",
+      "sendError": "Gagal mengirim pesan Anda."
+    },
+    "actions": {
+      "openChats": "Buka daftar percakapan",
+      "enterFullscreen": "Masuk ke layar penuh",
+      "exitFullscreen": "Keluar dari layar penuh",
+      "sessionActions": "Tindakan sesi percakapan",
+      "rename": "Ubah nama",
+      "archive": "Arsipkan"
+    },
+    "rename": {
+      "title": "Ubah nama percakapan",
+      "description": "Pilih judul yang memudahkan Anda menemukan percakapan ini nanti.",
+      "inputLabel": "Judul percakapan",
+      "save": "Simpan",
+      "error": "Gagal mengubah nama percakapan ini."
+    },
+    "archive": {
+      "title": "Arsipkan percakapan?",
+      "description": "Percakapan ini akan dihapus dari daftar percakapan terbaru Anda. Anda tidak dapat lagi membukanya dari ruang kerja percakapan mahasiswa.",
+      "confirm": "Arsipkan percakapan",
+      "error": "Gagal mengarsipkan percakapan ini."
+    },
+    "errors": {
+      "loadCourse": "Gagal memuat mata kuliah ini.",
+      "loadSessions": "Gagal memuat sesi percakapan Anda.",
+      "createSession": "Gagal membuat sesi percakapan baru.",
+      "loadSession": "Gagal memuat sesi percakapan ini.",
+      "loadMessages": "Gagal memuat pesan percakapan."
+    }
+  },
+  "richText": {
+    "editorAriaLabel": "Editor teks kaya",
+    "chooseImage": "Pilih gambar",
+    "addImage": "Tambah gambar",
+    "uploading": "Mengunggah...",
+    "preview": "Pratinjau",
+    "hidePreview": "Sembunyikan pratinjau",
+    "renderedPreview": "Pratinjau tampilan",
+    "nothingToPreview": "Belum ada konten untuk dipratinjau.",
+    "uploadError": "Gagal mengunggah gambar."
+  },
   "errors": {
     "dashboard": "Tidak dapat memuat dasbor Anda.",
     "courses": "Tidak dapat memuat mata kuliah Anda.",

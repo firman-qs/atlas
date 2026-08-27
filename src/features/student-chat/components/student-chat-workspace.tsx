@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ export function StudentChatWorkspace({
   enrollmentId,
   selectedChatSessionId,
 }: StudentChatWorkspaceProps) {
+  const t = useTranslations("chat");
   const router = useRouter();
 
   const [sessionsOpen, setSessionsOpen] = useState(false);
@@ -73,7 +75,7 @@ export function StudentChatWorkspace({
         <AlertDescription>
           {enrollmentQuery.error instanceof Error
             ? enrollmentQuery.error.message
-            : "Unable to load this course."}
+            : t("errors.loadCourse")}
         </AlertDescription>
       </Alert>
     );
@@ -96,12 +98,12 @@ export function StudentChatWorkspace({
           )}
         >
           <ArrowLeft />
-          Back to course
+          {t("backToCourse")}
         </Link>
 
         <Alert>
           <AlertDescription>
-            Start learning in this course before using the AI Tutor.
+            {t("startLearningFirst")}
           </AlertDescription>
         </Alert>
       </div>
@@ -114,7 +116,7 @@ export function StudentChatWorkspace({
         <AlertDescription>
           {sessionsQuery.error instanceof Error
             ? sessionsQuery.error.message
-            : "Unable to load your chat sessions."}
+            : t("errors.loadSessions")}
         </AlertDescription>
       </Alert>
     );
@@ -161,7 +163,7 @@ export function StudentChatWorkspace({
           <AlertDescription>
             {createSession.error instanceof Error
               ? createSession.error.message
-              : "Unable to create a new chat session."}
+              : t("errors.createSession")}
           </AlertDescription>
         </Alert>
       )}
@@ -212,10 +214,10 @@ export function StudentChatWorkspace({
           className="w-[min(20rem,calc(100vw-2rem))] gap-0 p-0 xl:hidden"
         >
           <SheetHeader className="border-b">
-            <SheetTitle>Chats</SheetTitle>
+            <SheetTitle>{t("chats")}</SheetTitle>
 
             <SheetDescription>
-              Your AI Tutor conversations for {course.title}.
+              {t("chatsDescription", { courseTitle: course.title })}
             </SheetDescription>
           </SheetHeader>
 

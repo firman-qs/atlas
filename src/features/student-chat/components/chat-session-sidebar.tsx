@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LoaderCircle, MessageSquare, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -29,6 +30,8 @@ export function ChatSessionSidebar({
   onLoadMoreSessions,
   onCreateSession,
 }: ChatSessionSidebarProps) {
+  const t = useTranslations("chat");
+
   return (
     <aside className="flex min-h-0 h-full flex-col bg-muted/20">
       <div className="p-4">
@@ -40,7 +43,7 @@ export function ChatSessionSidebar({
         >
           {isCreating ? <LoaderCircle className="animate-spin" /> : <Plus />}
 
-          {isCreating ? "Creating..." : "New chat"}
+          {isCreating ? t("creating") : t("newChat")}
         </Button>
       </div>
 
@@ -48,12 +51,12 @@ export function ChatSessionSidebar({
 
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         <p className="px-2 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Recent chats
+          {t("recentChats")}
         </p>
 
         {sessions.length === 0 ? (
           <p className="px-2 py-4 text-sm text-muted-foreground">
-            No conversations yet.
+            {t("noConversations")}
           </p>
         ) : (
           <nav className="space-y-1">
@@ -92,7 +95,7 @@ export function ChatSessionSidebar({
                   {isLoadingMoreSessions && (
                     <LoaderCircle className="animate-spin" />
                   )}
-                  Load more chats
+                  {t("loadMoreChats")}
                 </Button>
               </div>
             )}
