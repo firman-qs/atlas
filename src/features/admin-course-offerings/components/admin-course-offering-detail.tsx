@@ -34,7 +34,10 @@ import {
   useAdminCourseOffering,
   useDeleteAdminCourseOffering,
 } from "@/features/admin-course-offerings/queries";
-import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
+import {
+  formatAcademicSemester,
+  isAcademicSemester,
+} from "@/features/admin-academic-terms/semester";
 
 interface AdminCourseOfferingDetailProps {
   courseOfferingId: string;
@@ -60,7 +63,10 @@ export function AdminCourseOfferingDetail({
   const common = useTranslations("common");
 
   function getSemesterLabel(semester: string) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return semester;
   }
 
   const router = useRouter();

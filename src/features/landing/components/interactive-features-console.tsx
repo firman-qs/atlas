@@ -14,6 +14,7 @@ import {
   User,
 } from "lucide-react";
 
+import { useTranslations } from "next-intl";
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -221,6 +222,8 @@ const chatScenarios = [
 ];
 
 export function InteractiveFeaturesConsole() {
+  const t = useTranslations("landing.capabilities");
+
   // Tab 1: Concept & SOLO Stepper state
   const [selectedConceptId, setSelectedConceptId] = useState<string>("superposition");
   const [selectedSoloStage, setSelectedSoloStage] = useState<number>(1);
@@ -256,16 +259,15 @@ export function InteractiveFeaturesConsole() {
         {/* Section Header */}
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold text-primary">
-            Platform Capabilities
+            {t("badge")}
           </p>
 
           <h2 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            Built for deep conceptual progression
+            {t("title")}
           </h2>
 
           <p className="mt-3 text-base text-muted-foreground">
-            Explore authentic ATLAS interfaces for conceptual progress tracking,
-            formative assessment with KaTeX math, course-grounded AI tutoring, and curriculum governance.
+            {t("description")}
           </p>
         </ScrollReveal>
 
@@ -275,12 +277,12 @@ export function InteractiveFeaturesConsole() {
             <TabsList className="h-10 p-1 bg-muted/80 backdrop-blur-sm">
               <TabsTrigger value="progress" className="gap-2 text-xs font-medium">
                 <ListTree className="size-3.5" />
-                <span>Learning Progress</span>
+                <span>{t("tabs.progress")}</span>
               </TabsTrigger>
 
               <TabsTrigger value="assessment" className="gap-2 text-xs font-medium">
                 <ClipboardCheck className="size-3.5" />
-                <span>Formative Assessment</span>
+                <span>{t("tabs.assessment")}</span>
               </TabsTrigger>
 
               <TabsTrigger value="chat" className="gap-2 text-xs font-medium">
@@ -291,12 +293,12 @@ export function InteractiveFeaturesConsole() {
                   height={16}
                   className="size-4 object-contain"
                 />
-                <span>AI Learning Assistant</span>
+                <span>{t("tabs.chat")}</span>
               </TabsTrigger>
 
               <TabsTrigger value="instructor" className="gap-2 text-xs font-medium">
                 <BrainCircuit className="size-3.5" />
-                <span>Instructor Governance</span>
+                <span>{t("tabs.instructor")}</span>
               </TabsTrigger>
             </TabsList>
           </ScrollReveal>
@@ -312,20 +314,23 @@ export function InteractiveFeaturesConsole() {
                         <Badge variant="outline" className="font-mono">
                           PHYS102
                         </Badge>
-                        <Badge variant="secondary">In Progress</Badge>
+                        <Badge variant="secondary">{t("progress.inProgress")}</Badge>
                       </div>
                       <CardTitle className="mt-1.5 text-lg font-semibold">
-                        General Physics II: Electromagnetism
+                        {t("progress.courseTitle")}
                       </CardTitle>
                       <CardDescription>
-                        Learning Objective 01: Electrostatic Fields and Vector Superposition
+                        {t("progress.objectiveTitle")}
                       </CardDescription>
                     </div>
 
                     <div className="text-left sm:text-right">
-                      <p className="text-xs text-muted-foreground">Objective Mastery</p>
+                      <p className="text-xs text-muted-foreground">{t("progress.objectiveMastery")}</p>
                       <p className="text-base font-semibold tabular-nums">
-                        {currentConcept.isMastered ? "2 of 3" : "1 of 3"} Concepts Mastered
+                        {t("progress.conceptsMastered", {
+                          mastered: currentConcept.isMastered ? 2 : 1,
+                          total: 3,
+                        })}
                       </p>
                     </div>
                   </div>
@@ -347,7 +352,7 @@ export function InteractiveFeaturesConsole() {
                   {/* Selectable Concept Rows */}
                   <div className="space-y-2">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Ordered Concepts (Click to Inspect)
+                      {t("progress.orderedConcepts")}
                     </p>
 
                     <div className="grid gap-2 sm:grid-cols-3">
@@ -375,11 +380,11 @@ export function InteractiveFeaturesConsole() {
                               {concept.isMastered ? (
                                 <Badge className="gap-1 text-[10px] bg-emerald-600 hover:bg-emerald-600 text-white">
                                   <Check className="size-2.5" />
-                                  Mastered
+                                  {t("progress.mastered")}
                                 </Badge>
                               ) : (
                                 <Badge variant="outline" className="text-[10px]">
-                                  In Progress
+                                  {t("progress.inProgress")}
                                 </Badge>
                               )}
                             </div>
@@ -389,7 +394,10 @@ export function InteractiveFeaturesConsole() {
                             </p>
 
                             <p className="mt-1 text-[11px] text-muted-foreground">
-                              {concept.masteredLevels} of {concept.totalLevels} levels mastered
+                              {t("progress.levelsMastered", {
+                                mastered: concept.masteredLevels,
+                                total: concept.totalLevels,
+                              })}
                             </p>
                           </button>
                         );
@@ -402,13 +410,13 @@ export function InteractiveFeaturesConsole() {
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-xs font-semibold text-foreground">
-                          {currentConcept.name} — Configured SOLO Levels
+                          {t("progress.configuredSoloLevels", { name: currentConcept.name })}
                         </p>
                         <p className="text-xs text-muted-foreground">{currentConcept.description}</p>
                       </div>
 
                       <span className="text-[11px] font-mono text-muted-foreground">
-                        Click level to view math prompt
+                        {t("progress.clickLevelHint")}
                       </span>
                     </div>
 
@@ -416,6 +424,13 @@ export function InteractiveFeaturesConsole() {
                     <div className="grid gap-2.5 sm:grid-cols-3">
                       {currentConcept.levels.map((lvl, idx) => {
                         const isStageActive = selectedSoloStage === idx;
+
+                        const stageLabel =
+                          lvl.status === "mastered"
+                            ? t("progress.demonstrated")
+                            : lvl.status === "active"
+                            ? t("progress.activeAssessment")
+                            : t("progress.upcoming");
 
                         return (
                           <button
@@ -457,7 +472,7 @@ export function InteractiveFeaturesConsole() {
                                     : "text-muted-foreground"
                                 }`}
                               >
-                                {lvl.stage}
+                                {stageLabel}
                               </p>
                             </div>
                           </button>
@@ -469,20 +484,22 @@ export function InteractiveFeaturesConsole() {
                     <div className="rounded-md border bg-background p-4 text-xs space-y-2.5">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">
-                          {currentConcept.levels[selectedSoloStage]?.name} Level Assessment Focus:
+                          {t("progress.levelAssessmentFocus", {
+                            level: currentConcept.levels[selectedSoloStage]?.name ?? "",
+                          })}
                         </span>
                         <Badge variant="outline" className="text-[10px]">
-                          KaTeX Math Render
+                          {t("progress.katexMathRender")}
                         </Badge>
                       </div>
 
                       <p className="text-muted-foreground">
-                        <span className="font-medium text-foreground">Rubric Criteria: </span>
+                        <span className="font-medium text-foreground">{t("progress.rubricCriteria")} </span>
                         {currentConcept.levels[selectedSoloStage]?.criteria}
                       </p>
 
                       <div className="border-t pt-2.5">
-                        <p className="font-medium text-foreground mb-1 text-[11px]">Representative Prompt:</p>
+                        <p className="font-medium text-foreground mb-1 text-[11px]">{t("progress.representativePrompt")}</p>
                         <AtlasRichTextViewer
                           value={currentConcept.levels[selectedSoloStage]?.promptMath ?? ""}
                           className="text-xs leading-relaxed text-foreground bg-muted/30 p-2.5 rounded border"
@@ -502,11 +519,11 @@ export function InteractiveFeaturesConsole() {
                 <CardHeader className="pb-3 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold text-base">Assessment Question</h3>
+                      <h3 className="font-semibold text-base">{t("assessment.questionTitle")}</h3>
                       <Badge variant="secondary">
-                        {assessmentType === "mcq" ? "Multiple Choice" : "Essay"}
+                        {assessmentType === "mcq" ? t("assessment.multipleChoice") : t("assessment.essay")}
                       </Badge>
-                      <Badge variant="outline">Cycle 1</Badge>
+                      <Badge variant="outline">{t("assessment.cycle1")}</Badge>
                     </div>
 
                     {/* Mode Toggle */}
@@ -517,7 +534,7 @@ export function InteractiveFeaturesConsole() {
                         className="h-7 text-xs px-2.5"
                         onClick={() => setAssessmentType("essay")}
                       >
-                        Essay Question
+                        {t("assessment.essayQuestion")}
                       </Button>
                       <Button
                         variant={assessmentType === "mcq" ? "secondary" : "ghost"}
@@ -525,7 +542,7 @@ export function InteractiveFeaturesConsole() {
                         className="h-7 text-xs px-2.5"
                         onClick={() => setAssessmentType("mcq")}
                       >
-                        Multiple Choice (MCQ)
+                        {t("assessment.mcqOption")}
                       </Button>
                     </div>
                   </div>
@@ -535,7 +552,7 @@ export function InteractiveFeaturesConsole() {
                   {/* Question Workspace with AtlasRichTextViewer */}
                   <section className="rounded-xl border bg-muted/20 p-4 sm:p-5">
                     <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Question
+                      {t("assessment.questionLabel")}
                     </p>
                     <AtlasRichTextViewer
                       value={assessmentType === "essay" ? realEssayPrompt : realMcqQuestion.prompt}
@@ -548,7 +565,7 @@ export function InteractiveFeaturesConsole() {
                     <div className="space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="text-xs font-medium text-foreground">
-                          Sample Student Submissions:
+                          {t("assessment.sampleSubmissions")}
                         </p>
 
                         <div className="flex items-center gap-1.5">
@@ -561,7 +578,7 @@ export function InteractiveFeaturesConsole() {
                               setShowFeedback(true);
                             }}
                           >
-                            {essaySamples.sample1.label}
+                            {t("assessment.sample1Label")}
                           </Button>
                           <Button
                             variant={activeEssayKey === "sample2" ? "secondary" : "outline"}
@@ -572,7 +589,7 @@ export function InteractiveFeaturesConsole() {
                               setShowFeedback(true);
                             }}
                           >
-                            {essaySamples.sample2.label}
+                            {t("assessment.sample2Label")}
                           </Button>
                         </div>
                       </div>
@@ -580,7 +597,7 @@ export function InteractiveFeaturesConsole() {
                       {/* Submitted Essay with Math Viewer */}
                       <div className="rounded-lg border bg-card p-4">
                         <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">
-                          Student Written Response
+                          {t("assessment.studentWrittenResponse")}
                         </p>
                         <AtlasRichTextViewer
                           value={essaySamples[activeEssayKey].text}
@@ -599,12 +616,12 @@ export function InteractiveFeaturesConsole() {
                           {isEvaluating ? (
                             <>
                               <Loader2 className="size-3.5 animate-spin" />
-                              Evaluating response...
+                              {t("assessment.evaluating")}
                             </>
                           ) : (
                             <>
                               <Sparkles className="size-3.5" />
-                              Submit response
+                              {t("assessment.submitResponse")}
                             </>
                           )}
                         </Button>
@@ -617,7 +634,9 @@ export function InteractiveFeaturesConsole() {
                               : "text-amber-600 border-amber-500/40"
                           }
                         >
-                          {essaySamples[activeEssayKey].status}
+                          {essaySamples[activeEssayKey].status === "Criteria Met"
+                            ? t("assessment.criteriaMet")
+                            : t("assessment.formativeCycleActive")}
                         </Badge>
                       </div>
 
@@ -626,7 +645,7 @@ export function InteractiveFeaturesConsole() {
                         <div className="rounded-xl border bg-muted/30 p-4 space-y-2 animate-in fade-in duration-300">
                           <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                             <Sparkles className="size-3.5 text-primary" />
-                            Formative Evaluation & Feedback
+                            {t("assessment.formativeEvaluationFeedback")}
                           </p>
                           <AtlasRichTextViewer
                             value={essaySamples[activeEssayKey].feedback}
@@ -639,7 +658,7 @@ export function InteractiveFeaturesConsole() {
                     /* Authentic MCQ Runner */
                     <div className="space-y-3">
                       <p className="text-xs font-medium text-muted-foreground">
-                        Choose the best answer, then inspect diagnostic feedback:
+                        {t("assessment.mcqChooseInstruction")}
                       </p>
 
                       <div className="space-y-2.5">
@@ -671,14 +690,14 @@ export function InteractiveFeaturesConsole() {
                                         : "bg-amber-600 hover:bg-amber-600 text-white"
                                     }`}
                                   >
-                                    {opt.isCorrect ? "Correct Option" : "Distractor"}
+                                    {opt.isCorrect ? t("assessment.correctOption") : t("assessment.distractor")}
                                   </Badge>
                                 )}
                               </div>
 
                               {isSelected && (
                                 <div className="mt-2.5 border-t pt-2 text-[11px] text-muted-foreground leading-relaxed">
-                                  <span className="font-semibold text-foreground">Diagnostic Feedback: </span>
+                                  <span className="font-semibold text-foreground">{t("assessment.diagnosticFeedbackLabel")} </span>
                                   {opt.feedback}
                                 </div>
                               )}
@@ -711,16 +730,16 @@ export function InteractiveFeaturesConsole() {
                       </div>
                       <div>
                         <CardTitle className="text-sm font-semibold">
-                          ATLAS Course Learning Assistant
+                          {t("chat.title")}
                         </CardTitle>
                         <CardDescription className="text-xs">
-                          Grounded in: PHYS102 · Section 01 Electromagnetism Course Offering
+                          {t("chat.groundedIn")}
                         </CardDescription>
                       </div>
                     </div>
 
                     <Badge variant="outline" className="text-xs">
-                      Verified Curriculum
+                      {t("chat.verifiedCurriculum")}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -729,7 +748,7 @@ export function InteractiveFeaturesConsole() {
                   {/* Interactive Prompt Chips */}
                   <div className="space-y-1.5">
                     <p className="text-xs font-semibold text-muted-foreground">
-                      Sample Student Inquiries (Click to Switch):
+                      {t("chat.sampleInquiries")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {chatScenarios.map((sc, idx) => (
@@ -775,7 +794,7 @@ export function InteractiveFeaturesConsole() {
                           className="text-xs leading-relaxed"
                         />
                         <div className="border-t pt-2 text-[11px] text-muted-foreground flex items-center gap-1.5">
-                          <span className="font-semibold text-foreground">Grounding Source:</span>
+                          <span className="font-semibold text-foreground">{t("chat.groundingSource")}</span>
                           <span>{chatScenarios[activeChatIndex].citation}</span>
                         </div>
                       </div>
@@ -786,14 +805,14 @@ export function InteractiveFeaturesConsole() {
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
-                      placeholder="Ask a clarifying question about electric fields..."
+                      placeholder={t("chat.inputPlaceholder")}
                       value={userCustomFollowUp}
                       onChange={(e) => setUserCustomFollowUp(e.target.value)}
                       className="flex-1 rounded-md border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground outline-hidden focus:border-primary"
                     />
                     <Button size="sm" className="h-8 gap-1.5 text-xs">
                       <Send className="size-3" />
-                      Ask Tutor
+                      {t("chat.askButton")}
                     </Button>
                   </div>
                 </CardContent>
@@ -815,11 +834,11 @@ export function InteractiveFeaturesConsole() {
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Enrolled Students</span>
-                        <Badge variant="outline" className="text-[10px]">Active</Badge>
+                        <span>{t("instructor.enrolledStudents")}</span>
+                        <Badge variant="outline" className="text-[10px]">{t("instructor.active")}</Badge>
                       </div>
                       <p className="mt-1 text-2xl font-semibold">42</p>
-                      <p className="mt-1 text-[11px] text-muted-foreground">Section 01 · Odd 2025/2026</p>
+                      <p className="mt-1 text-[11px] text-muted-foreground">{t("instructor.sectionTerm")}</p>
                     </CardContent>
                   </Card>
 
@@ -831,11 +850,11 @@ export function InteractiveFeaturesConsole() {
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Formative Cycles Active</span>
-                        <Badge variant="outline" className="text-[10px] text-amber-600">Pending</Badge>
+                        <span>{t("instructor.formativeCyclesActive")}</span>
+                        <Badge variant="outline" className="text-[10px] text-amber-600">{t("instructor.pending")}</Badge>
                       </div>
                       <p className="mt-1 text-2xl font-semibold">18</p>
-                      <p className="mt-1 text-[11px] text-muted-foreground">Diagnostic intervention in progress</p>
+                      <p className="mt-1 text-[11px] text-muted-foreground">{t("instructor.interventionInProgress")}</p>
                     </CardContent>
                   </Card>
 
@@ -847,12 +866,12 @@ export function InteractiveFeaturesConsole() {
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>Concept Mastery Rate</span>
-                        <Badge variant="outline" className="text-[10px] text-emerald-600">Progressing</Badge>
+                        <span>{t("instructor.conceptMasteryRate")}</span>
+                        <Badge variant="outline" className="text-[10px] text-emerald-600">{t("instructor.progressing")}</Badge>
                       </div>
                       <p className="mt-1 text-2xl font-semibold">76%</p>
                       <p className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-                        Above target milestone
+                        {t("instructor.aboveTargetMilestone")}
                       </p>
                     </CardContent>
                   </Card>
@@ -864,13 +883,13 @@ export function InteractiveFeaturesConsole() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle className="text-sm font-semibold">
-                          Curriculum & Question Bank Repositories
+                          {t("instructor.repoTitle")}
                         </CardTitle>
                         <CardDescription className="text-xs">
-                          Calibrated question items linked to configured SOLO objectives
+                          {t("instructor.repoDescription")}
                         </CardDescription>
                       </div>
-                      <Badge variant="secondary">3 Repositories Active</Badge>
+                      <Badge variant="secondary">{t("instructor.repositoriesActive")}</Badge>
                     </div>
                   </CardHeader>
 
@@ -878,12 +897,12 @@ export function InteractiveFeaturesConsole() {
                     <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground">PHY-EM-01: Coulomb&apos;s Law</p>
-                        <p className="text-[11px] text-muted-foreground">6 MCQ Items · 2 Qualitative Essay Prompts</p>
+                        <p className="text-[11px] text-muted-foreground">{t("instructor.coulombStats")}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">Published</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
                         <Button variant="ghost" size="sm" className="h-7 text-xs">
-                          Edit Bank
+                          {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
@@ -891,12 +910,12 @@ export function InteractiveFeaturesConsole() {
                     <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground">PHY-EM-02: Field Superposition</p>
-                        <p className="text-[11px] text-muted-foreground">8 MCQ Items · 4 Qualitative Essay Prompts</p>
+                        <p className="text-[11px] text-muted-foreground">{t("instructor.superpositionStats")}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">Published</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
                         <Button variant="ghost" size="sm" className="h-7 text-xs">
-                          Edit Bank
+                          {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
@@ -904,12 +923,12 @@ export function InteractiveFeaturesConsole() {
                     <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground">PHY-EM-03: Gauss&apos;s Flux Law</p>
-                        <p className="text-[11px] text-muted-foreground">5 MCQ Items · 3 Qualitative Essay Prompts</p>
+                        <p className="text-[11px] text-muted-foreground">{t("instructor.gaussStats")}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="text-xs">Drafting</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("instructor.drafting")}</Badge>
                         <Button variant="ghost" size="sm" className="h-7 text-xs">
-                          Edit Bank
+                          {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>

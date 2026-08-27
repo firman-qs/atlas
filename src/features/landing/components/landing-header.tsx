@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, LayoutDashboard, Menu, Moon, Sun } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -18,33 +19,15 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@/features/auth/auth-provider";
 
-const navigation = [
-  {
-    label: "Capabilities",
-    href: "#capabilities",
-  },
-  {
-    label: "Progression",
-    href: "#progression",
-  },
-  {
-    label: "Guides & FAQ",
-    href: "#guides-faq",
-  },
-  {
-    label: "Project",
-    href: "#project",
-  },
-] as const;
-
 function ThemeToggle() {
+  const tHeader = useTranslations("landing.header");
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
     <Button
       variant="ghost"
       size="icon-sm"
-      aria-label="Toggle visual theme"
+      aria-label={tHeader("themeToggleAria")}
       onClick={() => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
       }}
@@ -56,6 +39,7 @@ function ThemeToggle() {
 }
 
 function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
+  const tHeader = useTranslations("landing.header");
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -71,7 +55,7 @@ function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
         render={<Link href="/dashboard" />}
       >
         <LayoutDashboard className="size-3.5" />
-        Dashboard
+        {tHeader("dashboard")}
       </Button>
     );
   }
@@ -85,7 +69,7 @@ function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
         nativeButton={false}
         render={<Link href="/login" />}
       >
-        Sign In
+        {tHeader("signIn")}
       </Button>
 
       <Button
@@ -94,7 +78,7 @@ function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
         nativeButton={false}
         render={<Link href="/register" />}
       >
-        Get Started
+        {tHeader("getStarted")}
         <ArrowRight className="size-3.5" />
       </Button>
     </div>
@@ -102,7 +86,28 @@ function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
 }
 
 export function LandingHeader() {
+  const tNav = useTranslations("landing.nav");
+  const tHeader = useTranslations("landing.header");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navigation = [
+    {
+      label: tNav("capabilities"),
+      href: "#capabilities",
+    },
+    {
+      label: tNav("progression"),
+      href: "#progression",
+    },
+    {
+      label: tNav("guidesFaq"),
+      href: "#guides-faq",
+    },
+    {
+      label: tNav("project"),
+      href: "#project",
+    },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -110,7 +115,7 @@ export function LandingHeader() {
         {/* Brand Logo with Real Logo Image */}
         <Link
           href="/"
-          aria-label="ATLAS Home"
+          aria-label={tHeader("homeAria")}
           className="flex items-center gap-2.5 outline-hidden group"
         >
           <div className="relative size-7 overflow-hidden transition-transform group-hover:scale-105">
@@ -163,7 +168,7 @@ export function LandingHeader() {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Open navigation menu"
+                  aria-label={tHeader("openMenuAria")}
                 />
               }
             >
@@ -188,7 +193,7 @@ export function LandingHeader() {
                   <div>
                     <SheetTitle className="text-base font-semibold">ATLAS</SheetTitle>
                     <SheetDescription className="text-xs">
-                      Atlas, Targeted Learning Assessment System
+                      {tHeader("tagline")}
                     </SheetDescription>
                   </div>
                 </div>

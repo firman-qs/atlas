@@ -52,9 +52,10 @@ export function InstructorLearningRecordDetail({
 
   function formatSemester(semester: string) {
     const normalized = semester.toLowerCase();
-    return tSemesters.has(normalized as any)
-      ? tSemesters(normalized as any)
-      : semester.charAt(0).toUpperCase() + semester.slice(1);
+    if (normalized === "odd" || normalized === "even" || normalized === "short") {
+      return tSemesters(normalized);
+    }
+    return semester.charAt(0).toUpperCase() + semester.slice(1);
   }
 
   if (recordQuery.isPending || progressQuery.isPending) {

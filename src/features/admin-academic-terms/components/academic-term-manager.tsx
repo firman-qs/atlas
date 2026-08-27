@@ -75,7 +75,10 @@ function AcademicTermCard({
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   function getSemesterLabel(semester: AcademicSemester) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return formatAcademicSemester(semester);
   }
 
   async function handleDelete() {
@@ -219,7 +222,10 @@ export function AcademicTermManager() {
   );
 
   function getSemesterLabel(semester: AcademicSemester) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return formatAcademicSemester(semester);
   }
 
   const academicTermsQuery = useAdminAcademicTerms({

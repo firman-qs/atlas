@@ -75,7 +75,10 @@ export function CreateAcademicTermForm({
   const common = useTranslations("common");
 
   function getSemesterLabel(semester: AcademicSemester) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return formatAcademicSemester(semester);
   }
 
   const createAcademicTerm = useCreateAdminAcademicTerm();

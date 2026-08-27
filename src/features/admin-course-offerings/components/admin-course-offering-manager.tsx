@@ -12,7 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { CreateCourseOfferingForm } from "@/features/admin-course-offerings/components/create-course-offering-form";
 import { useAdminCourseOfferings } from "@/features/admin-course-offerings/queries";
-import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
+import {
+  formatAcademicSemester,
+  isAcademicSemester,
+} from "@/features/admin-academic-terms/semester";
 
 function CourseOfferingListSkeleton() {
   return (
@@ -30,7 +33,10 @@ export function AdminCourseOfferingManager() {
   const tErrors = useTranslations("admin.errors");
 
   function getSemesterLabel(semester: string) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return semester;
   }
 
   const offeringsQuery = useAdminCourseOfferings({

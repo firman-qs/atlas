@@ -14,7 +14,10 @@ import { useAdminAcademicTerms } from "@/features/admin-academic-terms/queries";
 import { useCreateAdminCourseOffering } from "@/features/admin-course-offerings/queries";
 import { useAdminCourses } from "@/features/admin-courses/queries";
 import { useAdminUsers } from "@/features/admin-users/queries";
-import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
+import {
+  formatAcademicSemester,
+  isAcademicSemester,
+} from "@/features/admin-academic-terms/semester";
 
 export function CreateCourseOfferingForm() {
   const t = useTranslations("admin.courseOfferings.form");
@@ -22,7 +25,10 @@ export function CreateCourseOfferingForm() {
   const tErrors = useTranslations("admin.errors");
 
   function getSemesterLabel(semester: string) {
-    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+    if (isAcademicSemester(semester)) {
+      return tSemesters(semester);
+    }
+    return semester;
   }
 
   const coursesQuery = useAdminCourses({

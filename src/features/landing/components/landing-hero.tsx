@@ -2,6 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/auth-provider";
@@ -9,6 +10,7 @@ import { InteractiveMascot } from "@/features/landing/components/interactive-mas
 import { ScrollReveal } from "@/features/landing/components/scroll-reveal";
 
 export function LandingHero() {
+  const t = useTranslations("landing.hero");
   const { isAuthenticated, isLoading } = useAuth();
 
   return (
@@ -20,23 +22,22 @@ export function LandingHero() {
             <ScrollReveal delayMs={50}>
               <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur-xs">
                 <span className="flex size-2 rounded-full bg-primary animate-pulse" />
-                <span>ATLAS — Atlas, Targeted Learning Assessment System</span>
+                <span>{t("badge")}</span>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delayMs={150}>
               <h1 className="mt-5 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                Formative assessment{" "}
+                {t("titlePrefix")}{" "}
                 <span className="text-primary">
-                  for conceptual learning.
+                  {t("titleHighlight")}
                 </span>
               </h1>
             </ScrollReveal>
 
             <ScrollReveal delayMs={250}>
               <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Progress through structured conceptual hierarchies with formative assessment,
-                diagnostic feedback, and course-grounded AI learning assistance.
+                {t("subtitle")}
               </p>
             </ScrollReveal>
 
@@ -52,7 +53,7 @@ export function LandingHero() {
                         nativeButton={false}
                         render={<Link href="/dashboard" />}
                       >
-                        Open Dashboard
+                        {t("openDashboard")}
                         <ArrowRight className="size-4" />
                       </Button>
                     ) : (
@@ -63,7 +64,7 @@ export function LandingHero() {
                           nativeButton={false}
                           render={<Link href="/register" />}
                         >
-                          Get Started
+                          {t("getStarted")}
                           <ArrowRight className="size-4" />
                         </Button>
 
@@ -74,7 +75,7 @@ export function LandingHero() {
                           nativeButton={false}
                           render={<Link href="/login" />}
                         >
-                          Sign In
+                          {t("signIn")}
                         </Button>
                       </>
                     )}

@@ -1183,6 +1183,275 @@
       "deleteUser": "Unable to delete user."
     }
   },
+  "landing": {
+    "nav": {
+      "capabilities": "Capabilities",
+      "progression": "Progression",
+      "guidesFaq": "Guides & FAQ",
+      "project": "Project"
+    },
+    "header": {
+      "themeToggleAria": "Toggle visual theme",
+      "openMenuAria": "Open navigation menu",
+      "tagline": "Atlas, Targeted Learning Assessment System",
+      "homeAria": "ATLAS Home",
+      "dashboard": "Dashboard",
+      "signIn": "Sign In",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "ATLAS — Atlas, Targeted Learning Assessment System",
+      "titlePrefix": "Formative assessment",
+      "titleHighlight": "for conceptual learning.",
+      "subtitle": "Progress through structured conceptual hierarchies with formative assessment, diagnostic feedback, and course-grounded AI learning assistance.",
+      "openDashboard": "Open Dashboard",
+      "getStarted": "Get Started",
+      "signIn": "Sign In"
+    },
+    "capabilities": {
+      "badge": "Platform Capabilities",
+      "title": "Built for deep conceptual progression",
+      "description": "Explore authentic ATLAS interfaces for conceptual progress tracking, formative assessment with KaTeX math, course-grounded AI tutoring, and curriculum governance.",
+      "tabs": {
+        "progress": "Learning Progress",
+        "assessment": "Formative Assessment",
+        "chat": "AI Learning Assistant",
+        "instructor": "Instructor Governance"
+      },
+      "progress": {
+        "inProgress": "In Progress",
+        "courseTitle": "General Physics II: Electromagnetism",
+        "objectiveTitle": "Learning Objective 01: Electrostatic Fields and Vector Superposition",
+        "objectiveMastery": "Objective Mastery",
+        "conceptsMastered": "{mastered} of {total} Concepts Mastered",
+        "orderedConcepts": "Ordered Concepts (Click to Inspect)",
+        "mastered": "Mastered",
+        "levelsMastered": "{mastered} of {total} levels mastered",
+        "configuredSoloLevels": "{name} — Configured SOLO Levels",
+        "clickLevelHint": "Click level to view math prompt",
+        "demonstrated": "Demonstrated",
+        "activeAssessment": "Active Assessment",
+        "upcoming": "Upcoming",
+        "levelAssessmentFocus": "{level} Level Assessment Focus:",
+        "katexMathRender": "KaTeX Math Render",
+        "rubricCriteria": "Rubric Criteria:",
+        "representativePrompt": "Representative Prompt:"
+      },
+      "assessment": {
+        "questionTitle": "Assessment Question",
+        "multipleChoice": "Multiple Choice",
+        "essay": "Essay",
+        "cycle1": "Cycle 1",
+        "essayQuestion": "Essay Question",
+        "mcqOption": "Multiple Choice (MCQ)",
+        "questionLabel": "Question",
+        "sampleSubmissions": "Sample Student Submissions:",
+        "sample1Label": "Example Submission A",
+        "sample2Label": "Example Submission B",
+        "studentWrittenResponse": "Student Written Response",
+        "evaluating": "Evaluating response...",
+        "submitResponse": "Submit response",
+        "criteriaMet": "Criteria Met",
+        "formativeCycleActive": "Formative Cycle Active",
+        "formativeEvaluationFeedback": "Formative Evaluation & Feedback",
+        "mcqChooseInstruction": "Choose the best answer, then inspect diagnostic feedback:",
+        "correctOption": "Correct Option",
+        "distractor": "Distractor",
+        "diagnosticFeedbackLabel": "Diagnostic Feedback:"
+      },
+      "chat": {
+        "title": "ATLAS Course Learning Assistant",
+        "groundedIn": "Grounded in: PHYS102 · Section 01 Electromagnetism Course Offering",
+        "verifiedCurriculum": "Verified Curriculum",
+        "sampleInquiries": "Sample Student Inquiries (Click to Switch):",
+        "groundingSource": "Grounding Source:",
+        "inputPlaceholder": "Ask a clarifying question about electric fields...",
+        "askButton": "Ask Tutor"
+      },
+      "instructor": {
+        "enrolledStudents": "Enrolled Students",
+        "active": "Active",
+        "sectionTerm": "Section 01 · Odd 2025/2026",
+        "formativeCyclesActive": "Formative Cycles Active",
+        "pending": "Pending",
+        "interventionInProgress": "Diagnostic intervention in progress",
+        "conceptMasteryRate": "Concept Mastery Rate",
+        "progressing": "Progressing",
+        "aboveTargetMilestone": "Above target milestone",
+        "repoTitle": "Curriculum & Question Bank Repositories",
+        "repoDescription": "Calibrated question items linked to configured SOLO objectives",
+        "repositoriesActive": "3 Repositories Active",
+        "coulombStats": "6 MCQ Items · 2 Qualitative Essay Prompts",
+        "superpositionStats": "8 MCQ Items · 4 Qualitative Essay Prompts",
+        "gaussStats": "5 MCQ Items · 3 Qualitative Essay Prompts",
+        "published": "Published",
+        "drafting": "Drafting",
+        "editBank": "Edit Bank"
+      }
+    },
+    "guidesFaq": {
+      "badge": "Resources & Reference",
+      "title": "Guides & Frequently Asked Questions",
+      "description": "Explore forthcoming video walkthroughs, documentation outlines, and answers regarding the ATLAS formative learning methodology.",
+      "video": {
+        "title": "Video Guides",
+        "badge": "Forthcoming",
+        "comingSoon": "Video Guides Coming Soon",
+        "description": "Curated walkthroughs covering student onboarding and instructor curriculum authoring are in production.",
+        "plannedRelease": "Planned release with pilot phase",
+        "modalText": "Walkthrough recordings are currently being recorded for the Electromagnetics pilot cohort."
+      },
+      "docs": {
+        "title": "Documentation Topics",
+        "badge": "Interactive Outlines",
+        "keyCoverage": "Key Coverage:"
+      },
+      "categories": {
+        "student": "Student",
+        "instructor": "Instructor",
+        "conceptual": "Conceptual"
+      },
+      "guides": {
+        "gettingStarted": {
+          "title": "Getting started with ATLAS",
+          "description": "Orientation to course offerings, dashboard navigation, and learning objectives.",
+          "highlights": {
+            "0": "Enrollment access",
+            "1": "Active assessment discovery",
+            "2": "Mastery indicators"
+          }
+        },
+        "takingAssessment": {
+          "title": "Taking a formative assessment",
+          "description": "Responding to calibrated MCQ items and drafting qualitative conceptual essays.",
+          "highlights": {
+            "0": "Interactive equation inputs",
+            "1": "No punitive penalties",
+            "2": "Direct diagnostic hints"
+          }
+        },
+        "understandingSolo": {
+          "title": "Understanding conceptual progression",
+          "description": "How ordered concepts and configured SOLO levels structure your learning path.",
+          "highlights": {
+            "0": "Unistructural $\\to$ Multistructural $\\to$ Relational",
+            "1": "Mastery thresholds",
+            "2": "Review mode"
+          }
+        },
+        "reviewingHistory": {
+          "title": "Reviewing assessment history and feedback",
+          "description": "Navigating past submissions, diagnostic feedback, and review assessment modes.",
+          "highlights": {
+            "0": "Retrying completed concepts safely",
+            "1": "Auditing qualitative feedback traces"
+          }
+        },
+        "learningAssistant": {
+          "title": "Using the ATLAS learning assistant",
+          "description": "Asking course-grounded conceptual questions without receiving unsolicited answers.",
+          "highlights": {
+            "0": "Strict curriculum grounding",
+            "1": "Socratic prompting",
+            "2": "Chapter citations"
+          }
+        },
+        "instructorWorkflow": {
+          "title": "Instructor curriculum and assessment workflow",
+          "description": "Authoring objectives, organizing question banks, and observing cohort progression.",
+          "highlights": {
+            "0": "JSON curriculum imports",
+            "1": "Taxonomy level binding",
+            "2": "Cohort telemetry"
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "description": "Direct answers regarding ATLAS formative mechanics, AI evaluation, and learning evidence.",
+        "q1": {
+          "question": "What is ATLAS?",
+          "answer": "ATLAS (Atlas, Targeted Learning Assessment System) is an academic educational platform for AI-supported adaptive formative assessment. It structures curricula around learning objectives, ordered concepts, and configured SOLO levels to evaluate conceptual mastery and provide diagnostic learning feedback."
+        },
+        "q2": {
+          "question": "How does formative progression work?",
+          "answer": "Students engage with formative assessments containing Multiple-Choice Questions (MCQ) and qualitative essays at their current conceptual level. When responses demonstrate sufficient conceptual understanding for that configured SOLO level (such as Unistructural or Multistructural), the student advances deeper along the trajectory."
+        },
+        "q3": {
+          "question": "What happens if mastery is not yet demonstrated?",
+          "answer": "If a student does not yet demonstrate mastery at their current level, ATLAS initiates another formative cycle. The student receives targeted diagnostic feedback explaining relevant principles and misconceptions, followed by additional formative practice opportunities rather than a punitive terminal grade."
+        },
+        "q4": {
+          "question": "Can previously mastered material be reviewed?",
+          "answer": "Yes. Students can freely revisit previously mastered concepts through review assessments. Review sessions provide ongoing retrieval practice and reinforce long-term conceptual retention without altering the student's recorded mastery status."
+        },
+        "q5": {
+          "question": "How is AI used in ATLAS?",
+          "answer": "AI supports educational functions where pedagogically appropriate: performing formative evaluation of open-ended essay explanations, generating contextual diagnostic feedback, and powering a learning assistant strictly grounded in the course curriculum and verified learning context."
+        },
+        "q6": {
+          "question": "What types of assessment questions are supported?",
+          "answer": "ATLAS currently supports diagnostic Multiple-Choice Questions (MCQ) and open-ended qualitative Essay questions, enabling both rapid conceptual verification and deep qualitative reasoning."
+        },
+        "q7": {
+          "question": "Does ATLAS replace instructors?",
+          "answer": "No. ATLAS is designed as a formative tool to assist educators and students. Instructors define the learning objectives, organize concepts, curate question banks, and maintain full oversight over cohort progression and assessment evidence."
+        }
+      }
+    },
+    "project": {
+      "badge": "Project & Academic Team",
+      "title": "The people and institutional support behind ATLAS",
+      "description": "ATLAS brings together educational assessment, conceptual learning, and software engineering in a research-oriented academic project.",
+      "clickToCollapse": "Click to collapse",
+      "clickForBio": "Click for bio",
+      "roles": {
+        "creator": "Creator & Developer",
+        "supervisor": "Academic Supervisor"
+      },
+      "bios": {
+        "firman": "Lead software architecture, AI formative assessment pipelines, and system implementation.",
+        "khusaini": "Physics education specialist supervising pedagogical design, assessment taxonomy, and learning models.",
+        "cahyo": "Physics content expert advising on electromagnetism conceptual structures and curriculum alignment."
+      },
+      "funding": {
+        "badge": "Internal Grant",
+        "title": "Funding Acknowledgement",
+        "institution": "Universitas Negeri Malang",
+        "type": "Internal Non-PNBP Funding",
+        "description": "Support provided for educational technology research and pilot assessment deployment."
+      },
+      "publication": {
+        "badge": "In Preparation",
+        "title": "Publication Status",
+        "subtitle": "Empirical Evaluation",
+        "type": "Research publication",
+        "description": "Coming soon."
+      }
+    },
+    "footer": {
+      "tagline": "Atlas, Targeted Learning Assessment System",
+      "description": "An academic educational platform for AI-supported adaptive formative assessment, conceptual progression, and evidence-grounded learning.",
+      "platformTitle": "Platform",
+      "openDashboard": "Open Dashboard",
+      "signIn": "Sign In",
+      "getStarted": "Get Started",
+      "exploreTitle": "Explore",
+      "links": {
+        "capabilities": "Capabilities",
+        "progression": "Progression",
+        "guidesFaq": "Guides & FAQ",
+        "project": "Project Team",
+        "publication": "Publication"
+      },
+      "supportTitle": "Institutional Support",
+      "institution": "Universitas Negeri Malang",
+      "funding": "Internal Non-PNBP Funding",
+      "department": "Department of Physics",
+      "copyright": "© 2026 ATLAS. All rights reserved.",
+      "motto": "Formative assessment for conceptual learning."
+    }
+  },
   "errors": {
     "dashboard": "Unable to load your dashboard.",
     "courses": "Unable to load your courses.",

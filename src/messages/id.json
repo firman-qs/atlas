@@ -1183,6 +1183,275 @@
       "deleteUser": "Tidak dapat menghapus pengguna."
     }
   },
+  "landing": {
+    "nav": {
+      "capabilities": "Kapabilitas",
+      "progression": "Progresi",
+      "guidesFaq": "Panduan & FAQ",
+      "project": "Proyek"
+    },
+    "header": {
+      "themeToggleAria": "Ganti tema visual",
+      "openMenuAria": "Buka menu navigasi",
+      "tagline": "Atlas, Targeted Learning Assessment System",
+      "homeAria": "Beranda ATLAS",
+      "dashboard": "Dasbor",
+      "signIn": "Masuk",
+      "getStarted": "Mulai Sekarang"
+    },
+    "hero": {
+      "badge": "ATLAS — Atlas, Targeted Learning Assessment System",
+      "titlePrefix": "Asesmen formatif",
+      "titleHighlight": "untuk pembelajaran konseptual.",
+      "subtitle": "Capai kemajuan melalui hierarki konseptual terstruktur dengan asesmen formatif, umpan balik diagnostik, dan bantuan belajar AI berbasis kurikulum mata kuliah.",
+      "openDashboard": "Buka Dasbor",
+      "getStarted": "Mulai Sekarang",
+      "signIn": "Masuk"
+    },
+    "capabilities": {
+      "badge": "Kapabilitas Platform",
+      "title": "Dirancang untuk progresi konseptual mendalam",
+      "description": "Jelajahi antarmuka autentik ATLAS untuk pelacakan progres konseptual, asesmen formatif dengan matematika KaTeX, bimbingan AI berbasis materi mata kuliah, dan tata kelola kurikulum.",
+      "tabs": {
+        "progress": "Progres Pembelajaran",
+        "assessment": "Asesmen Formatif",
+        "chat": "Asisten Belajar AI",
+        "instructor": "Tata Kelola Pengajar"
+      },
+      "progress": {
+        "inProgress": "Sedang Berlangsung",
+        "courseTitle": "Fisika Dasar II: Elektromagnetisme",
+        "objectiveTitle": "Tujuan Pembelajaran 01: Medan Elektrostatik dan Superposisi Vektor",
+        "objectiveMastery": "Penguasaan Capaian",
+        "conceptsMastered": "{mastered} dari {total} Konsep Dikuasai",
+        "orderedConcepts": "Urutan Konsep (Klik untuk Memeriksa)",
+        "mastered": "Dikuasai",
+        "levelsMastered": "{mastered} dari {total} level dikuasai",
+        "configuredSoloLevels": "{name} — Level SOLO Terkonfigurasi",
+        "clickLevelHint": "Klik level untuk melihat soal matematika",
+        "demonstrated": "Terbukti",
+        "activeAssessment": "Asesmen Aktif",
+        "upcoming": "Mendatang",
+        "levelAssessmentFocus": "Fokus Asesmen Level {level}:",
+        "katexMathRender": "Render Matematika KaTeX",
+        "rubricCriteria": "Kriteria Rubrik:",
+        "representativePrompt": "Soal Representatif:"
+      },
+      "assessment": {
+        "questionTitle": "Soal Asesmen",
+        "multipleChoice": "Pilihan Ganda",
+        "essay": "Esai",
+        "cycle1": "Siklus 1",
+        "essayQuestion": "Soal Esai",
+        "mcqOption": "Pilihan Ganda (MCQ)",
+        "questionLabel": "Soal",
+        "sampleSubmissions": "Contoh Jawaban Mahasiswa:",
+        "sample1Label": "Contoh Jawaban A",
+        "sample2Label": "Contoh Jawaban B",
+        "studentWrittenResponse": "Jawaban Tertulis Mahasiswa",
+        "evaluating": "Mengevaluasi jawaban...",
+        "submitResponse": "Kirim jawaban",
+        "criteriaMet": "Kriteria Terpenuhi",
+        "formativeCycleActive": "Siklus Formatif Aktif",
+        "formativeEvaluationFeedback": "Evaluasi & Umpan Balik Formatif",
+        "mcqChooseInstruction": "Pilih jawaban terbaik, lalu periksa umpan balik diagnostik:",
+        "correctOption": "Opsi Benar",
+        "distractor": "Pengecoh",
+        "diagnosticFeedbackLabel": "Umpan Balik Diagnostik:"
+      },
+      "chat": {
+        "title": "Asisten Belajar Mata Kuliah ATLAS",
+        "groundedIn": "Berbasis pada: Penawaran Mata Kuliah PHYS102 · Seksi 01 Elektromagnetisme",
+        "verifiedCurriculum": "Kurikulum Terverifikasi",
+        "sampleInquiries": "Contoh Pertanyaan Mahasiswa (Klik untuk Beralih):",
+        "groundingSource": "Sumber Rujukan:",
+        "inputPlaceholder": "Ajukan pertanyaan klarifikasi tentang medan listrik...",
+        "askButton": "Tanya Tutor"
+      },
+      "instructor": {
+        "enrolledStudents": "Mahasiswa Terdaftar",
+        "active": "Aktif",
+        "sectionTerm": "Seksi 01 · Ganjil 2025/2026",
+        "formativeCyclesActive": "Siklus Formatif Aktif",
+        "pending": "Menunggu",
+        "interventionInProgress": "Intervensi diagnostik sedang berlangsung",
+        "conceptMasteryRate": "Tingkat Penguasaan Konsep",
+        "progressing": "Berkembang",
+        "aboveTargetMilestone": "Di atas target pencapaian",
+        "repoTitle": "Repositori Kurikulum & Bank Soal",
+        "repoDescription": "Item soal terkalibrasi yang ditautkan ke capaian level SOLO terkonfigurasi",
+        "repositoriesActive": "3 Repositori Aktif",
+        "coulombStats": "6 Butir MCQ · 2 Butir Esai Kualitatif",
+        "superpositionStats": "8 Butir MCQ · 4 Butir Esai Kualitatif",
+        "gaussStats": "5 Butir MCQ · 3 Butir Esai Kualitatif",
+        "published": "Dipublikasikan",
+        "drafting": "Penyusunan Draf",
+        "editBank": "Edit Bank Soal"
+      }
+    },
+    "guidesFaq": {
+      "badge": "Sumber Daya & Referensi",
+      "title": "Panduan & Pertanyaan yang Sering Diajukan",
+      "description": "Jelajahi panduan video mendatang, ikhtisar dokumentasi, dan jawaban seputar metodologi pembelajaran formatif ATLAS.",
+      "video": {
+        "title": "Panduan Video",
+        "badge": "Mendatang",
+        "comingSoon": "Panduan Video Segera Hadir",
+        "description": "Panduan terkurasi tentang orientasi mahasiswa dan penyusunan kurikulum oleh pengajar sedang dalam tahap produksi.",
+        "plannedRelease": "Rencana rilis bersamaan dengan fase uji coba",
+        "modalText": "Rekaman panduan saat ini sedang diproduksi untuk kelompok uji coba mata kuliah Elektromagnetisme."
+      },
+      "docs": {
+        "title": "Topik Dokumentasi",
+        "badge": "Ikhtisar Interaktif",
+        "keyCoverage": "Cakupan Utama:"
+      },
+      "categories": {
+        "student": "Mahasiswa",
+        "instructor": "Pengajar",
+        "conceptual": "Konseptual"
+      },
+      "guides": {
+        "gettingStarted": {
+          "title": "Memulai dengan ATLAS",
+          "description": "Orientasi penawaran mata kuliah, navigasi dasbor, dan tujuan pembelajaran.",
+          "highlights": {
+            "0": "Akses pendaftaran",
+            "1": "Penemuan asesmen aktif",
+            "2": "Indikator penguasaan"
+          }
+        },
+        "takingAssessment": {
+          "title": "Mengikuti asesmen formatif",
+          "description": "Menjawab butir MCQ terkalibrasi dan menyusun esai konseptual kualitatif.",
+          "highlights": {
+            "0": "Input persamaan interaktif",
+            "1": "Tanpa penalti hukuman nilai",
+            "2": "Petunjuk diagnostik langsung"
+          }
+        },
+        "understandingSolo": {
+          "title": "Memahami progresi konseptual",
+          "description": "Bagaimana konsep berurutan dan level SOLO terkonfigurasi menyusun jalur belajar Anda.",
+          "highlights": {
+            "0": "Unistruktural $\\to$ Multistruktural $\\to$ Relasional",
+            "1": "Ambang penguasaan",
+            "2": "Mode tinjauan"
+          }
+        },
+        "reviewingHistory": {
+          "title": "Meninjau riwayat asesmen dan umpan balik",
+          "description": "Menelusuri submisi sebelumnya, umpan balik diagnostik, dan mode asesmen tinjauan.",
+          "highlights": {
+            "0": "Mencoba ulang konsep tuntas dengan aman",
+            "1": "Audit jejak umpan balik kualitatif"
+          }
+        },
+        "learningAssistant": {
+          "title": "Menggunakan asisten belajar ATLAS",
+          "description": "Mengajukan pertanyaan konseptual berbasis materi kuliah tanpa menerima jawaban langsung secara prematur.",
+          "highlights": {
+            "0": "Dasar kurikulum yang ketat",
+            "1": "Pertanyaan sokratik",
+            "2": "Sitasi bab"
+          }
+        },
+        "instructorWorkflow": {
+          "title": "Alur kerja kurikulum dan asesmen pengajar",
+          "description": "Menyusun tujuan pembelajaran, mengorganisasi bank soal, dan mengamati perkembangan mahasiswa.",
+          "highlights": {
+            "0": "Impor kurikulum JSON",
+            "1": "Pengikatan level taksonomi",
+            "2": "Telemetri kelompok mahasiswa"
+          }
+        }
+      },
+      "faq": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "description": "Jawaban langsung terkait mekanisme formatif ATLAS, evaluasi AI, dan bukti pembelajaran.",
+        "q1": {
+          "question": "Apa itu ATLAS?",
+          "answer": "ATLAS (Atlas, Targeted Learning Assessment System) adalah platform pendidikan akademis untuk asesmen formatif adaptif berbantuan AI. Platform ini menstrukturkan kurikulum di sekitar tujuan pembelajaran, konsep berurutan, dan level SOLO terkonfigurasi untuk mengevaluasi penguasaan konseptual dan memberikan umpan balik pembelajaran diagnostik."
+        },
+        "q2": {
+          "question": "Bagaimana cara kerja progresi formatif?",
+          "answer": "Mahasiswa mengerjakan asesmen formatif yang berisi Soal Pilihan Ganda (MCQ) dan esai kualitatif pada level konseptual mereka saat ini. Ketika jawaban menunjukkan pemahaman konseptual yang memadai untuk level SOLO terkonfigurasi tersebut (seperti Unistruktural atau Multistruktural), mahasiswa maju lebih jauh di sepanjang trajektori belajar."
+        },
+        "q3": {
+          "question": "Apa yang terjadi jika penguasaan belum terbukti?",
+          "answer": "Jika mahasiswa belum menunjukkan penguasaan pada level saat ini, ATLAS memulai siklus formatif berikutnya. Mahasiswa menerima umpan balik diagnostik yang ditargetkan untuk menjelaskan prinsip dan miskonsepsi yang relevan, diikuti oleh kesempatan latihan formatif tambahan alih-alih nilai akhir yang menghukum."
+        },
+        "q4": {
+          "question": "Bisakah materi yang sudah dikuasai ditinjau kembali?",
+          "answer": "Ya. Mahasiswa dapat dengan bebas meninjau kembali konsep yang telah dikuasai sebelumnya melalui asesmen tinjauan. Sesi tinjauan menyediakan latihan pengambilan memori berkelanjutan dan memperkuat retensi konseptual jangka panjang tanpa mengubah status penguasaan yang telah tercatat."
+        },
+        "q5": {
+          "question": "Bagaimana AI digunakan di ATLAS?",
+          "answer": "AI mendukung fungsi-fungsi pendidikan yang sesuai secara pedagogis: melakukan evaluasi formatif terhadap penjelasan esai terbuka, menghasilkan umpan balik diagnostik kontekstual, dan menggerakkan asisten belajar yang strictly grounded pada kurikulum mata kuliah dan konteks pembelajaran terverifikasi."
+        },
+        "q6": {
+          "question": "Jenis soal asesmen apa saja yang didukung?",
+          "answer": "ATLAS saat ini mendukung Soal Pilihan Ganda (MCQ) diagnostik dan soal Esai kualitatif terbuka, memungkinkan verifikasi konseptual cepat dan penalaran kualitatif mendalam."
+        },
+        "q7": {
+          "question": "Apakah ATLAS menggantikan pengajar?",
+          "answer": "Tidak. ATLAS dirancang sebagai alat formatif untuk membantu pendidik dan mahasiswa. Pengajar menetapkan tujuan pembelajaran, mengatur konsep, mengurasi bank soal, dan memegang kendali penuh atas perkembangan mahasiswa dan bukti asesmen."
+        }
+      }
+    },
+    "project": {
+      "badge": "Tim Proyek & Akademik",
+      "title": "Sosok dan dukungan institusional di balik ATLAS",
+      "description": "ATLAS memadukan asesmen pendidikan, pembelajaran konseptual, dan rekayasa perangkat lunak dalam proyek akademik berorientasi riset.",
+      "clickToCollapse": "Klik untuk menutup",
+      "clickForBio": "Klik untuk bio",
+      "roles": {
+        "creator": "Pencipta & Pengembang",
+        "supervisor": "Pembimbing Akademik"
+      },
+      "bios": {
+        "firman": "Memimpin arsitektur perangkat lunak, pipeline asesmen formatif AI, dan implementasi sistem.",
+        "khusaini": "Spesialis pendidikan fisika yang membimbing desain pedagogis, taksonomi asesmen, dan model pembelajaran.",
+        "cahyo": "Pakar konten fisika yang memberikan arahan struktur konseptual elektromagnetisme dan penyelarasan kurikulum."
+      },
+      "funding": {
+        "badge": "Hibah Internal",
+        "title": "Pengakuan Pendanaan",
+        "institution": "Universitas Negeri Malang",
+        "type": "Pendanaan Internal Non-PNBP",
+        "description": "Dukungan disediakan untuk riset teknologi pembelajaran dan implementasi asesmen percontohan."
+      },
+      "publication": {
+        "badge": "Dalam Persiapan",
+        "title": "Status Publikasi",
+        "subtitle": "Evaluasi Empiris",
+        "type": "Publikasi riset",
+        "description": "Segera hadir."
+      }
+    },
+    "footer": {
+      "tagline": "Atlas, Targeted Learning Assessment System",
+      "description": "Platform pendidikan akademis untuk asesmen formatif adaptif berbantuan AI, progresi konseptual, dan pembelajaran berbasis bukti.",
+      "platformTitle": "Platform",
+      "openDashboard": "Buka Dasbor",
+      "signIn": "Masuk",
+      "getStarted": "Mulai Sekarang",
+      "exploreTitle": "Jelajahi",
+      "links": {
+        "capabilities": "Kapabilitas",
+        "progression": "Progresi",
+        "guidesFaq": "Panduan & FAQ",
+        "project": "Tim Proyek",
+        "publication": "Publikasi"
+      },
+      "supportTitle": "Dukungan Institusional",
+      "institution": "Universitas Negeri Malang",
+      "funding": "Pendanaan Internal Non-PNBP",
+      "department": "Departemen Fisika",
+      "copyright": "© 2026 ATLAS. Hak cipta dilindungi undang-undang.",
+      "motto": "Asesmen formatif untuk pembelajaran konseptual."
+    }
+  },
   "errors": {
 
     "dashboard": "Tidak dapat memuat dasbor Anda.",

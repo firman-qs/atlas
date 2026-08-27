@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   BookOpenText,
   Building2,
@@ -13,31 +14,40 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollReveal } from "@/features/landing/components/scroll-reveal";
 
-const team = [
+interface TeamMember {
+  name: string;
+  roleKey: "creator" | "supervisor";
+  bioKey: "firman" | "khusaini" | "cahyo";
+  affiliation: string;
+  icon: typeof UserCheck | typeof GraduationCap;
+}
+
+const team: TeamMember[] = [
   {
     name: "Firman Qashdus Sabil",
-    role: "Creator & Developer",
+    roleKey: "creator",
+    bioKey: "firman",
     affiliation: "Universitas Negeri Malang",
     icon: UserCheck,
-    bio: "Lead software architecture, AI formative assessment pipelines, and system implementation.",
   },
   {
     name: "Khusaini, S.Pd., M.Ed., Ph.D.",
-    role: "Academic Supervisor",
+    roleKey: "supervisor",
+    bioKey: "khusaini",
     affiliation: "Universitas Negeri Malang",
     icon: GraduationCap,
-    bio: "Physics education specialist supervising pedagogical design, assessment taxonomy, and learning models.",
   },
   {
     name: "Dr. Cahyo Aji Hapsoro, M.Si.",
-    role: "Academic Supervisor",
+    roleKey: "supervisor",
+    bioKey: "cahyo",
     affiliation: "Universitas Negeri Malang",
     icon: GraduationCap,
-    bio: "Physics content expert advising on electromagnetism conceptual structures and curriculum alignment.",
   },
-] as const;
+];
 
 export function ProjectSection() {
+  const t = useTranslations("landing.project");
   const [activeMember, setActiveMember] = useState<string | null>(null);
 
   return (
@@ -46,16 +56,15 @@ export function ProjectSection() {
         {/* Section Header */}
         <ScrollReveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold text-primary">
-            Project & Academic Team
+            {t("badge")}
           </p>
 
           <h2 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            The people and institutional support behind ATLAS
+            {t("title")}
           </h2>
 
           <p className="mt-3 text-base text-muted-foreground">
-            ATLAS brings together educational assessment, conceptual learning,
-            and software engineering in a research-oriented academic project.
+            {t("description")}
           </p>
         </ScrollReveal>
 
@@ -84,12 +93,12 @@ export function ProjectSection() {
                       </CardTitle>
 
                       <CardDescription className="text-xs font-medium text-primary">
-                        {member.role}
+                        {t(`roles.${member.roleKey}`)}
                       </CardDescription>
 
                       {isSelected && (
                         <p className="mt-2 text-xs text-muted-foreground leading-relaxed animate-in fade-in">
-                          {member.bio}
+                          {t(`bios.${member.bioKey}`)}
                         </p>
                       )}
                     </CardHeader>
@@ -100,7 +109,7 @@ export function ProjectSection() {
                         <span>{member.affiliation}</span>
                       </div>
                       <span className="text-[10px] text-muted-foreground font-mono">
-                        {isSelected ? "Click to collapse" : "Click for bio"}
+                        {isSelected ? t("clickToCollapse") : t("clickForBio")}
                       </span>
                     </CardContent>
                   </Card>
@@ -120,20 +129,20 @@ export function ProjectSection() {
                   <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Landmark className="size-4.5" />
                   </div>
-                  <Badge variant="secondary">Internal Grant</Badge>
+                  <Badge variant="secondary">{t("funding.badge")}</Badge>
                 </div>
 
                 <CardTitle className="mt-2 text-base font-semibold">
-                  Funding Acknowledgement
+                  {t("funding.title")}
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Universitas Negeri Malang
+                  {t("funding.institution")}
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="pt-0 text-xs text-muted-foreground space-y-1">
-                <p className="font-medium text-foreground">Internal Non-PNBP Funding</p>
-                <p>Support provided for educational technology research and pilot assessment deployment.</p>
+                <p className="font-medium text-foreground">{t("funding.type")}</p>
+                <p>{t("funding.description")}</p>
               </CardContent>
             </Card>
           </ScrollReveal>
@@ -146,20 +155,20 @@ export function ProjectSection() {
                   <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <BookOpenText className="size-4.5" />
                   </div>
-                  <Badge variant="outline">In Preparation</Badge>
+                  <Badge variant="outline">{t("publication.badge")}</Badge>
                 </div>
 
                 <CardTitle className="mt-2 text-base font-semibold">
-                  Publication Status
+                  {t("publication.title")}
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Empirical Evaluation
+                  {t("publication.subtitle")}
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="pt-0 text-xs text-muted-foreground space-y-1">
-                <p className="font-medium text-foreground">Research publication</p>
-                <p>Coming soon.</p>
+                <p className="font-medium text-foreground">{t("publication.type")}</p>
+                <p>{t("publication.description")}</p>
               </CardContent>
             </Card>
           </ScrollReveal>

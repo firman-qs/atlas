@@ -62,4 +62,42 @@ describe("LandingHeader", () => {
       "#project",
     );
   });
+
+  it("renders navigation and actions in Indonesian when locale is id", () => {
+    mockedUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+    });
+
+    render(<LandingHeader />, { locale: "id" });
+
+    expect(
+      screen.getAllByRole("button", { name: "Ubah bahasa" }),
+    ).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Masuk" })).toHaveAttribute(
+      "href",
+      "/login",
+    );
+    expect(screen.getByRole("button", { name: "Mulai Sekarang" })).toHaveAttribute(
+      "href",
+      "/register",
+    );
+
+    expect(screen.getByRole("link", { name: "Kapabilitas" })).toHaveAttribute(
+      "href",
+      "#capabilities",
+    );
+    expect(screen.getByRole("link", { name: "Progresi" })).toHaveAttribute(
+      "href",
+      "#progression",
+    );
+    expect(screen.getByRole("link", { name: "Panduan & FAQ" })).toHaveAttribute(
+      "href",
+      "#guides-faq",
+    );
+    expect(screen.getByRole("link", { name: "Proyek" })).toHaveAttribute(
+      "href",
+      "#project",
+    );
+  });
 });

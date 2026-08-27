@@ -37,7 +37,16 @@ export function InstructorLearningProgress({
 
   function formatSoloLabel(code: string) {
     const key = soloLevelMessageKey(code);
-    return key && tSolo.has(key as any) ? tSolo(key as any) : formatDomainCode(code);
+    if (
+      key === "unistructural" ||
+      key === "multistructural" ||
+      key === "relational" ||
+      key === "extendedAbstract" ||
+      key === "prestructural"
+    ) {
+      return tSolo(key);
+    }
+    return formatDomainCode(code);
   }
 
   return (

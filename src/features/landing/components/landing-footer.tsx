@@ -2,33 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/features/auth/auth-provider";
 
-const exploreLinks = [
-  {
-    label: "Capabilities",
-    href: "#capabilities",
-  },
-  {
-    label: "Progression",
-    href: "#progression",
-  },
-  {
-    label: "Guides & FAQ",
-    href: "#guides-faq",
-  },
-  {
-    label: "Project Team",
-    href: "#project",
-  },
-  {
-    label: "Publication",
-    href: "#publication",
-  },
-] as const;
-
 function PlatformLinks() {
+  const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -46,7 +26,7 @@ function PlatformLinks() {
         href="/dashboard"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        Open Dashboard
+        {tNav("dashboard")}
       </Link>
     );
   }
@@ -57,20 +37,46 @@ function PlatformLinks() {
         href="/login"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        Sign In
+        {tCommon("login")}
       </Link>
 
       <Link
         href="/register"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        Get Started
+        {tCommon("register")}
       </Link>
     </div>
   );
 }
 
 export function LandingFooter() {
+  const t = useTranslations("landing.footer");
+  const tHeader = useTranslations("landing.header");
+
+  const exploreLinks = [
+    {
+      label: t("links.capabilities"),
+      href: "#capabilities",
+    },
+    {
+      label: t("links.progression"),
+      href: "#progression",
+    },
+    {
+      label: t("links.guidesFaq"),
+      href: "#guides-faq",
+    },
+    {
+      label: t("links.project"),
+      href: "#project",
+    },
+    {
+      label: t("links.publication"),
+      href: "#publication",
+    },
+  ];
+
   return (
     <footer className="bg-muted/20 px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-5xl">
@@ -79,7 +85,7 @@ export function LandingFooter() {
           <div className="max-w-sm">
             <Link
               href="/"
-              aria-label="ATLAS Home"
+              aria-label={tHeader("homeAria")}
               className="inline-flex items-center gap-2.5 group"
             >
               <div className="relative size-7.5 overflow-hidden transition-transform group-hover:scale-105">
@@ -97,19 +103,18 @@ export function LandingFooter() {
             </Link>
 
             <p className="mt-3 text-xs font-medium text-foreground">
-              Atlas, Targeted Learning Assessment System
+              {t("tagline")}
             </p>
 
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              An academic educational platform for AI-supported adaptive formative assessment,
-              conceptual progression, and evidence-grounded learning.
+              {t("description")}
             </p>
           </div>
 
           {/* Platform Links */}
           <div>
             <h4 className="text-xs font-semibold text-foreground">
-              Platform
+              {t("platformTitle")}
             </h4>
 
             <div className="mt-3">
@@ -120,7 +125,7 @@ export function LandingFooter() {
           {/* Explore Navigation Links */}
           <div>
             <h4 className="text-xs font-semibold text-foreground">
-              Explore
+              {t("exploreTitle")}
             </h4>
 
             <nav
@@ -142,21 +147,21 @@ export function LandingFooter() {
           {/* Project & Support Acknowledgement */}
           <div>
             <h4 className="text-xs font-semibold text-foreground">
-              Institutional Support
+              {t("supportTitle")}
             </h4>
 
             <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-              <p className="font-medium text-foreground">Universitas Negeri Malang</p>
-              <p>Internal Non-PNBP Funding</p>
-              <p className="text-[11px]">Department of Physics</p>
+              <p className="font-medium text-foreground">{t("institution")}</p>
+              <p>{t("funding")}</p>
+              <p className="text-[11px]">{t("department")}</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Legal / Copyright Row */}
         <div className="mt-10 flex flex-col gap-2 border-t pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 ATLAS. All rights reserved.</p>
-          <p>Formative assessment for conceptual learning.</p>
+          <p>{t("copyright")}</p>
+          <p>{t("motto")}</p>
         </div>
       </div>
     </footer>

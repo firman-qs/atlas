@@ -52,9 +52,10 @@ export function InstructorCourseOfferingList() {
       return value;
     }
     const normalized = value.toLowerCase();
-    return tSemesters.has(normalized as any)
-      ? tSemesters(normalized as any)
-      : `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+    if (normalized === "odd" || normalized === "even" || normalized === "short") {
+      return tSemesters(normalized);
+    }
+    return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
   }
 
   if (offeringsQuery.isPending) {
