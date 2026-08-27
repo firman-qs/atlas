@@ -3,7 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,23 +21,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useResetPassword } from "@/features/auth/queries";
 
-const resetPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Password must contain at least 8 characters.")
-      .max(255, "Password is too long."),
+function createResetPasswordSchema(
+  t: ReturnType<typeof useTranslations<"auth.validation">>,
+) {
+  return z
+    .object({
+      password: z
+        .string()
+        .min(8, t("passwordMinLength", { min: 8 }))
+        .max(255, t("passwordTooLong")),
 
-    passwordConfirmation: z
-      .string()
-      .min(1, "Password confirmation is required."),
-  })
-  .refine((values) => values.password === values.passwordConfirmation, {
-    message: "Password confirmation does not match.",
-    path: ["passwordConfirmation"],
-  });
+      passwordConfirmation: z
+        .string()
+        .min(1, t("passwordConfirmationRequired")),
+    })
+    .refine((values) => values.password === values.passwordConfirmation, {
+      message: t("passwordConfirmationDoesNotMatch"),
+      path: ["passwordConfirmation"],
+    });
+}
 
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+type ResetPasswordFormValues = z.infer<
+  ReturnType<typeof createResetPasswordSchema>
+>;
 
 interface ResetPasswordFormProps {
   token: string;
@@ -44,6 +51,12 @@ interface ResetPasswordFormProps {
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const resetPassword = useResetPassword();
+  const t = useTranslations("auth.resetPassword");
+  const tValidation = useTranslations("auth.validation");
+  const resetPasswordSchema = useMemo(
+    () => createResetPasswordSchema(tValidation),
+    [tValidation],
+  );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -72,7 +85,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       setSubmissionError(
         error instanceof Error
           ? error.message
-          : "Unable to reset your password.",
+          : t("fallbackError"),
       );
     }
   }
@@ -80,17 +93,17 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Set a new password</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
 
         <CardDescription>
-          Enter a new password for your ATLAS account.
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-5">
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
-            <Label htmlFor="new-password">New password</Label>
+            <Label htmlFor="new-password">{t("newPassword")}</Label>
 
             <Input
               id="new-password"
@@ -108,7 +121,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirm-new-password">Confirm new password</Label>
+            <Label htmlFor="confirm-new-password">
+              {t("confirmNewPassword")}
+            </Label>
 
             <Input
               id="confirm-new-password"
@@ -145,8 +160,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             {resetPassword.isPending && <Loader2 className="animate-spin" />}
 
             {resetPassword.isPending
-              ? "Resetting password..."
-              : "Reset password"}
+              ? t("submitting")
+              : t("submit")}
           </Button>
         </form>
 
@@ -157,7 +172,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             className="w-full"
             render={<Link href="/login" />}
           >
-            Back to sign in
+            {t("backToSignIn")}
           </Button>
         )}
       </CardContent>

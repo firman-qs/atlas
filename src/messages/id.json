@@ -1,6 +1,150 @@
 {
   "metadata": {"description": "Asesmen formatif adaptif untuk pembelajaran konseptual"},
   "common": {"save": "Simpan", "cancel": "Batalkan"},
+  "navigation": {
+    "breadcrumbs": {
+      "dashboard": "Dasbor",
+      "account": "Akun",
+      "myCourses": "Mata Kuliah Saya",
+      "aiTutor": "Tutor AI",
+      "assessments": "Asesmen",
+      "courseOfferings": "Penawaran Mata Kuliah",
+      "students": "Mahasiswa",
+      "curriculumImport": "Impor Kurikulum",
+      "questionImport": "Impor Pertanyaan",
+      "questionBanks": "Bank Pertanyaan",
+      "questions": "Pertanyaan",
+      "academicTerms": "Periode Akademik",
+      "courses": "Mata Kuliah",
+      "users": "Pengguna"
+    },
+    "sidebar": {
+      "formativeAssessment": "Asesmen Formatif",
+      "workspace": "Ruang Kerja",
+      "curriculum": "Kurikulum",
+      "delivery": "Penyelenggaraan",
+      "administration": "Administrasi",
+      "dashboard": "Dasbor",
+      "myCourses": "Mata Kuliah Saya",
+      "assessments": "Asesmen",
+      "courseOfferings": "Penawaran Mata Kuliah",
+      "students": "Mahasiswa",
+      "courses": "Mata Kuliah",
+      "curriculumImport": "Impor Kurikulum",
+      "questions": "Pertanyaan",
+      "questionImport": "Impor Pertanyaan",
+      "questionBanks": "Bank Pertanyaan",
+      "academicTerms": "Periode Akademik",
+      "users": "Pengguna",
+      "accountMenu": "Akun Saya",
+      "signOut": "Keluar",
+      "accountTooltip": "{name} · Akun"
+    },
+    "workspace": "Ruang Kerja",
+    "theme": {
+      "toggle": "Ubah tema"
+    }
+  },
+  "roles": {
+    "student": "Mahasiswa",
+    "instructor": "Pengajar",
+    "admin": "Administrator",
+    "adminShort": "Admin"
+  },
+  "auth": {
+    "validation": {
+      "validEmail": "Masukkan alamat email yang valid.",
+      "passwordRequired": "Kata sandi wajib diisi.",
+      "passwordTooLong": "Kata sandi terlalu panjang.",
+      "passwordMinLength": "Kata sandi harus berisi setidaknya {min} karakter.",
+      "fullNameRequired": "Nama lengkap wajib diisi.",
+      "fullNameTooLong": "Nama lengkap terlalu panjang.",
+      "passwordsDoNotMatch": "Kata sandi tidak cocok.",
+      "passwordConfirmationRequired": "Konfirmasi kata sandi wajib diisi.",
+      "passwordConfirmationDoesNotMatch": "Konfirmasi kata sandi tidak cocok.",
+      "currentPasswordMinLength": "Kata sandi saat ini harus berisi setidaknya {min} karakter.",
+      "currentPasswordTooLong": "Kata sandi saat ini terlalu panjang.",
+      "newPasswordMinLength": "Kata sandi baru harus berisi setidaknya {min} karakter.",
+      "newPasswordTooLong": "Kata sandi baru terlalu panjang.",
+      "confirmNewPassword": "Konfirmasikan kata sandi baru Anda.",
+      "passwordConfirmationTooLong": "Konfirmasi kata sandi terlalu panjang.",
+      "newPasswordMustDiffer": "Kata sandi baru harus berbeda dari kata sandi saat ini."
+    },
+    "login": {
+      "title": "Masuk ke ATLAS",
+      "description": "Gunakan akun ATLAS Anda untuk melanjutkan.",
+      "email": "Email",
+      "password": "Kata sandi",
+      "forgotPassword": "Lupa kata sandi?",
+      "submitting": "Sedang masuk...",
+      "submit": "Masuk",
+      "noAccount": "Belum punya akun?",
+      "createAccount": "Buat akun",
+      "fallbackError": "Tidak dapat masuk. Silakan coba lagi."
+    },
+    "register": {
+      "title": "Buat akun ATLAS Anda",
+      "description": "Daftar sebagai mahasiswa untuk mengakses mata kuliah dan asesmen Anda.",
+      "fullName": "Nama lengkap",
+      "email": "Email",
+      "password": "Kata sandi",
+      "confirmPassword": "Konfirmasi kata sandi",
+      "success": "Akun berhasil dibuat. Mengalihkan ke halaman masuk.",
+      "submitting": "Sedang membuat akun...",
+      "submit": "Buat akun",
+      "hasAccount": "Sudah punya akun?",
+      "signIn": "Masuk",
+      "fallbackError": "Tidak dapat membuat akun. Silakan coba lagi."
+    },
+    "forgotPassword": {
+      "title": "Atur ulang kata sandi Anda",
+      "description": "Masukkan email akun Anda dan kami akan memberikan petunjuk pengaturan ulang kata sandi jika akun memenuhi syarat.",
+      "email": "Email",
+      "submitting": "Sedang mengirim...",
+      "submit": "Kirim petunjuk pengaturan ulang",
+      "backToSignIn": "Kembali ke masuk",
+      "fallbackError": "Tidak dapat meminta pengaturan ulang kata sandi."
+    },
+    "resetPassword": {
+      "title": "Atur kata sandi baru",
+      "description": "Masukkan kata sandi baru untuk akun ATLAS Anda.",
+      "newPassword": "Kata sandi baru",
+      "confirmNewPassword": "Konfirmasi kata sandi baru",
+      "submitting": "Sedang mengatur ulang kata sandi...",
+      "submit": "Atur ulang kata sandi",
+      "backToSignIn": "Kembali ke masuk",
+      "fallbackError": "Tidak dapat mengatur ulang kata sandi Anda.",
+      "invalidLinkTitle": "Tautan pengaturan ulang tidak valid",
+      "invalidLinkDescription": "Tautan pengaturan ulang kata sandi ini tidak valid atau tidak lengkap.",
+      "requestNewLink": "Minta tautan pengaturan ulang baru"
+    },
+    "changePassword": {
+      "title": "Ubah Kata Sandi",
+      "description": "Perbarui kata sandi yang digunakan untuk masuk ke akun ATLAS Anda.",
+      "currentPassword": "Kata sandi saat ini",
+      "newPassword": "Kata sandi baru",
+      "confirmNewPassword": "Konfirmasi kata sandi baru",
+      "submitting": "Sedang mengubah kata sandi...",
+      "submit": "Ubah kata sandi",
+      "fallbackError": "Tidak dapat mengubah kata sandi."
+    }
+  },
+  "account": {
+    "title": "Akun",
+    "description": "Tinjau identitas ATLAS Anda dan kelola keamanan akun.",
+    "profile": "Profil",
+    "profileDescription": "Informasi akun ATLAS Anda yang telah diautentikasi.",
+    "fullName": "Nama lengkap",
+    "email": "Email",
+    "roles": "Peran"
+  },
+  "accessibility": {
+    "close": "Tutup",
+    "more": "Lainnya",
+    "sidebar": "Bilah samping",
+    "mobileSidebarDescription": "Menampilkan bilah samping seluler.",
+    "toggleSidebar": "Alihkan Bilah Samping"
+  },
   "language": {
     "label": "Bahasa",
     "change": "Ubah bahasa",

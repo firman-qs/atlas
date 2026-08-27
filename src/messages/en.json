@@ -1,6 +1,150 @@
 {
   "metadata": {"description": "Adaptive formative assessment for conceptual learning"},
   "common": {"save": "Save", "cancel": "Cancel"},
+  "navigation": {
+    "breadcrumbs": {
+      "dashboard": "Dashboard",
+      "account": "Account",
+      "myCourses": "My Courses",
+      "aiTutor": "AI Tutor",
+      "assessments": "Assessments",
+      "courseOfferings": "Course Offerings",
+      "students": "Students",
+      "curriculumImport": "Curriculum Import",
+      "questionImport": "Question Import",
+      "questionBanks": "Question Banks",
+      "questions": "Questions",
+      "academicTerms": "Academic Terms",
+      "courses": "Courses",
+      "users": "Users"
+    },
+    "sidebar": {
+      "formativeAssessment": "Formative Assessment",
+      "workspace": "Workspace",
+      "curriculum": "Curriculum",
+      "delivery": "Delivery",
+      "administration": "Administration",
+      "dashboard": "Dashboard",
+      "myCourses": "My Courses",
+      "assessments": "Assessments",
+      "courseOfferings": "Course Offerings",
+      "students": "Students",
+      "courses": "Courses",
+      "curriculumImport": "Curriculum Import",
+      "questions": "Questions",
+      "questionImport": "Question Import",
+      "questionBanks": "Question Banks",
+      "academicTerms": "Academic Terms",
+      "users": "Users",
+      "accountMenu": "My Account",
+      "signOut": "Sign out",
+      "accountTooltip": "{name} · Account"
+    },
+    "workspace": "Workspace",
+    "theme": {
+      "toggle": "Toggle theme"
+    }
+  },
+  "roles": {
+    "student": "Student",
+    "instructor": "Instructor",
+    "admin": "Administrator",
+    "adminShort": "Admin"
+  },
+  "auth": {
+    "validation": {
+      "validEmail": "Enter a valid email address.",
+      "passwordRequired": "Password is required.",
+      "passwordTooLong": "Password is too long.",
+      "passwordMinLength": "Password must contain at least {min} characters.",
+      "fullNameRequired": "Full name is required.",
+      "fullNameTooLong": "Full name is too long.",
+      "passwordsDoNotMatch": "Passwords do not match.",
+      "passwordConfirmationRequired": "Password confirmation is required.",
+      "passwordConfirmationDoesNotMatch": "Password confirmation does not match.",
+      "currentPasswordMinLength": "Current password must contain at least {min} characters.",
+      "currentPasswordTooLong": "Current password is too long.",
+      "newPasswordMinLength": "New password must contain at least {min} characters.",
+      "newPasswordTooLong": "New password is too long.",
+      "confirmNewPassword": "Confirm your new password.",
+      "passwordConfirmationTooLong": "Password confirmation is too long.",
+      "newPasswordMustDiffer": "New password must be different from the current password."
+    },
+    "login": {
+      "title": "Sign in to ATLAS",
+      "description": "Use your ATLAS account to continue.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "submitting": "Signing in...",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "fallbackError": "Unable to sign in. Please try again."
+    },
+    "register": {
+      "title": "Create your ATLAS account",
+      "description": "Register as a student to access your courses and assessments.",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "success": "Account created successfully. Redirecting to sign in.",
+      "submitting": "Creating account...",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "fallbackError": "Unable to create account. Please try again."
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "description": "Enter your account email and we'll provide password reset instructions if the account is eligible.",
+      "email": "Email",
+      "submitting": "Sending...",
+      "submit": "Send reset instructions",
+      "backToSignIn": "Back to sign in",
+      "fallbackError": "Unable to request a password reset."
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "description": "Enter a new password for your ATLAS account.",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "submitting": "Resetting password...",
+      "submit": "Reset password",
+      "backToSignIn": "Back to sign in",
+      "fallbackError": "Unable to reset your password.",
+      "invalidLinkTitle": "Invalid reset link",
+      "invalidLinkDescription": "This password reset link is invalid or incomplete.",
+      "requestNewLink": "Request a new reset link"
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Update the password used to sign in to your ATLAS account.",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "submitting": "Changing password...",
+      "submit": "Change password",
+      "fallbackError": "Unable to change password."
+    }
+  },
+  "account": {
+    "title": "Account",
+    "description": "Review your ATLAS identity and manage account security.",
+    "profile": "Profile",
+    "profileDescription": "Your authenticated ATLAS account information.",
+    "fullName": "Full name",
+    "email": "Email",
+    "roles": "Roles"
+  },
+  "accessibility": {
+    "close": "Close",
+    "more": "More",
+    "sidebar": "Sidebar",
+    "mobileSidebarDescription": "Displays the mobile sidebar.",
+    "toggleSidebar": "Toggle Sidebar"
+  },
   "language": {
     "label": "Language",
     "change": "Change language",

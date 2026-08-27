@@ -2,12 +2,19 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { fireEvent, render, screen } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockedUseAuth, mockedUseActiveRole, mockedSetActiveRole, mockedPush } =
+const {
+  mockedUseAuth,
+  mockedUseActiveRole,
+  mockedSetActiveRole,
+  mockedPush,
+  mockedUseLogout,
+} =
   vi.hoisted(() => ({
     mockedUseAuth: vi.fn(),
     mockedUseActiveRole: vi.fn(),
     mockedSetActiveRole: vi.fn(),
     mockedPush: vi.fn(),
+    mockedUseLogout: vi.fn(),
   }));
 
 vi.mock("next/navigation", () => ({
@@ -32,7 +39,12 @@ vi.mock("@/features/auth/active-role-provider", () => ({
   useActiveRole: mockedUseActiveRole,
 }));
 
+vi.mock("@/features/auth/queries", () => ({
+  useLogout: mockedUseLogout,
+}));
+
 import { AppHeader } from "@/components/app-shell/app-header";
+import { AppSidebar } from "@/components/app-shell/app-sidebar";
 
 describe("AppHeader", () => {
   beforeEach(() => {
@@ -52,10 +64,15 @@ describe("AppHeader", () => {
       availableRoles: ["admin", "instructor", "student"],
       setActiveRole: mockedSetActiveRole,
     });
+
+    mockedUseLogout.mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: false,
+    });
   });
 
   it("renders route context and switches workspace role", () => {
-    render(
+    const { container } = render(
       <SidebarProvider>
         <AppHeader />
       </SidebarProvider>,
@@ -80,5 +97,26 @@ describe("AppHeader", () => {
 
     expect(mockedSetActiveRole).toHaveBeenCalledWith("student");
     expect(mockedPush).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("renders Indonesian shell labels without changing navigation targets", () => {
+    render(
+      <SidebarProvider>
+        <AppHeader />
+        <AppSidebar />
+      </SidebarProvider>,
+      { locale: "id" },
+    );
+
+    expect(screen.getAllByText("Mata Kuliah")).toHaveLength(2);
+    expect(screen.getByText("Ruang Kerja")).toBeInTheDocument();
+    expect(container.querySelector('a[href="/admin/courses"]')).toHaveTextContent(
+      "Mata Kuliah",
+    );
+
+    fireEvent.click(screen.getByText("Firman Sabil"));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Akun Saya" }));
+
+    expect(mockedPush).toHaveBeenCalledWith("/account");
   });
 });

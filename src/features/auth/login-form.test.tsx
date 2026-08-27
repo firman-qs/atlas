@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "@/test/render";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("next/navigation", () => ({
@@ -38,5 +38,15 @@ describe("LoginForm", () => {
     });
 
     expect(link).toHaveAttribute("href", "/register");
+  });
+
+  it("renders the Indonesian sign-in heading while preserving auth links", () => {
+    render(<LoginForm />, { locale: "id" });
+
+    expect(screen.getByText("Masuk ke ATLAS")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Lupa kata sandi?" })).toHaveAttribute(
+      "href",
+      "/forgot-password",
+    );
   });
 });

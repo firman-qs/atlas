@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -42,46 +43,47 @@ import { useActiveRole } from "@/features/auth/active-role-provider";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useLogout } from "@/features/auth/queries";
 
-const navigation = {
-  student: [
-    {
-      label: "Workspace",
-      items: [
-        {
-          label: "Dashboard",
-          href: "/dashboard",
-          icon: LayoutDashboard,
-        },
-        {
-          label: "My Courses",
-          href: "/student/courses",
-          icon: BookOpen,
-        },
-        {
-          label: "Assessments",
-          href: "/student/assessments",
-          icon: ClipboardCheck,
-        },
-      ],
-    },
-  ],
+function getNavigation(t: ReturnType<typeof useTranslations<"navigation.sidebar">>) {
+  return {
+    student: [
+      {
+        label: t("workspace"),
+        items: [
+          {
+            label: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
+          },
+          {
+            label: t("myCourses"),
+            href: "/student/courses",
+            icon: BookOpen,
+          },
+          {
+            label: t("assessments"),
+            href: "/student/assessments",
+            icon: ClipboardCheck,
+          },
+        ],
+      },
+    ],
 
   instructor: [
     {
-      label: "Workspace",
+      label: t("workspace"),
       items: [
         {
-          label: "Dashboard",
+          label: t("dashboard"),
           href: "/dashboard",
           icon: LayoutDashboard,
         },
         {
-          label: "Course Offerings",
+          label: t("courseOfferings"),
           href: "/instructor/course-offerings",
           icon: GraduationCap,
         },
         {
-          label: "Students",
+          label: t("students"),
           href: "/instructor/students",
           icon: Users,
         },
@@ -91,72 +93,73 @@ const navigation = {
 
   admin: [
     {
-      label: "Workspace",
+      label: t("workspace"),
       items: [
         {
-          label: "Dashboard",
+          label: t("dashboard"),
           href: "/dashboard",
           icon: LayoutDashboard,
         },
       ],
     },
     {
-      label: "Curriculum",
+      label: t("curriculum"),
       items: [
         {
-          label: "Courses",
+          label: t("courses"),
           href: "/admin/courses",
           icon: BookOpen,
         },
         {
-          label: "Curriculum Import",
+          label: t("curriculumImport"),
           href: "/admin/curriculum-import",
           icon: FileUp,
         },
         {
-          label: "Questions",
+          label: t("questions"),
           href: "/admin/questions",
           icon: ClipboardCheck,
         },
         {
-          label: "Question Import",
+          label: t("questionImport"),
           href: "/admin/question-import",
           icon: FileUp,
         },
         {
-          label: "Question Banks",
+          label: t("questionBanks"),
           href: "/admin/question-banks",
           icon: Library,
         },
       ],
     },
     {
-      label: "Delivery",
+      label: t("delivery"),
       items: [
         {
-          label: "Academic Terms",
+          label: t("academicTerms"),
           href: "/admin/academic-terms",
           icon: CalendarDays,
         },
         {
-          label: "Course Offerings",
+          label: t("courseOfferings"),
           href: "/admin/course-offerings",
           icon: GraduationCap,
         },
       ],
     },
     {
-      label: "Administration",
+      label: t("administration"),
       items: [
         {
-          label: "Users",
+          label: t("users"),
           href: "/admin/users",
           icon: Users,
         },
       ],
     },
   ],
-} as const;
+  } as const;
+}
 
 function isNavigationItemActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -174,13 +177,14 @@ function initials(name: string) {
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("navigation.sidebar");
 
   const { isMobile } = useSidebar();
   const { activeRole } = useActiveRole();
   const { user } = useAuth();
   const logout = useLogout();
 
-  const groups = activeRole ? navigation[activeRole] : [];
+  const groups = activeRole ? getNavigation(t)[activeRole] : [];
 
   async function handleLogout() {
     await logout.mutateAsync();
@@ -208,7 +212,7 @@ export function AppSidebar() {
                 </div>
 
                 <div className="truncate text-xs text-muted-foreground">
-                  Formative Assessment
+                  {t("formativeAssessment")}
                 </div>
               </div>
             </SidebarMenuButton>
@@ -256,7 +260,7 @@ export function AppSidebar() {
                   render={
                     <SidebarMenuButton
                       size="lg"
-                      tooltip={`${user.full_name} · Account`}
+                      tooltip={t("accountTooltip", { name: user.full_name })}
                       className="data-open:bg-sidebar-accent"
                     />
                   }
@@ -285,11 +289,11 @@ export function AppSidebar() {
                   className={isMobile ? "w-56 min-w-56" : "min-w-56"}
                 >
                   <DropdownMenuGroup>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t("accountMenu")}</DropdownMenuLabel>
 
                     <DropdownMenuItem onClick={() => router.push("/account")}>
                       <UserRound />
-                      My Account
+                      {t("accountMenu")}
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
@@ -297,7 +301,7 @@ export function AppSidebar() {
                       onClick={handleLogout}
                     >
                       <LogOut />
-                      Sign out
+                      {t("signOut")}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>

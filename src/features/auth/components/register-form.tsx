@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,37 +23,47 @@ import { Label } from "@/components/ui/label";
 
 import { useRegister } from "@/features/auth/queries";
 
-const registerSchema = z
-  .object({
-    fullName: z
-      .string()
-      .trim()
-      .min(1, "Full name is required.")
-      .max(255, "Full name is too long."),
+function createRegisterSchema(
+  t: ReturnType<typeof useTranslations<"auth.validation">>,
+) {
+  return z
+    .object({
+      fullName: z
+        .string()
+        .trim()
+        .min(1, t("fullNameRequired"))
+        .max(255, t("fullNameTooLong")),
 
-    email: z
-      .string()
-      .trim()
-      .toLowerCase()
-      .pipe(z.email("Enter a valid email address.")),
+      email: z
+        .string()
+        .trim()
+        .toLowerCase()
+        .pipe(z.email(t("validEmail"))),
 
-    password: z
-      .string()
-      .min(8, "Password must contain at least 8 characters.")
-      .max(255, "Password is too long."),
+      password: z
+        .string()
+        .min(8, t("passwordMinLength", { min: 8 }))
+        .max(255, t("passwordTooLong")),
 
-    passwordConfirmation: z.string(),
-  })
-  .refine((values) => values.password === values.passwordConfirmation, {
-    message: "Passwords do not match.",
-    path: ["passwordConfirmation"],
-  });
+      passwordConfirmation: z.string(),
+    })
+    .refine((values) => values.password === values.passwordConfirmation, {
+      message: t("passwordsDoNotMatch"),
+      path: ["passwordConfirmation"],
+    });
+}
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = z.infer<ReturnType<typeof createRegisterSchema>>;
 
 export function RegisterForm() {
   const router = useRouter();
   const registerMutation = useRegister();
+  const t = useTranslations("auth.register");
+  const tValidation = useTranslations("auth.validation");
+  const registerSchema = useMemo(
+    () => createRegisterSchema(tValidation),
+    [tValidation],
+  );
 
   const [success, setSuccess] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -84,7 +95,7 @@ export function RegisterForm() {
       setSubmissionError(
         error instanceof Error
           ? error.message
-          : "Unable to create account. Please try again.",
+          : t("fallbackError"),
       );
     }
   }
@@ -92,10 +103,10 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Create your ATLAS account</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
 
         <CardDescription>
-          Register as a student to access your courses and assessments.
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
@@ -106,7 +117,7 @@ export function RegisterForm() {
           noValidate
         >
           <div className="space-y-2">
-            <Label htmlFor="full-name">Full name</Label>
+            <Label htmlFor="full-name">{t("fullName")}</Label>
 
             <Input
               id="full-name"
@@ -124,7 +135,7 @@ export function RegisterForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
 
             <Input
               id="email"
@@ -142,7 +153,7 @@ export function RegisterForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
 
             <Input
               id="password"
@@ -160,7 +171,7 @@ export function RegisterForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password-confirmation">Confirm password</Label>
+            <Label htmlFor="password-confirmation">{t("confirmPassword")}</Label>
 
             <Input
               id="password-confirmation"
@@ -187,7 +198,7 @@ export function RegisterForm() {
             <Alert>
               <CheckCircle2 />
               <AlertDescription>
-                Account created successfully. Redirecting to sign in.
+                {t("success")}
               </AlertDescription>
             </Alert>
           )}
@@ -200,18 +211,18 @@ export function RegisterForm() {
             {registerMutation.isPending && <Loader2 className="animate-spin" />}
 
             {registerMutation.isPending
-              ? "Creating account..."
-              : "Create account"}
+              ? t("submitting")
+              : t("submit")}
           </Button>
         </form>
 
         <div className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {t("hasAccount")} {" "}
           <Link
             href="/login"
             className="font-medium text-foreground underline-offset-4 hover:underline"
           >
-            Sign in
+            {t("signIn")}
           </Link>
         </div>
       </CardContent>

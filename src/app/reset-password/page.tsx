@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 
 import {
@@ -16,6 +17,7 @@ import { ResetPasswordForm } from "@/features/auth/components/reset-password-for
 
 function ResetPasswordPageContent() {
   const searchParams = useSearchParams();
+  const t = useTranslations("auth.resetPassword");
   const token = searchParams.get("token");
 
   if (!token) {
@@ -23,10 +25,10 @@ function ResetPasswordPageContent() {
       <main className="flex min-h-screen items-center justify-center p-6">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl">Invalid reset link</CardTitle>
+            <CardTitle className="text-2xl">{t("invalidLinkTitle")}</CardTitle>
 
             <CardDescription>
-              This password reset link is invalid or incomplete.
+              {t("invalidLinkDescription")}
             </CardDescription>
           </CardHeader>
 
@@ -35,7 +37,7 @@ function ResetPasswordPageContent() {
               href="/forgot-password"
               className="inline-flex h-8 w-full items-center justify-center rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
             >
-              Request a new reset link
+              {t("requestNewLink")}
             </Link>
           </CardContent>
         </Card>

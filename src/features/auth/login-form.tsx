@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { z } from "zod";
@@ -21,19 +23,27 @@ import { Label } from "@/components/ui/label";
 import { useLogin } from "@/features/auth/queries";
 import { ApiError } from "@/lib/api/api-error";
 
-const loginSchema = z.object({
-  email: z.email("Enter a valid email address."),
-  password: z
-    .string()
-    .min(1, "Password is required.")
-    .max(255, "Password is too long."),
-});
+function createLoginSchema(t: ReturnType<typeof useTranslations<"auth.validation">>) {
+  return z.object({
+    email: z.email(t("validEmail")),
+    password: z
+      .string()
+      .min(1, t("passwordRequired"))
+      .max(255, t("passwordTooLong")),
+  });
+}
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;
 
 export function LoginForm() {
   const router = useRouter();
   const loginMutation = useLogin();
+  const t = useTranslations("auth.login");
+  const tValidation = useTranslations("auth.validation");
+  const loginSchema = useMemo(
+    () => createLoginSchema(tValidation),
+    [tValidation],
+  );
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -56,20 +66,20 @@ export function LoginForm() {
     loginMutation.error instanceof ApiError
       ? loginMutation.error.message
       : loginMutation.isError
-        ? "Unable to sign in. Please try again."
+        ? t("fallbackError")
         : null;
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign in to ATLAS</CardTitle>
-        <CardDescription>Use your ATLAS account to continue.</CardDescription>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
 
       <CardContent>
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
 
             <Input
               id="email"
@@ -88,13 +98,13 @@ export function LoginForm() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("password")}</Label>
 
               <Link
                 href="/forgot-password"
                 className="text-sm text-primary underline-offset-4 hover:underline"
               >
-                Forgot password?
+                {t("forgotPassword")}
               </Link>
             </div>
 
@@ -126,17 +136,17 @@ export function LoginForm() {
           >
             {loginMutation.isPending && <Loader2 className="animate-spin" />}
 
-            {loginMutation.isPending ? "Signing in..." : "Sign in"}
+            {loginMutation.isPending ? t("submitting") : t("submit")}
           </Button>
         </form>
 
         <div className="mt-5 text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {t("noAccount")} {" "}
           <Link
             href="/register"
             className="font-medium text-foreground underline-offset-4 hover:underline"
           >
-            Create account
+            {t("createAccount")}
           </Link>
         </div>
       </CardContent>

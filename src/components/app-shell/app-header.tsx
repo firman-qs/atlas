@@ -2,6 +2,7 @@
 
 import { Check, ChevronsUpDown, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -31,86 +32,82 @@ import {
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useActiveRole } from "@/features/auth/active-role-provider";
 import { useAuth } from "@/features/auth/auth-provider";
-import type { UserRole } from "@/features/auth/types";
-
-const roleLabels: Record<UserRole, string> = {
-  admin: "Administrator",
-  instructor: "Instructor",
-  student: "Student",
-};
 
 interface BreadcrumbEntry {
   label: string;
   href?: string;
 }
 
-function getBreadcrumbs(pathname: string): BreadcrumbEntry[] {
+function getBreadcrumbs(
+  pathname: string,
+  t: ReturnType<typeof useTranslations<"navigation">>,
+): BreadcrumbEntry[] {
   if (pathname === "/dashboard") {
-    return [{ label: "Dashboard" }];
+    return [{ label: t("breadcrumbs.dashboard") }];
   }
 
   if (pathname === "/account") {
-    return [{ label: "Account" }];
+    return [{ label: t("breadcrumbs.account") }];
   }
 
   if (pathname.startsWith("/student/courses")) {
     if (pathname.includes("/chat")) {
       return [
         {
-          label: "My Courses",
+          label: t("breadcrumbs.myCourses"),
           href: "/student/courses",
         },
         {
-          label: "AI Tutor",
+          label: t("breadcrumbs.aiTutor"),
         },
       ];
     }
 
-    return [{ label: "My Courses" }];
+    return [{ label: t("breadcrumbs.myCourses") }];
   }
 
   if (pathname.startsWith("/student/assessments")) {
-    return [{ label: "Assessments" }];
+    return [{ label: t("breadcrumbs.assessments") }];
   }
 
   if (pathname.startsWith("/instructor/course-offerings")) {
-    return [{ label: "Course Offerings" }];
+    return [{ label: t("breadcrumbs.courseOfferings") }];
   }
 
   if (pathname.startsWith("/instructor/students")) {
-    return [{ label: "Students" }];
+    return [{ label: t("breadcrumbs.students") }];
   }
 
   if (pathname.startsWith("/admin/curriculum-import")) {
-    return [{ label: "Curriculum Import" }];
+    return [{ label: t("breadcrumbs.curriculumImport") }];
   }
 
   if (pathname.startsWith("/admin/question-import")) {
-    return [{ label: "Question Import" }];
+    return [{ label: t("breadcrumbs.questionImport") }];
   }
 
   if (pathname.startsWith("/admin/question-banks")) {
-    return [{ label: "Question Banks" }];
+    return [{ label: t("breadcrumbs.questionBanks") }];
   }
 
   if (pathname.startsWith("/admin/questions")) {
-    return [{ label: "Questions" }];
+    return [{ label: t("breadcrumbs.questions") }];
   }
 
   if (pathname.startsWith("/admin/academic-terms")) {
-    return [{ label: "Academic Terms" }];
+    return [{ label: t("breadcrumbs.academicTerms") }];
   }
 
   if (pathname.startsWith("/admin/course-offerings")) {
-    return [{ label: "Course Offerings" }];
+    return [{ label: t("breadcrumbs.courseOfferings") }];
   }
 
   if (pathname.startsWith("/admin/courses")) {
-    return [{ label: "Courses" }];
+    return [{ label: t("breadcrumbs.courses") }];
   }
 
   if (pathname.startsWith("/admin/users")) {
-    return [{ label: "Users" }];
+    return [{ label: t("breadcrumbs.users") }];
   }
 
   return [];
@@ -118,6 +115,7 @@ function getBreadcrumbs(pathname: string): BreadcrumbEntry[] {
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const t = useTranslations("navigation.theme");
 
   return (
     <Tooltip>
@@ -126,7 +124,7 @@ function ThemeToggle() {
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label="Toggle theme"
+            aria-label={t("toggle")}
             onClick={() => {
               setTheme(resolvedTheme === "dark" ? "light" : "dark");
             }}
@@ -137,7 +135,7 @@ function ThemeToggle() {
         <Moon className="dark:hidden" />
       </TooltipTrigger>
 
-      <TooltipContent side="bottom">Toggle theme</TooltipContent>
+      <TooltipContent side="bottom">{t("toggle")}</TooltipContent>
     </Tooltip>
   );
 }
@@ -145,11 +143,13 @@ function ThemeToggle() {
 export function AppHeader() {
   const pathname = usePathname();
   const router = useRouter();
+  const tNavigation = useTranslations("navigation");
+  const tRoles = useTranslations("roles");
 
   const { user } = useAuth();
   const { activeRole, availableRoles, setActiveRole } = useActiveRole();
 
-  const breadcrumbs = getBreadcrumbs(pathname);
+  const breadcrumbs = getBreadcrumbs(pathname, tNavigation);
 
   if (!user) {
     return null;
@@ -203,10 +203,10 @@ export function AppHeader() {
                 <Button variant="ghost" size="sm" className="gap-2 px-2.5" />
               }
             >
-              <span className="hidden sm:inline">{roleLabels[activeRole]}</span>
+              <span className="hidden sm:inline">{tRoles(activeRole)}</span>
 
               <span className="sm:hidden">
-                {activeRole === "admin" ? "Admin" : roleLabels[activeRole]}
+                {activeRole === "admin" ? tRoles("adminShort") : tRoles(activeRole)}
               </span>
 
               <ChevronsUpDown className="size-3.5 opacity-60" />
@@ -214,7 +214,7 @@ export function AppHeader() {
 
             <DropdownMenuContent align="end">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Workspace</DropdownMenuLabel>
+                <DropdownMenuLabel>{tNavigation("workspace")}</DropdownMenuLabel>
 
                 {availableRoles.map((role) => (
                   <DropdownMenuItem
@@ -224,7 +224,7 @@ export function AppHeader() {
                       router.push("/dashboard");
                     }}
                   >
-                    <span className="flex-1">{roleLabels[role]}</span>
+                    <span className="flex-1">{tRoles(role)}</span>
 
                     {role === activeRole && <Check />}
                   </DropdownMenuItem>

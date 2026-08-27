@@ -3,9 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -20,18 +21,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForgotPassword } from "@/features/auth/queries";
 
-const forgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .pipe(z.email("Enter a valid email address.")),
-});
+function createForgotPasswordSchema(
+  t: ReturnType<typeof useTranslations<"auth.validation">>,
+) {
+  return z.object({
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .pipe(z.email(t("validEmail"))),
+  });
+}
 
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordFormValues = z.infer<
+  ReturnType<typeof createForgotPasswordSchema>
+>;
 
 export function ForgotPasswordForm() {
   const forgotPassword = useForgotPassword();
+  const t = useTranslations("auth.forgotPassword");
+  const tValidation = useTranslations("auth.validation");
+  const forgotPasswordSchema = useMemo(
+    () => createForgotPasswordSchema(tValidation),
+    [tValidation],
+  );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -57,11 +70,10 @@ export function ForgotPasswordForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Reset your password</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
 
         <CardDescription>
-          Enter your account email and we&apos;ll provide password reset
-          instructions if the account is eligible.
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
@@ -72,7 +84,7 @@ export function ForgotPasswordForm() {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
 
             <Input
               id="email"
@@ -94,7 +106,7 @@ export function ForgotPasswordForm() {
               <AlertDescription>
                 {forgotPassword.error instanceof Error
                   ? forgotPassword.error.message
-                  : "Unable to request a password reset."}
+                  : t("fallbackError")}
               </AlertDescription>
             </Alert>
           )}
@@ -113,8 +125,8 @@ export function ForgotPasswordForm() {
             {forgotPassword.isPending && <Loader2 className="animate-spin" />}
 
             {forgotPassword.isPending
-              ? "Sending..."
-              : "Send reset instructions"}
+              ? t("submitting")
+              : t("submit")}
           </Button>
         </form>
 
@@ -124,7 +136,7 @@ export function ForgotPasswordForm() {
             variant="link"
             render={<Link href="/login" />}
           >
-            Back to sign in
+            {t("backToSignIn")}
           </Button>
         </div>
       </CardContent>

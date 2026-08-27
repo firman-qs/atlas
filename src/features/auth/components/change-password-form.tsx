@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,36 +21,48 @@ import { Label } from "@/components/ui/label";
 
 import { useChangePassword } from "@/features/auth/queries";
 
-const changePasswordSchema = z
-  .object({
-    current_password: z
-      .string()
-      .min(8, "Current password must contain at least 8 characters.")
-      .max(255, "Current password is too long."),
+function createChangePasswordSchema(
+  t: ReturnType<typeof useTranslations<"auth.validation">>,
+) {
+  return z
+    .object({
+      current_password: z
+        .string()
+        .min(8, t("currentPasswordMinLength", { min: 8 }))
+        .max(255, t("currentPasswordTooLong")),
 
-    new_password: z
-      .string()
-      .min(8, "New password must contain at least 8 characters.")
-      .max(255, "New password is too long."),
+      new_password: z
+        .string()
+        .min(8, t("newPasswordMinLength", { min: 8 }))
+        .max(255, t("newPasswordTooLong")),
 
-    confirm_password: z
-      .string()
-      .min(1, "Confirm your new password.")
-      .max(255, "Password confirmation is too long."),
-  })
-  .refine((values) => values.new_password === values.confirm_password, {
-    message: "Passwords do not match.",
-    path: ["confirm_password"],
-  })
-  .refine((values) => values.current_password !== values.new_password, {
-    message: "New password must be different from the current password.",
-    path: ["new_password"],
-  });
+      confirm_password: z
+        .string()
+        .min(1, t("confirmNewPassword"))
+        .max(255, t("passwordConfirmationTooLong")),
+    })
+    .refine((values) => values.new_password === values.confirm_password, {
+      message: t("passwordsDoNotMatch"),
+      path: ["confirm_password"],
+    })
+    .refine((values) => values.current_password !== values.new_password, {
+      message: t("newPasswordMustDiffer"),
+      path: ["new_password"],
+    });
+}
 
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+type ChangePasswordFormValues = z.infer<
+  ReturnType<typeof createChangePasswordSchema>
+>;
 
 export function ChangePasswordForm() {
   const changePassword = useChangePassword();
+  const t = useTranslations("auth.changePassword");
+  const tValidation = useTranslations("auth.validation");
+  const changePasswordSchema = useMemo(
+    () => createChangePasswordSchema(tValidation),
+    [tValidation],
+  );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -87,17 +100,17 @@ export function ChangePasswordForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Change Password</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
 
         <CardDescription>
-          Update the password used to sign in to your ATLAS account.
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
-            <Label htmlFor="current-password">Current password</Label>
+            <Label htmlFor="current-password">{t("currentPassword")}</Label>
 
             <Input
               id="current-password"
@@ -115,7 +128,7 @@ export function ChangePasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="new-password">New password</Label>
+            <Label htmlFor="new-password">{t("newPassword")}</Label>
 
             <Input
               id="new-password"
@@ -133,7 +146,9 @@ export function ChangePasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirm-new-password">Confirm new password</Label>
+            <Label htmlFor="confirm-new-password">
+              {t("confirmNewPassword")}
+            </Label>
 
             <Input
               id="confirm-new-password"
@@ -155,7 +170,7 @@ export function ChangePasswordForm() {
               <AlertDescription>
                 {changePassword.error instanceof Error
                   ? changePassword.error.message
-                  : "Unable to change password."}
+                  : t("fallbackError")}
               </AlertDescription>
             </Alert>
           )}
@@ -174,8 +189,8 @@ export function ChangePasswordForm() {
             )}
 
             {changePassword.isPending
-              ? "Changing password..."
-              : "Change password"}
+              ? t("submitting")
+              : t("submit")}
           </Button>
         </form>
       </CardContent>
