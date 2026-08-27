@@ -15,15 +15,23 @@ function flattenKeys(messages: Catalog, prefix = ""): string[] {
     .sort();
 }
 
-function interpolationArguments(messages: Catalog): string[] {
-  return Object.values(messages)
-    .flatMap((value) => {
-      if (isObject(value)) return interpolationArguments(value);
-      if (typeof value !== "string") return [];
+function interpolationArguments(messages: Catalog, prefix = ""): Record<string, string[]> {
+  const argumentsByMessage: Record<string, string[]> = {};
 
-      return Array.from(value.matchAll(/{([a-zA-Z][\w]*)[,}]/g), ([, name]) => name).sort();
-    })
-    .sort();
+  for (const [key, value] of Object.entries(messages)) {
+    const path = prefix ? `${prefix}.${key}` : key;
+
+    if (isObject(value)) {
+      Object.assign(argumentsByMessage, interpolationArguments(value, path));
+    } else if (typeof value === "string") {
+      argumentsByMessage[path] = Array.from(
+        value.matchAll(/{([a-zA-Z][\w]*)[,}]/g),
+        ([, name]) => name,
+      ).sort();
+    }
+  }
+
+  return argumentsByMessage;
 }
 
 function isObject(value: unknown): value is Catalog {
@@ -34,6 +42,19 @@ describe("message catalogs", () => {
   it("keeps Indonesian catalog keys and ICU arguments aligned with English", () => {
     expect(flattenKeys(idMessages)).toEqual(flattenKeys(enMessages));
     expect(interpolationArguments(idMessages)).toEqual(interpolationArguments(enMessages));
+  });
+
+  it("binds ICU arguments to their message key", () => {
+    const english = {
+      students: "{studentCount} students",
+      assignments: "{assignmentCount} assignments",
+    };
+    const swappedIndonesian = {
+      students: "{assignmentCount} students",
+      assignments: "{studentCount} assignments",
+    };
+
+    expect(interpolationArguments(swappedIndonesian)).not.toEqual(interpolationArguments(english));
   });
 
   it("overrides English with Indonesian messages", () => {
