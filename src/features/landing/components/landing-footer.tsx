@@ -7,8 +7,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/features/auth/auth-provider";
 
 function PlatformLinks() {
-  const tNav = useTranslations("nav");
-  const tCommon = useTranslations("common");
+  const tHeader = useTranslations("landing.header");
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -26,7 +25,7 @@ function PlatformLinks() {
         href="/dashboard"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        {tNav("dashboard")}
+        {tHeader("dashboard")}
       </Link>
     );
   }
@@ -37,14 +36,14 @@ function PlatformLinks() {
         href="/login"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        {tCommon("login")}
+        {tHeader("signIn")}
       </Link>
 
       <Link
         href="/register"
         className="text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
-        {tCommon("register")}
+        {tHeader("getStarted")}
       </Link>
     </div>
   );
