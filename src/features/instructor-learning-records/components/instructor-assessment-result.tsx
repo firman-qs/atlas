@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, CheckCircle2, CircleX } from "lucide-react";
 import Link from "next/link";
 
@@ -9,6 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  formatDomainCode,
+  soloLevelMessageKey,
+} from "@/features/student-course/labels";
 import { useInstructorAssessmentResult } from "@/features/instructor-learning-records/queries";
 import type {
   AssessmentResultAnswer,
@@ -48,21 +53,25 @@ function getMcqSelectedOptionText(
   return selectedOption?.text ?? null;
 }
 
-function formatSoloCode(code: string) {
-  return code
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 export function InstructorAssessmentResult({
   courseOfferingId,
   learningRecordId,
   assessmentId,
 }: InstructorAssessmentResultProps) {
+  const t = useTranslations("instructor.learningRecords.assessmentResult");
+  const tHistory = useTranslations("instructor.learningRecords.assessmentHistory");
+  const tSolo = useTranslations("course.soloLevels");
+  const tErrors = useTranslations("instructor.errors");
+
   const resultQuery = useInstructorAssessmentResult(
     courseOfferingId,
     assessmentId,
   );
+
+  function formatSoloLabel(code: string) {
+    const key = soloLevelMessageKey(code);
+    return key && tSolo.has(key as any) ? tSolo(key as any) : formatDomainCode(code);
+  }
 
   if (resultQuery.isPending) {
     return (
@@ -80,7 +89,7 @@ export function InstructorAssessmentResult({
         <AlertDescription>
           {resultQuery.error instanceof Error
             ? resultQuery.error.message
-            : "Unable to load assessment result."}
+            : tErrors("loadAssessmentResult")}
         </AlertDescription>
       </Alert>
     );
@@ -101,18 +110,21 @@ export function InstructorAssessmentResult({
         }
       >
         <ArrowLeft />
-        Learning Record
+        {t("backToRecord")}
       </Button>
 
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
-          <Badge>{result.mode === "progress" ? "Progress" : "Review"}</Badge>
+          <Badge>
+            {result.mode === "progress"
+              ? tHistory("modes.progress")
+              : tHistory("modes.review")}
+          </Badge>
 
           <Badge variant="outline">{result.status}</Badge>
 
           <Badge variant="secondary">
-            {result.total_attempts} attempt
-            {result.total_attempts === 1 ? "" : "s"}
+            {t("attempts", { count: result.total_attempts })}
           </Badge>
 
           {result.question_bank && (
@@ -132,11 +144,10 @@ export function InstructorAssessmentResult({
       {result.concepts.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="font-medium">No assessment evidence available</p>
+            <p className="font-medium">{t("noEvidence")}</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              No persisted concept, cycle, or attempt evidence is available for
-              this assessment.
+              {t("noEvidenceDescription")}
             </p>
           </CardContent>
         </Card>
@@ -162,17 +173,16 @@ export function InstructorAssessmentResult({
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-medium">
-                        {formatSoloCode(level.solo_code)}
+                        {formatSoloLabel(level.solo_code)}
                       </p>
 
                       <p className="text-xs text-muted-foreground">
-                        SOLO level {level.solo_level}
+                        {t("soloLevel", { level: level.solo_level })}
                       </p>
                     </div>
 
                     <Badge variant="outline">
-                      {level.cycles.length} cycle
-                      {level.cycles.length === 1 ? "" : "s"}
+                      {t("cycles", { count: level.cycles.length })}
                     </Badge>
                   </div>
 
@@ -184,35 +194,35 @@ export function InstructorAssessmentResult({
                       >
                         <div className="flex flex-wrap items-center gap-2">
                           <p className="font-medium">
-                            Cycle {cycle.cycle_number}
+                            {t("cycle", { number: cycle.cycle_number })}
                           </p>
 
                           <Badge variant="outline">
-                            Score {percent(cycle.score)}
+                            {t("score", { score: percent(cycle.score) })}
                           </Badge>
 
                           <Badge variant="outline">
-                            Required {percent(cycle.mastery_threshold)}
+                            {t("required", { required: percent(cycle.mastery_threshold) })}
                           </Badge>
 
                           {cycle.passed === true && (
                             <Badge>
                               <CheckCircle2 />
-                              Mastered
+                              {t("mastered")}
                             </Badge>
                           )}
 
                           {cycle.passed === false && (
                             <Badge variant="secondary">
                               <CircleX />
-                              Not mastered
+                              {t("notMastered")}
                             </Badge>
                           )}
                         </div>
 
                         {cycle.attempts.length === 0 ? (
                           <p className="mt-4 text-sm text-muted-foreground">
-                            No attempts were persisted for this cycle.
+                            {t("noAttempts")}
                           </p>
                         ) : (
                           <div className="mt-4 space-y-3">
@@ -227,8 +237,8 @@ export function InstructorAssessmentResult({
 
                               const unavailableAnswer =
                                 attempt.question_type === "essay"
-                                  ? "Submitted answer is unavailable."
-                                  : "Selected option is unavailable.";
+                                  ? t("submittedAnswerUnavailable")
+                                  : t("selectedOptionUnavailable");
                               return (
                                 <div
                                   key={attempt.attempt_id}
@@ -236,13 +246,13 @@ export function InstructorAssessmentResult({
                                 >
                                   <div className="flex flex-wrap items-center gap-2">
                                     <Badge variant="outline">
-                                      Question {index + 1}
+                                      {t("questionNumbered", { number: index + 1 })}
                                     </Badge>
 
                                     <Badge variant="secondary">
                                       {attempt.question_type === "mcq"
-                                        ? "MCQ"
-                                        : "Essay"}
+                                        ? t("types.mcq")
+                                        : t("types.essay")}
                                     </Badge>
 
                                     {attempt.is_correct !== null && (
@@ -254,8 +264,8 @@ export function InstructorAssessmentResult({
                                         }
                                       >
                                         {attempt.is_correct
-                                          ? "Correct"
-                                          : "Incorrect"}
+                                          ? t("correct")
+                                          : t("incorrect")}
                                       </Badge>
                                     )}
 
@@ -273,7 +283,7 @@ export function InstructorAssessmentResult({
 
                                   <div className="mt-4 rounded-md border bg-muted/20 p-3">
                                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                      Student answer
+                                      {t("studentAnswer")}
                                     </p>
 
                                     {answerText ? (
@@ -291,7 +301,7 @@ export function InstructorAssessmentResult({
                                   {attempt.feedback && (
                                     <div className="mt-4 border-t pt-4">
                                       <p className="text-sm font-medium">
-                                        Feedback
+                                        {t("feedback")}
                                       </p>
 
                                       <AtlasRichTextViewer

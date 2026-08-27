@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, CheckCircle2, Clock3 } from "lucide-react";
 import Link from "next/link";
 
@@ -20,10 +21,6 @@ interface InstructorLearningRecordDetailProps {
   learningRecordId: string;
 }
 
-function formatSemester(semester: string) {
-  return semester.charAt(0).toUpperCase() + semester.slice(1);
-}
-
 function LearningRecordSkeleton() {
   return (
     <div className="space-y-6">
@@ -38,6 +35,11 @@ export function InstructorLearningRecordDetail({
   courseOfferingId,
   learningRecordId,
 }: InstructorLearningRecordDetailProps) {
+  const t = useTranslations("instructor.learningRecords");
+  const tOfferings = useTranslations("instructor.courseOfferings");
+  const tErrors = useTranslations("instructor.errors");
+  const tSemesters = useTranslations("course.semesters");
+
   const recordQuery = useInstructorLearningRecord(
     courseOfferingId,
     learningRecordId,
@@ -47,6 +49,13 @@ export function InstructorLearningRecordDetail({
     courseOfferingId,
     learningRecordId,
   );
+
+  function formatSemester(semester: string) {
+    const normalized = semester.toLowerCase();
+    return tSemesters.has(normalized as any)
+      ? tSemesters(normalized as any)
+      : semester.charAt(0).toUpperCase() + semester.slice(1);
+  }
 
   if (recordQuery.isPending || progressQuery.isPending) {
     return <LearningRecordSkeleton />;
@@ -58,7 +67,7 @@ export function InstructorLearningRecordDetail({
         <AlertDescription>
           {recordQuery.error instanceof Error
             ? recordQuery.error.message
-            : "Unable to load learning record."}
+            : tErrors("loadLearningRecord")}
         </AlertDescription>
       </Alert>
     );
@@ -70,7 +79,7 @@ export function InstructorLearningRecordDetail({
         <AlertDescription>
           {progressQuery.error instanceof Error
             ? progressQuery.error.message
-            : "Unable to load learning progress."}
+            : tErrors("loadLearningProgress")}
         </AlertDescription>
       </Alert>
     );
@@ -93,14 +102,14 @@ export function InstructorLearningRecordDetail({
         }
       >
         <ArrowLeft />
-        Course Offering
+        {t("backToOffering")}
       </Button>
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{offering.course.code}</Badge>
 
-          <Badge variant="outline">Section {offering.section}</Badge>
+          <Badge variant="outline">{tOfferings("section", { section: offering.section })}</Badge>
 
           <Badge variant={completed ? "default" : "secondary"}>
             {completed ? (
@@ -109,7 +118,7 @@ export function InstructorLearningRecordDetail({
               <Clock3 className="size-3" />
             )}
 
-            {completed ? "Completed" : "In progress"}
+            {completed ? t("states.completed") : t("states.inProgress")}
           </Badge>
         </div>
 
@@ -124,19 +133,19 @@ export function InstructorLearningRecordDetail({
 
       <Card>
         <CardHeader>
-          <CardTitle>Learning Record</CardTitle>
+          <CardTitle>{t("detailTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <dt className="text-sm text-muted-foreground">Course</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.course")}</dt>
 
               <dd className="mt-1 font-medium">{offering.course.title}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Academic term</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.academicTerm")}</dt>
 
               <dd className="mt-1 font-medium">
                 {formatSemester(offering.academic_term.semester)}{" "}
@@ -145,16 +154,16 @@ export function InstructorLearningRecordDetail({
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Section</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.section")}</dt>
 
-              <dd className="mt-1 font-medium">Section {offering.section}</dd>
+              <dd className="mt-1 font-medium">{tOfferings("section", { section: offering.section })}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Status</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.status")}</dt>
 
               <dd className="mt-1 font-medium">
-                {completed ? "Completed" : "In progress"}
+                {completed ? t("states.completed") : t("states.inProgress")}
               </dd>
             </div>
           </dl>

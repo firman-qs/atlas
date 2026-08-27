@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   BookOpen,
@@ -36,19 +37,25 @@ function CourseOfferingListSkeleton() {
   );
 }
 
-function formatSemester(value: string) {
-  if (value.length === 0) {
-    return value;
-  }
-
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
-}
-
 export function InstructorCourseOfferingList() {
+  const t = useTranslations("instructor.courseOfferings");
+  const tErrors = useTranslations("instructor.errors");
+  const tSemesters = useTranslations("course.semesters");
+
   const offeringsQuery = useInstructorCourseOfferings({
     page: 1,
     pageSize: 20,
   });
+
+  function formatSemester(value: string) {
+    if (value.length === 0) {
+      return value;
+    }
+    const normalized = value.toLowerCase();
+    return tSemesters.has(normalized as any)
+      ? tSemesters(normalized as any)
+      : `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+  }
 
   if (offeringsQuery.isPending) {
     return <CourseOfferingListSkeleton />;
@@ -60,7 +67,7 @@ export function InstructorCourseOfferingList() {
         <AlertDescription>
           {offeringsQuery.error instanceof Error
             ? offeringsQuery.error.message
-            : "Unable to load course offerings."}
+            : tErrors("loadCourseOfferings")}
         </AlertDescription>
       </Alert>
     );
@@ -77,11 +84,10 @@ export function InstructorCourseOfferingList() {
               <GraduationCap className="size-5 text-muted-foreground" />
             </div>
 
-            <p className="mt-4 font-medium">No course offerings assigned</p>
+            <p className="mt-4 font-medium">{t("noOfferings")}</p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              You do not currently have any course offerings assigned to your
-              instructor account.
+              {t("noOfferingsDescription")}
             </p>
           </div>
         </CardContent>
@@ -93,7 +99,7 @@ export function InstructorCourseOfferingList() {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Badge variant="outline">
-          {data.total} offering{data.total === 1 ? "" : "s"}
+          {t("count", { count: data.total })}
         </Badge>
       </div>
 
@@ -105,7 +111,7 @@ export function InstructorCourseOfferingList() {
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">{offering.course.code}</Badge>
 
-                  <Badge variant="outline">Section {offering.section}</Badge>
+                  <Badge variant="outline">{t("section", { section: offering.section })}</Badge>
                 </div>
 
                 <CardTitle>{offering.course.title}</CardTitle>
@@ -117,11 +123,11 @@ export function InstructorCourseOfferingList() {
                 render={
                   <Link
                     href={`/instructor/course-offerings/${offering.id}`}
-                    aria-label={`Open ${offering.course.title}`}
+                    aria-label={t("openOfferingAria", { title: offering.course.title })}
                   />
                 }
               >
-                Open
+                {t("open")}
                 <ArrowRight />
               </Button>
             </div>
@@ -133,8 +139,7 @@ export function InstructorCourseOfferingList() {
                 <BookOpen className="size-4" />
 
                 <span>
-                  {offering.course.credits} credit
-                  {offering.course.credits === 1 ? "" : "s"}
+                  {t("credits", { count: offering.course.credits })}
                 </span>
               </div>
 
@@ -150,7 +155,7 @@ export function InstructorCourseOfferingList() {
               <div className="flex items-center gap-2">
                 <GraduationCap className="size-4" />
 
-                <span>Section {offering.section}</span>
+                <span>{t("section", { section: offering.section })}</span>
               </div>
             </div>
           </CardContent>

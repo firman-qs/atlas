@@ -423,6 +423,149 @@
     "nothingToPreview": "Belum ada konten untuk dipratinjau.",
     "uploadError": "Gagal mengunggah gambar."
   },
+  "instructor": {
+    "courseOfferings": {
+      "title": "Penawaran Mata Kuliah",
+      "noOfferings": "Tidak ada penawaran mata kuliah yang ditugaskan",
+      "noOfferingsDescription": "Saat ini Anda belum memiliki penawaran mata kuliah yang ditugaskan ke akun pengajar Anda.",
+      "count": "{count, plural, one {# penawaran} other {# penawaran}}",
+      "openOffering": "Buka {title}",
+      "openOfferingAria": "Buka {title}",
+      "backToOfferings": "Penawaran Mata Kuliah",
+      "detailTitle": "Penawaran Mata Kuliah",
+      "credits": "{count, plural, one {# SKS} other {# SKS}}",
+      "section": "Kelas {section}",
+      "semesterYear": "Semester {semester} {year}",
+      "open": "Buka",
+      "labels": {
+        "courseCode": "Kode mata kuliah",
+        "section": "Kelas",
+        "academicTerm": "Periode akademik",
+        "credits": "SKS"
+      }
+    },
+    "enrollment": {
+      "enrollStudent": "Daftarkan mahasiswa",
+      "enrollStudentTitle": "Daftarkan Mahasiswa",
+      "searchPlaceholder": "Cari mahasiswa berdasarkan nama atau email",
+      "searchAria": "Cari mahasiswa",
+      "loadingStudents": "Memuat data mahasiswa...",
+      "noStudentsFound": "Mahasiswa tidak ditemukan",
+      "noStudentsDescription": "Coba nama atau alamat email lain.",
+      "selectStudentAria": "Pilih {name}",
+      "select": "Pilih",
+      "selected": "Dipilih",
+      "selectedLabel": "Dipilih: ",
+      "selectOnePrompt": "Pilih satu mahasiswa untuk didaftarkan.",
+      "enrolling": "Mendaftarkan...",
+      "enroll": "Daftarkan",
+      "enrolledStudents": "Mahasiswa Terdaftar",
+      "studentCount": "{count, plural, one {# mahasiswa} other {# mahasiswa}}",
+      "noStudentsEnrolled": "Belum ada mahasiswa yang terdaftar",
+      "noStudentsEnrolledDescription": "Mahasiswa yang terdaftar pada penawaran mata kuliah ini akan muncul di sini.",
+      "states": {
+        "notStarted": "Belum dimulai",
+        "inProgress": "Sedang berlangsung",
+        "completed": "Selesai"
+      },
+      "view": "Lihat",
+      "viewRecord": "Lihat rekam pembelajaran untuk {name}",
+      "unenrollAria": "Keluarkan {name}",
+      "unenroll": "Keluarkan",
+      "dialog": {
+        "title": "Keluarkan mahasiswa?",
+        "descriptionNamed": "Keluarkan {name} dari penawaran mata kuliah ini?",
+        "descriptionDefault": "Keluarkan mahasiswa ini dari penawaran mata kuliah?",
+        "unenrolling": "Mengeluarkan...",
+        "confirm": "Konfirmasi keluarkan"
+      }
+    },
+    "learningRecords": {
+      "backToOffering": "Penawaran Mata Kuliah",
+      "detailTitle": "Rekam Pembelajaran",
+      "labels": {
+        "course": "Mata kuliah",
+        "academicTerm": "Periode akademik",
+        "section": "Kelas",
+        "status": "Status"
+      },
+      "states": {
+        "inProgress": "Sedang berlangsung",
+        "completed": "Selesai"
+      },
+      "progress": {
+        "title": "Progres Pembelajaran",
+        "description": "Penguasaan konsep pada tujuan pembelajaran dan level SOLO yang dikonfigurasi.",
+        "noCurriculum": "Tidak ada progres kurikulum yang tersedia",
+        "noCurriculumDescription": "Rekam pembelajaran ini belum memiliki progres tujuan pembelajaran yang dikonfigurasi.",
+        "mastered": "Dikuasai",
+        "conceptMastered": "Konsep dikuasai",
+        "optional": "Opsional",
+        "masteryThreshold": "Ambang penguasaan {percent}%"
+      },
+      "assessmentHistory": {
+        "title": "Riwayat Asesmen",
+        "count": "{count, plural, one {# asesmen} other {# asesmen}}",
+        "noAssessments": "Belum ada asesmen",
+        "noAssessmentsDescription": "Aktivitas asesmen untuk rekam pembelajaran ini akan muncul di sini.",
+        "startedAt": "Dimulai {date}",
+        "completedAt": "Selesai {date}",
+        "viewEvidence": "Lihat bukti",
+        "viewEvidenceAria": "Lihat bukti untuk {code}",
+        "modes": {
+          "progress": "Progres",
+          "review": "Tinjauan"
+        }
+      },
+      "assessmentResult": {
+        "backToRecord": "Rekam Pembelajaran",
+        "attempts": "{count, plural, one {# percobaan} other {# percobaan}}",
+        "noEvidence": "Bukti asesmen tidak tersedia",
+        "noEvidenceDescription": "Tidak ada bukti konsep, siklus, atau percobaan yang tersimpan untuk asesmen ini.",
+        "soloLevel": "Level SOLO {level}",
+        "cycles": "{count, plural, one {# siklus} other {# siklus}}",
+        "cycle": "Siklus {number}",
+        "score": "Skor {score}",
+        "required": "Dibutuhkan {required}",
+        "mastered": "Dikuasai",
+        "notMastered": "Belum dikuasai",
+        "noAttempts": "Tidak ada percobaan yang tersimpan untuk siklus ini.",
+        "questionNumbered": "Soal {number}",
+        "types": {
+          "mcq": "Pilihan Ganda",
+          "essay": "Esai"
+        },
+        "correct": "Benar",
+        "incorrect": "Salah",
+        "studentAnswer": "Jawaban mahasiswa",
+        "feedback": "Umpan balik",
+        "submittedAnswerUnavailable": "Jawaban yang dikirim tidak tersedia.",
+        "selectedOptionUnavailable": "Pilihan yang dipilih tidak tersedia."
+      }
+    },
+    "students": {
+      "title": "Mahasiswa",
+      "searchPlaceholder": "Cari mahasiswa berdasarkan nama atau email...",
+      "searchAria": "Cari mahasiswa",
+      "search": "Cari",
+      "clear": "Hapus pencarian",
+      "count": "{count, plural, one {# mahasiswa} other {# mahasiswa}}",
+      "noStudents": "Mahasiswa tidak ditemukan",
+      "noStudentsDescription": "Tidak ada akun mahasiswa aktif yang cocok dengan pencarian saat ini."
+    },
+    "errors": {
+      "loadCourseOfferings": "Tidak dapat memuat penawaran mata kuliah.",
+      "loadCourseOffering": "Tidak dapat memuat penawaran mata kuliah.",
+      "loadStudents": "Tidak dapat memuat data mahasiswa.",
+      "enrollStudent": "Tidak dapat mendaftarkan mahasiswa.",
+      "loadEnrollments": "Tidak dapat memuat data pendaftaran.",
+      "unenrollStudent": "Tidak dapat mengeluarkan mahasiswa.",
+      "loadLearningRecord": "Tidak dapat memuat rekam pembelajaran.",
+      "loadLearningProgress": "Tidak dapat memuat progres pembelajaran.",
+      "loadAssessmentHistory": "Tidak dapat memuat riwayat asesmen.",
+      "loadAssessmentResult": "Tidak dapat memuat hasil asesmen."
+    }
+  },
   "errors": {
     "dashboard": "Tidak dapat memuat dasbor Anda.",
     "courses": "Tidak dapat memuat mata kuliah Anda.",

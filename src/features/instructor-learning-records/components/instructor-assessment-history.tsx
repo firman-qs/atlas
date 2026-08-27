@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormatter, useTranslations } from "next-intl";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 
@@ -15,23 +16,14 @@ interface InstructorAssessmentHistoryProps {
   learningRecordId: string;
 }
 
-function formatDateTime(value: string | null) {
-  if (!value) {
-    return "—";
-  }
-
-  const date = new Date(value);
-
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(date);
-}
-
 export function InstructorAssessmentHistory({
   courseOfferingId,
   learningRecordId,
 }: InstructorAssessmentHistoryProps) {
+  const t = useTranslations("instructor.learningRecords.assessmentHistory");
+  const tErrors = useTranslations("instructor.errors");
+  const format = useFormatter();
+
   const assessmentsQuery = useInstructorLearningRecordAssessments(
     courseOfferingId,
     learningRecordId,
@@ -40,6 +32,17 @@ export function InstructorAssessmentHistory({
       pageSize: 100,
     },
   );
+
+  function formatDateTime(value: string | null) {
+    if (!value) {
+      return "—";
+    }
+
+    return format.dateTime(new Date(value), {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  }
 
   if (assessmentsQuery.isPending) {
     return (
@@ -60,7 +63,7 @@ export function InstructorAssessmentHistory({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Assessment History</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -68,7 +71,7 @@ export function InstructorAssessmentHistory({
             <AlertDescription>
               {assessmentsQuery.error instanceof Error
                 ? assessmentsQuery.error.message
-                : "Unable to load assessment history."}
+                : tErrors("loadAssessmentHistory")}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -82,11 +85,10 @@ export function InstructorAssessmentHistory({
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle>Assessment History</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
 
           <Badge variant="outline">
-            {assessmentsQuery.data.total} assessment
-            {assessmentsQuery.data.total === 1 ? "" : "s"}
+            {t("count", { count: assessmentsQuery.data.total })}
           </Badge>
         </div>
       </CardHeader>
@@ -98,10 +100,10 @@ export function InstructorAssessmentHistory({
               <ClipboardCheck className="size-4 text-muted-foreground" />
             </div>
 
-            <p className="mt-3 font-medium">No assessments yet</p>
+            <p className="mt-3 font-medium">{t("noAssessments")}</p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              Assessment activity for this learning record will appear here.
+              {t("noAssessmentsDescription")}
             </p>
           </div>
         ) : (
@@ -118,7 +120,9 @@ export function InstructorAssessmentHistory({
                     </Badge>
 
                     <Badge>
-                      {assessment.mode === "progress" ? "Progress" : "Review"}
+                      {assessment.mode === "progress"
+                        ? t("modes.progress")
+                        : t("modes.review")}
                     </Badge>
 
                     <Badge variant="secondary" className="capitalize">
@@ -131,10 +135,16 @@ export function InstructorAssessmentHistory({
                   </p>
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                    <span>Started {formatDateTime(assessment.started_at)}</span>
+                    <span>
+                      {t("startedAt", {
+                        date: formatDateTime(assessment.started_at),
+                      })}
+                    </span>
 
                     <span>
-                      Completed {formatDateTime(assessment.completed_at)}
+                      {t("completedAt", {
+                        date: formatDateTime(assessment.completed_at),
+                      })}
                     </span>
                   </div>
                 </div>
@@ -148,11 +158,11 @@ export function InstructorAssessmentHistory({
                     render={
                       <Link
                         href={`/instructor/course-offerings/${courseOfferingId}/learning-records/${learningRecordId}/assessments/${assessment.id}`}
-                        aria-label={`View evidence for ${assessment.learning_objective.code}`}
+                        aria-label={t("viewEvidenceAria", { code: assessment.learning_objective.code })}
                       />
                     }
                   >
-                    View evidence
+                    {t("viewEvidence")}
                     <ArrowRight />
                   </Button>
                 )}

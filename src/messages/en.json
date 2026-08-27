@@ -423,6 +423,149 @@
     "nothingToPreview": "Nothing to preview yet.",
     "uploadError": "Unable to upload image."
   },
+  "instructor": {
+    "courseOfferings": {
+      "title": "Course Offerings",
+      "noOfferings": "No course offerings assigned",
+      "noOfferingsDescription": "You do not currently have any course offerings assigned to your instructor account.",
+      "count": "{count, plural, one {# offering} other {# offerings}}",
+      "openOffering": "Open {title}",
+      "openOfferingAria": "Open {title}",
+      "backToOfferings": "Course Offerings",
+      "detailTitle": "Course Offering",
+      "credits": "{count, plural, one {# credit} other {# credits}}",
+      "section": "Section {section}",
+      "semesterYear": "{semester} semester {year}",
+      "open": "Open",
+      "labels": {
+        "courseCode": "Course code",
+        "section": "Section",
+        "academicTerm": "Academic term",
+        "credits": "Credits"
+      }
+    },
+    "enrollment": {
+      "enrollStudent": "Enroll student",
+      "enrollStudentTitle": "Enroll Student",
+      "searchPlaceholder": "Search students by name or email",
+      "searchAria": "Search students",
+      "loadingStudents": "Loading students...",
+      "noStudentsFound": "No students found",
+      "noStudentsDescription": "Try another name or email address.",
+      "selectStudentAria": "Select {name}",
+      "select": "Select",
+      "selected": "Selected",
+      "selectedLabel": "Selected: ",
+      "selectOnePrompt": "Select one student to enroll.",
+      "enrolling": "Enrolling...",
+      "enroll": "Enroll",
+      "enrolledStudents": "Enrolled Students",
+      "studentCount": "{count, plural, one {# student} other {# students}}",
+      "noStudentsEnrolled": "No students enrolled",
+      "noStudentsEnrolledDescription": "Students enrolled in this course offering will appear here.",
+      "states": {
+        "notStarted": "Not started",
+        "inProgress": "In progress",
+        "completed": "Completed"
+      },
+      "view": "View",
+      "viewRecord": "View learning record for {name}",
+      "unenrollAria": "Unenroll {name}",
+      "unenroll": "Unenroll",
+      "dialog": {
+        "title": "Unenroll student?",
+        "descriptionNamed": "Remove {name} from this course offering?",
+        "descriptionDefault": "Remove this student from the course offering?",
+        "unenrolling": "Unenrolling...",
+        "confirm": "Confirm unenroll"
+      }
+    },
+    "learningRecords": {
+      "backToOffering": "Course Offering",
+      "detailTitle": "Learning Record",
+      "labels": {
+        "course": "Course",
+        "academicTerm": "Academic term",
+        "section": "Section",
+        "status": "Status"
+      },
+      "states": {
+        "inProgress": "In progress",
+        "completed": "Completed"
+      },
+      "progress": {
+        "title": "Learning Progress",
+        "description": "Concept mastery across configured learning objectives and SOLO levels.",
+        "noCurriculum": "No curriculum progress available",
+        "noCurriculumDescription": "This learning record does not currently contain configured learning-objective progress.",
+        "mastered": "Mastered",
+        "conceptMastered": "Concept mastered",
+        "optional": "Optional",
+        "masteryThreshold": "Mastery threshold {percent}%"
+      },
+      "assessmentHistory": {
+        "title": "Assessment History",
+        "count": "{count, plural, one {# assessment} other {# assessments}}",
+        "noAssessments": "No assessments yet",
+        "noAssessmentsDescription": "Assessment activity for this learning record will appear here.",
+        "startedAt": "Started {date}",
+        "completedAt": "Completed {date}",
+        "viewEvidence": "View evidence",
+        "viewEvidenceAria": "View evidence for {code}",
+        "modes": {
+          "progress": "Progress",
+          "review": "Review"
+        }
+      },
+      "assessmentResult": {
+        "backToRecord": "Learning Record",
+        "attempts": "{count, plural, one {# attempt} other {# attempts}}",
+        "noEvidence": "No assessment evidence available",
+        "noEvidenceDescription": "No persisted concept, cycle, or attempt evidence is available for this assessment.",
+        "soloLevel": "SOLO level {level}",
+        "cycles": "{count, plural, one {# cycle} other {# cycles}}",
+        "cycle": "Cycle {number}",
+        "score": "Score {score}",
+        "required": "Required {required}",
+        "mastered": "Mastered",
+        "notMastered": "Not mastered",
+        "noAttempts": "No attempts were persisted for this cycle.",
+        "questionNumbered": "Question {number}",
+        "types": {
+          "mcq": "MCQ",
+          "essay": "Essay"
+        },
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "studentAnswer": "Student answer",
+        "feedback": "Feedback",
+        "submittedAnswerUnavailable": "Submitted answer is unavailable.",
+        "selectedOptionUnavailable": "Selected option is unavailable."
+      }
+    },
+    "students": {
+      "title": "Students",
+      "searchPlaceholder": "Search students by name or email...",
+      "searchAria": "Search students",
+      "search": "Search",
+      "clear": "Clear",
+      "count": "{count, plural, one {# student} other {# students}}",
+      "noStudents": "No students found",
+      "noStudentsDescription": "No active student account matches the current search."
+    },
+    "errors": {
+      "loadCourseOfferings": "Unable to load course offerings.",
+      "loadCourseOffering": "Unable to load course offering.",
+      "loadStudents": "Unable to load students.",
+      "enrollStudent": "Unable to enroll student.",
+      "loadEnrollments": "Unable to load enrollments.",
+      "unenrollStudent": "Unable to unenroll student.",
+      "loadLearningRecord": "Unable to load learning record.",
+      "loadLearningProgress": "Unable to load learning progress.",
+      "loadAssessmentHistory": "Unable to load assessment history.",
+      "loadAssessmentResult": "Unable to load assessment result."
+    }
+  },
   "errors": {
     "dashboard": "Unable to load your dashboard.",
     "courses": "Unable to load your courses.",

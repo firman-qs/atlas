@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Search, Users } from "lucide-react";
 import { FormEvent, useState } from "react";
 
@@ -31,6 +32,9 @@ function StudentListSkeleton() {
 }
 
 export function InstructorStudentList() {
+  const t = useTranslations("instructor.students");
+  const tErrors = useTranslations("instructor.errors");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
@@ -56,15 +60,15 @@ export function InstructorStudentList() {
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
           <Input
-            aria-label="Search students"
+            aria-label={t("searchAria")}
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
-            placeholder="Search students by name or email..."
+            placeholder={t("searchPlaceholder")}
             className="pl-9"
           />
         </div>
 
-        <Button type="submit">Search</Button>
+        <Button type="submit">{t("search")}</Button>
 
         {search && (
           <Button
@@ -75,7 +79,7 @@ export function InstructorStudentList() {
               setSearch("");
             }}
           >
-            Clear
+            {t("clear")}
           </Button>
         )}
       </form>
@@ -85,7 +89,7 @@ export function InstructorStudentList() {
           <AlertDescription>
             {studentsQuery.error instanceof Error
               ? studentsQuery.error.message
-              : "Unable to load students."}
+              : tErrors("loadStudents")}
           </AlertDescription>
         </Alert>
       )}
@@ -94,11 +98,10 @@ export function InstructorStudentList() {
         <Card>
           <CardHeader>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <CardTitle>Students</CardTitle>
+              <CardTitle>{t("title")}</CardTitle>
 
               <Badge variant="outline">
-                {studentsQuery.data.total} student
-                {studentsQuery.data.total === 1 ? "" : "s"}
+                {t("count", { count: studentsQuery.data.total })}
               </Badge>
             </div>
           </CardHeader>
@@ -110,10 +113,10 @@ export function InstructorStudentList() {
                   <Users className="size-4 text-muted-foreground" />
                 </div>
 
-                <p className="mt-3 font-medium">No students found</p>
+                <p className="mt-3 font-medium">{t("noStudents")}</p>
 
                 <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                  No active student account matches the current search.
+                  {t("noStudentsDescription")}
                 </p>
               </div>
             ) : (

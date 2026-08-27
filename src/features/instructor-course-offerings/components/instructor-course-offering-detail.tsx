@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -9,18 +10,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InstructorEnrollStudent } from "@/features/instructor-course-offerings/components/instructor-enroll-student";
 import { InstructorEnrollmentList } from "@/features/instructor-course-offerings/components/instructor-enrollment-list";
 import { useInstructorCourseOffering } from "@/features/instructor-course-offerings/queries";
+
 interface InstructorCourseOfferingDetailProps {
   courseOfferingId: string;
-}
-
-function formatSemester(semester: string) {
-  return semester.charAt(0).toUpperCase() + semester.slice(1);
 }
 
 export function InstructorCourseOfferingDetail({
   courseOfferingId,
 }: InstructorCourseOfferingDetailProps) {
+  const t = useTranslations("instructor.courseOfferings");
+  const tErrors = useTranslations("instructor.errors");
+  const tSemesters = useTranslations("course.semesters");
+
   const offeringQuery = useInstructorCourseOffering(courseOfferingId);
+
+  function formatSemester(semester: string) {
+    const normalized = semester.toLowerCase();
+    return tSemesters.has(normalized as any)
+      ? tSemesters(normalized as any)
+      : semester.charAt(0).toUpperCase() + semester.slice(1);
+  }
 
   if (offeringQuery.isPending) {
     return (
@@ -35,7 +44,7 @@ export function InstructorCourseOfferingDetail({
     return (
       <Card>
         <CardContent>
-          <p className="font-medium">Unable to load course offering.</p>
+          <p className="font-medium">{tErrors("loadCourseOffering")}</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {offeringQuery.error instanceof Error
               ? offeringQuery.error.message
@@ -57,13 +66,13 @@ export function InstructorCourseOfferingDetail({
         render={<Link href="/instructor/course-offerings" />}
       >
         <ArrowLeft />
-        Course Offerings
+        {t("backToOfferings")}
       </Button>
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="secondary">{offering.course.code}</Badge>
-          <Badge variant="outline">Section {offering.section}</Badge>
+          <Badge variant="outline">{t("section", { section: offering.section })}</Badge>
         </div>
 
         <div>
@@ -72,31 +81,33 @@ export function InstructorCourseOfferingDetail({
           </h1>
 
           <p className="mt-1 text-muted-foreground">
-            {formatSemester(offering.academic_term.semester)} semester{" "}
-            {offering.academic_term.year}
+            {t("semesterYear", {
+              semester: formatSemester(offering.academic_term.semester),
+              year: offering.academic_term.year,
+            })}
           </p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Course Offering</CardTitle>
+          <CardTitle>{t("detailTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
           <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <dt className="text-sm text-muted-foreground">Course code</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.courseCode")}</dt>
               <dd className="mt-1 font-medium">{offering.course.code}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Section</dt>
-              <dd className="mt-1 font-medium">Section {offering.section}</dd>
+              <dt className="text-sm text-muted-foreground">{t("labels.section")}</dt>
+              <dd className="mt-1 font-medium">{t("section", { section: offering.section })}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Academic term</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.academicTerm")}</dt>
               <dd className="mt-1 font-medium">
                 {formatSemester(offering.academic_term.semester)}{" "}
                 {offering.academic_term.year}
@@ -104,9 +115,9 @@ export function InstructorCourseOfferingDetail({
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Credits</dt>
+              <dt className="text-sm text-muted-foreground">{t("labels.credits")}</dt>
               <dd className="mt-1 font-medium">
-                {offering.course.credits} credits
+                {t("credits", { count: offering.course.credits })}
               </dd>
             </div>
           </dl>

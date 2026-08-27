@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { InstructorEnrollStudent } from "@/features/instructor-course-offerings/components/instructor-enroll-student";

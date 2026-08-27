@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowRight, Loader2, UserMinus, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -59,6 +60,10 @@ function EnrollmentListSkeleton() {
 export function InstructorEnrollmentList({
   courseOfferingId,
 }: InstructorEnrollmentListProps) {
+  const t = useTranslations("instructor.enrollment");
+  const tErrors = useTranslations("instructor.errors");
+  const common = useTranslations("common");
+
   const enrollmentsQuery = useInstructorCourseOfferingEnrollments(
     courseOfferingId,
     {
@@ -93,7 +98,7 @@ export function InstructorEnrollmentList({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Enrolled Students</CardTitle>
+          <CardTitle>{t("enrolledStudents")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -101,7 +106,7 @@ export function InstructorEnrollmentList({
             <AlertDescription>
               {enrollmentsQuery.error instanceof Error
                 ? enrollmentsQuery.error.message
-                : "Unable to load enrollments."}
+                : tErrors("loadEnrollments")}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -117,10 +122,10 @@ export function InstructorEnrollmentList({
       <Card>
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <CardTitle>Enrolled Students</CardTitle>
+            <CardTitle>{t("enrolledStudents")}</CardTitle>
 
             <Badge variant="outline">
-              {total} student{total === 1 ? "" : "s"}
+              {t("studentCount", { count: total })}
             </Badge>
           </div>
         </CardHeader>
@@ -131,7 +136,7 @@ export function InstructorEnrollmentList({
               <AlertDescription>
                 {deleteEnrollment.error instanceof Error
                   ? deleteEnrollment.error.message
-                  : "Unable to unenroll student."}
+                  : tErrors("unenrollStudent")}
               </AlertDescription>
             </Alert>
           )}
@@ -142,10 +147,10 @@ export function InstructorEnrollmentList({
                 <Users className="size-4 text-muted-foreground" />
               </div>
 
-              <p className="mt-3 font-medium">No students enrolled</p>
+              <p className="mt-3 font-medium">{t("noStudentsEnrolled")}</p>
 
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Students enrolled in this course offering will appear here.
+                {t("noStudentsEnrolledDescription")}
               </p>
             </div>
           ) : (
@@ -153,11 +158,11 @@ export function InstructorEnrollmentList({
               {enrollments.map((enrollment) => {
                 const learningRecord = enrollment.learning_record;
 
-                const learningState = !learningRecord
-                  ? "Not started"
+                const learningStateKey = !learningRecord
+                  ? "notStarted"
                   : learningRecord.completed_at
-                    ? "Completed"
-                    : "In progress";
+                    ? "completed"
+                    : "inProgress";
 
                 return (
                   <div
@@ -177,14 +182,14 @@ export function InstructorEnrollmentList({
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge
                         variant={
-                          learningState === "Completed"
+                          learningStateKey === "completed"
                             ? "default"
-                            : learningState === "In progress"
+                            : learningStateKey === "inProgress"
                               ? "secondary"
                               : "outline"
                         }
                       >
-                        {learningState}
+                        {t(`states.${learningStateKey}`)}
                       </Badge>
 
                       {learningRecord && (
@@ -195,11 +200,11 @@ export function InstructorEnrollmentList({
                           render={
                             <Link
                               href={`/instructor/course-offerings/${courseOfferingId}/learning-records/${learningRecord.id}`}
-                              aria-label={`View learning record for ${enrollment.student.full_name}`}
+                              aria-label={t("viewRecord", { name: enrollment.student.full_name })}
                             />
                           }
                         >
-                          View
+                          {t("view")}
                           <ArrowRight />
                         </Button>
                       )}
@@ -209,7 +214,7 @@ export function InstructorEnrollmentList({
                           type="button"
                           size="sm"
                           variant="outline"
-                          aria-label={`Unenroll ${enrollment.student.full_name}`}
+                          aria-label={t("unenrollAria", { name: enrollment.student.full_name })}
                           onClick={() =>
                             setSelectedEnrollment({
                               id: enrollment.id,
@@ -224,7 +229,7 @@ export function InstructorEnrollmentList({
                           ) : (
                             <UserMinus />
                           )}
-                          Unenroll
+                          {t("unenroll")}
                         </Button>
                       )}
                     </div>
@@ -246,12 +251,12 @@ export function InstructorEnrollmentList({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Unenroll student?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {selectedEnrollment
-                ? `Remove ${selectedEnrollment.studentName} from this course offering?`
-                : "Remove this student from the course offering?"}
+                ? t("dialog.descriptionNamed", { name: selectedEnrollment.studentName })
+                : t("dialog.descriptionDefault")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -260,14 +265,14 @@ export function InstructorEnrollmentList({
               <AlertDescription>
                 {deleteEnrollment.error instanceof Error
                   ? deleteEnrollment.error.message
-                  : "Unable to unenroll student."}
+                  : tErrors("unenrollStudent")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteEnrollment.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -283,8 +288,8 @@ export function InstructorEnrollmentList({
               )}
 
               {deleteEnrollment.isPending
-                ? "Unenrolling..."
-                : "Confirm unenroll"}
+                ? t("dialog.unenrolling")
+                : t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

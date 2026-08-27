@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,6 +17,10 @@ interface InstructorEnrollStudentProps {
 export function InstructorEnrollStudent({
   courseOfferingId,
 }: InstructorEnrollStudentProps) {
+  const t = useTranslations("instructor.enrollment");
+  const tErrors = useTranslations("instructor.errors");
+  const common = useTranslations("common");
+
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
@@ -62,7 +67,7 @@ export function InstructorEnrollStudent({
             setOpen(true);
           }}
         >
-          Enroll student
+          {t("enrollStudent")}
         </Button>
       </div>
     );
@@ -72,7 +77,7 @@ export function InstructorEnrollStudent({
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle>Enroll Student</CardTitle>
+          <CardTitle>{t("enrollStudentTitle")}</CardTitle>
 
           <Button
             type="button"
@@ -85,15 +90,15 @@ export function InstructorEnrollStudent({
             }}
             disabled={createEnrollment.isPending}
           >
-            Cancel
+            {common("cancel")}
           </Button>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <Input
-          aria-label="Search students"
-          placeholder="Search students by name or email"
+          aria-label={t("searchAria")}
+          placeholder={t("searchPlaceholder")}
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
@@ -103,7 +108,7 @@ export function InstructorEnrollStudent({
         />
 
         {studentsQuery.isPending && (
-          <p className="text-sm text-muted-foreground">Loading students...</p>
+          <p className="text-sm text-muted-foreground">{t("loadingStudents")}</p>
         )}
 
         {studentsQuery.isError && (
@@ -111,7 +116,7 @@ export function InstructorEnrollStudent({
             <AlertDescription>
               {studentsQuery.error instanceof Error
                 ? studentsQuery.error.message
-                : "Unable to load students."}
+                : tErrors("loadStudents")}
             </AlertDescription>
           </Alert>
         )}
@@ -120,10 +125,10 @@ export function InstructorEnrollStudent({
           <div className="space-y-2">
             {studentsQuery.data.items.length === 0 ? (
               <div className="rounded-lg border border-dashed p-6 text-center">
-                <p className="font-medium">No students found</p>
+                <p className="font-medium">{t("noStudentsFound")}</p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Try another name or email address.
+                  {t("noStudentsDescription")}
                 </p>
               </div>
             ) : (
@@ -146,13 +151,13 @@ export function InstructorEnrollStudent({
                     <Button
                       type="button"
                       variant={selected ? "secondary" : "outline"}
-                      aria-label={`Select ${student.full_name}`}
+                      aria-label={t("selectStudentAria", { name: student.full_name })}
                       onClick={() => {
                         setSelectedStudentId(student.id);
                       }}
                       disabled={createEnrollment.isPending}
                     >
-                      {selected ? "Selected" : "Select"}
+                      {selected ? t("selected") : t("select")}
                     </Button>
                   </div>
                 );
@@ -166,7 +171,7 @@ export function InstructorEnrollStudent({
             <AlertDescription>
               {createEnrollment.error instanceof Error
                 ? createEnrollment.error.message
-                : "Unable to enroll student."}
+                : tErrors("enrollStudent")}
             </AlertDescription>
           </Alert>
         )}
@@ -175,13 +180,13 @@ export function InstructorEnrollStudent({
           <div className="min-w-0 text-sm text-muted-foreground">
             {selectedStudent ? (
               <>
-                Selected:{" "}
+                {t("selectedLabel")}
                 <span className="font-medium text-foreground">
                   {selectedStudent.full_name}
                 </span>
               </>
             ) : (
-              "Select one student to enroll."
+              t("selectOnePrompt")
             )}
           </div>
 
@@ -192,7 +197,7 @@ export function InstructorEnrollStudent({
             }}
             disabled={selectedStudentId === null || createEnrollment.isPending}
           >
-            {createEnrollment.isPending ? "Enrolling..." : "Enroll"}
+            {createEnrollment.isPending ? t("enrolling") : t("enroll")}
           </Button>
         </div>
       </CardContent>
