@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StudentDashboard } from "@/features/dashboard/components/student-dashboard";
@@ -320,6 +320,19 @@ describe("StudentDashboard", () => {
         name: "My Courses",
       }),
     ).not.toBeInTheDocument();
+  });
+
+  it("localizes dashboard presentation without translating course data", () => {
+    render(<StudentDashboard />, { locale: "id" });
+
+    expect(screen.getByText("Mata Kuliah Saya")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /lanjutkan asesmen/i }),
+    ).toHaveAttribute("href", "/student/assessments/assessment-1");
+
+    expect(screen.getByText("Electromagnetics")).toBeInTheDocument();
+    expect(screen.getByText("UM032EM000")).toBeInTheDocument();
+    expect(screen.getByText(/Electromagnetics Instructor/)).toBeInTheDocument();
   });
 
   it("continues an active review assessment after the learning record is completed", () => {

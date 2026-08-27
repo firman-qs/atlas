@@ -4,7 +4,11 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { learningObjectiveLabel } from "@/features/student-course/labels";
+import {
+  formatDomainCode,
+  learningObjectiveNumber,
+  soloLevelMessageKey,
+} from "@/features/student-course/labels";
 import {
   ArrowRight,
   ClipboardCheck,
@@ -15,6 +19,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -34,20 +39,13 @@ interface AssessmentOptionsProps {
   learningRecordId: string;
 }
 
-function modeLabel(mode: "progress" | "review") {
-  return mode === "progress" ? "Progress" : "Review";
-}
-
-function formatSoloCode(code: string) {
-  return code
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 export function AssessmentOptionsPanel({
   options,
   learningRecordId,
 }: AssessmentOptionsProps) {
+  const messages = useTranslations("assessment");
+  const course = useTranslations("course");
+  const errors = useTranslations("errors");
   const createProgressAssessment =
     useCreateProgressAssessment(learningRecordId);
   const startAssessment = useStartAssessment(learningRecordId);
@@ -61,10 +59,24 @@ export function AssessmentOptionsPanel({
 
   const selectedQuestionBankLabel =
     selectedQuestionBankId === "all"
-      ? "All available questions"
+      ? messages("allAvailableQuestions")
       : (questionBanksQuery.data?.items.find(
           (bank) => bank.id === selectedQuestionBankId,
-        )?.name ?? "Selected question bank");
+        )?.name ?? messages("selectedQuestionBank"));
+
+  function objectiveLabel(code: string, displayOrder?: number | null) {
+    const number = learningObjectiveNumber(code, displayOrder);
+
+    return number === null
+      ? course("progress.learningObjective")
+      : course("progress.learningObjectiveNumbered", { number });
+  }
+
+  function soloLabel(code: string) {
+    const key = soloLevelMessageKey(code);
+
+    return key ? course(`soloLevels.${key}`) : formatDomainCode(code);
+  }
 
   if (options.active_assessment) {
     const assessment = options.active_assessment;
@@ -72,7 +84,7 @@ export function AssessmentOptionsPanel({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Assessment</CardTitle>
+          <CardTitle>{messages("assessment")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -82,17 +94,19 @@ export function AssessmentOptionsPanel({
                 <div className="flex flex-wrap items-center gap-2">
                   <ClipboardCheck className="size-5" />
 
-                  <p className="font-medium">Active assessment</p>
+                  <p className="font-medium">{messages("activeAssessment")}</p>
 
-                  <Badge>{modeLabel(assessment.mode)}</Badge>
+                  <Badge>{messages(`modes.${assessment.mode}`)}</Badge>
 
-                  <Badge variant="outline">{assessment.status}</Badge>
+                  <Badge variant="outline">
+                    {messages(`statuses.${assessment.status}`)}
+                  </Badge>
                 </div>
 
                 <p className="text-sm text-muted-foreground">
                   {assessment.status === "created"
-                    ? "This assessment is ready to begin."
-                    : "Finish your current assessment before starting another one."}
+                    ? messages("readyToBegin")
+                    : messages("finishCurrent")}
                 </p>
               </div>
 
@@ -115,8 +129,8 @@ export function AssessmentOptionsPanel({
                     )}
 
                     {startAssessment.isPending
-                      ? "Starting..."
-                      : "Start assessment"}
+                      ? messages("starting")
+                      : messages("startAssessment")}
                   </Button>
                 ) : (
                   <Button
@@ -125,7 +139,7 @@ export function AssessmentOptionsPanel({
                       <Link href={`/student/assessments/${assessment.id}`} />
                     }
                   >
-                    Continue assessment
+                    {messages("continueAssessment")}
                     <ArrowRight />
                   </Button>
                 )}
@@ -142,7 +156,7 @@ export function AssessmentOptionsPanel({
                 <AlertDescription>
                   {startAssessment.error instanceof Error
                     ? startAssessment.error.message
-                    : "Unable to start assessment."}
+                    : errors("startAssessment")}
                 </AlertDescription>
               </Alert>
             )}
@@ -156,11 +170,10 @@ export function AssessmentOptionsPanel({
     <Card>
       <CardHeader>
         <div className="space-y-1">
-          <CardTitle>Assessments</CardTitle>
+          <CardTitle>{messages("title")}</CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            Progress assessments advance mastery. Review assessments revisit
-            material you have already mastered.
+            {messages("optionsDescription")}
           </p>
         </div>
       </CardHeader>
@@ -180,19 +193,21 @@ export function AssessmentOptionsPanel({
 
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">Progress assessment</p>
-                      <Badge>Available</Badge>
+                      <p className="font-medium">
+                        {messages("modeAssessment.progress")}
+                      </p>
+                      <Badge>{messages("available")}</Badge>
                     </div>
 
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Your next mastery assessment
+                      {messages("nextMasteryAssessment")}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4">
                   <Badge variant="outline">
-                    {learningObjectiveLabel(
+                    {objectiveLabel(
                       options.progress.learning_objective.code,
                       options.progress.learning_objective.display_order,
                     )}
@@ -223,8 +238,8 @@ export function AssessmentOptionsPanel({
                 )}
 
                 {createProgressAssessment.isPending
-                  ? "Creating..."
-                  : "Start progress assessment"}
+                  ? messages("creating")
+                  : messages("startProgress")}
               </Button>
             </div>
 
@@ -233,7 +248,7 @@ export function AssessmentOptionsPanel({
                 <AlertDescription>
                   {createProgressAssessment.error instanceof Error
                     ? createProgressAssessment.error.message
-                    : "Unable to create assessment."}
+                    : errors("createAssessment")}
                 </AlertDescription>
               </Alert>
             )}
@@ -243,11 +258,10 @@ export function AssessmentOptionsPanel({
             data-testid="progress-assessment"
             className="rounded-xl border bg-muted/25 p-4 sm:p-5"
           >
-            <p className="font-medium">Progress assessment unavailable</p>
+            <p className="font-medium">{messages("progressUnavailable")}</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              There is currently no progress assessment available for this
-              learning record.
+              {messages("progressUnavailableDescription")}
             </p>
           </section>
         )}
@@ -266,13 +280,13 @@ export function AssessmentOptionsPanel({
 
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-medium">Review assessments</p>
+                  <p className="font-medium">{messages("reviewAssessments")}</p>
 
-                  <Badge variant="secondary">Locked</Badge>
+                  <Badge variant="secondary">{messages("locked")}</Badge>
                 </div>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Review assessments become available after you master material.
+                  {messages("reviewLockedDescription")}
                 </p>
               </div>
             </div>
@@ -288,16 +302,19 @@ export function AssessmentOptionsPanel({
 
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">Review assessments</p>
+                      <p className="font-medium">
+                        {messages("reviewAssessments")}
+                      </p>
 
                       <Badge variant="outline">
-                        {options.review.length} learning objective
-                        {options.review.length === 1 ? "" : "s"}
+                        {messages("objectiveCount", {
+                          count: options.review.length,
+                        })}
                       </Badge>
                     </div>
 
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Revisit material you have already mastered.
+                      {messages("reviewDescription")}
                     </p>
                   </div>
                 </div>
@@ -307,11 +324,12 @@ export function AssessmentOptionsPanel({
             <div className="rounded-xl border bg-muted/20 p-4 sm:p-5">
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,20rem)] lg:items-end">
                 <div>
-                  <p className="text-sm font-medium">Question source</p>
+                  <p className="text-sm font-medium">
+                    {messages("questionSource")}
+                  </p>
 
                   <p className="mt-1 max-w-2xl text-xs leading-5 text-muted-foreground">
-                    Use all eligible published questions or choose a specific
-                    student-selectable question bank for this review.
+                    {messages("questionSourceDescription")}
                   </p>
                 </div>
 
@@ -321,7 +339,7 @@ export function AssessmentOptionsPanel({
                       <AlertDescription>
                         {questionBanksQuery.error instanceof Error
                           ? questionBanksQuery.error.message
-                          : "Unable to load question banks."}
+                          : errors("questionBanks")}
                       </AlertDescription>
                     </Alert>
                   ) : (
@@ -337,14 +355,14 @@ export function AssessmentOptionsPanel({
                       <SelectTrigger className="w-full">
                         <span className="truncate">
                           {questionBanksQuery.isPending
-                            ? "Loading question banks..."
+                            ? messages("loadingQuestionBanks")
                             : selectedQuestionBankLabel}
                         </span>
                       </SelectTrigger>
 
                       <SelectContent>
                         <SelectItem value="all">
-                          All available questions
+                          {messages("allAvailableQuestions")}
                         </SelectItem>
 
                         {questionBanksQuery.data?.items.map((bank) => (
@@ -360,8 +378,7 @@ export function AssessmentOptionsPanel({
 
               {selectedQuestionBankId !== "all" && (
                 <p className="mt-3 text-xs text-muted-foreground lg:text-right">
-                  This review will use only eligible published questions from
-                  the selected question bank.
+                  {messages("selectedQuestionBankHint")}
                 </p>
               )}
             </div>
@@ -376,14 +393,14 @@ export function AssessmentOptionsPanel({
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="outline">
-                          {learningObjectiveLabel(
+                          {objectiveLabel(
                             review.learning_objective.code,
                             review.learning_objective.display_order,
                           )}
                         </Badge>
 
                         {review.can_review_learning_objective && (
-                          <Badge>Whole objective available</Badge>
+                          <Badge>{messages("wholeObjectiveAvailable")}</Badge>
                         )}
                       </div>
 
@@ -409,7 +426,7 @@ export function AssessmentOptionsPanel({
                         disabled={createReviewAssessment.isPending}
                       >
                         <RotateCcw />
-                        Review learning objective
+                        {messages("reviewLearningObjective")}
                       </Button>
                     )}
                   </div>
@@ -437,7 +454,7 @@ export function AssessmentOptionsPanel({
 
                                 {concept.can_review_concept && (
                                   <Badge variant="outline">
-                                    Concept review
+                                    {messages("conceptReview")}
                                   </Badge>
                                 )}
                               </div>
@@ -467,7 +484,7 @@ export function AssessmentOptionsPanel({
                                 disabled={createReviewAssessment.isPending}
                               >
                                 <RotateCcw />
-                                Review concept
+                                {messages("reviewConcept")}
                               </Button>
                             )}
                           </div>
@@ -475,7 +492,7 @@ export function AssessmentOptionsPanel({
                           {concept.mastered_levels.length > 0 && (
                             <div className="mt-4">
                               <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                Review by SOLO level
+                                {messages("reviewBySoloLevel")}
                               </p>
 
                               <div className="flex flex-wrap gap-2">
@@ -501,7 +518,7 @@ export function AssessmentOptionsPanel({
                                     disabled={createReviewAssessment.isPending}
                                   >
                                     <RotateCcw />
-                                    {formatSoloCode(level.solo_code)}
+                                    {soloLabel(level.solo_code)}
                                   </Button>
                                 ))}
                               </div>
@@ -520,7 +537,7 @@ export function AssessmentOptionsPanel({
                 <AlertDescription>
                   {createReviewAssessment.error instanceof Error
                     ? createReviewAssessment.error.message
-                    : "Unable to create review assessment."}
+                    : errors("createReviewAssessment")}
                 </AlertDescription>
               </Alert>
             )}

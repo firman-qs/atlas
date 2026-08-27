@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const push = vi.hoisted(() => vi.fn());
@@ -99,7 +99,7 @@ describe("AssessmentOptionsPanel", () => {
 
     expect(screen.getByText("Active assessment")).toBeInTheDocument();
     expect(screen.getByText("Progress")).toBeInTheDocument();
-    expect(screen.getByText("created")).toBeInTheDocument();
+    expect(screen.getByText("Ready to start")).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", {
@@ -160,12 +160,39 @@ describe("AssessmentOptionsPanel", () => {
     ).toHaveAttribute("href", "/student/assessments/assessment-running");
 
     expect(screen.getByText("Review")).toBeInTheDocument();
-    expect(screen.getByText("running")).toBeInTheDocument();
+    expect(screen.getByText("In progress")).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", {
         name: /cancel assessment/i,
       }),
+    ).toBeInTheDocument();
+  });
+
+  it("localizes active review controls while preserving assessment identity", () => {
+    const options: AssessmentOptions = {
+      learning_record_id: "lr-1",
+      active_assessment: {
+        id: "assessment-running",
+        learning_objective_id: "lo-1",
+        mode: "review",
+        status: "running",
+      },
+      progress: null,
+      review: [],
+    };
+
+    render(
+      <AssessmentOptionsPanel options={options} learningRecordId="lr-1" />,
+      { locale: "id" },
+    );
+
+    expect(screen.getByText("Tinjauan")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /lanjutkan asesmen/i }),
+    ).toHaveAttribute("href", "/student/assessments/assessment-running");
+    expect(
+      screen.getByRole("button", { name: /batalkan asesmen/i }),
     ).toBeInTheDocument();
   });
 

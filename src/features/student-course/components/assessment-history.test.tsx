@@ -1,10 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const push = vi.hoisted(() => vi.fn());
@@ -313,5 +307,48 @@ describe("AssessmentHistory", () => {
     });
 
     expect(push).toHaveBeenCalledWith("/student/assessments/assessment-1");
+  });
+
+  it("localizes assessment history without translating objective content", () => {
+    useAssessments.mockReturnValue({
+      data: {
+        items: [
+          {
+            id: "assessment-running",
+            learning_record_id: "lr-1",
+            learning_objective: {
+              id: "lo-2",
+              course_id: "course-1",
+              code: "lo2",
+              description: "Apply Gauss's law.",
+              display_order: 2,
+            },
+            question_bank_id: null,
+            review_learning_objective_concept_id: null,
+            review_loc_level_id: null,
+            mode: "review",
+            status: "running",
+            current_loc_level_id: "level-1",
+            current_question_id: "question-1",
+            current_cycle_number: 1,
+            started_at: "2026-08-23T01:00:00Z",
+            completed_at: null,
+          },
+        ],
+        page: 1,
+        page_size: 20,
+        total: 1,
+        total_pages: 1,
+      },
+      isPending: false,
+      isError: false,
+      error: null,
+    });
+
+    render(<AssessmentHistory />, { locale: "id" });
+
+    expect(screen.getByText("Tinjauan")).toBeInTheDocument();
+    expect(screen.getByText("Tujuan Pembelajaran 2")).toBeInTheDocument();
+    expect(screen.getByText("Apply Gauss's law.")).toBeInTheDocument();
   });
 });

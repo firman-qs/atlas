@@ -1,11 +1,4 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const invalidateQueries = vi.hoisted(() => vi.fn());
@@ -194,6 +187,32 @@ describe("AssessmentRunner", () => {
       screen.getByRole("heading", {
         name: "Learning Objective 1",
       }),
+    ).toBeInTheDocument();
+  });
+
+  it("localizes runner controls without translating issued question content", () => {
+    getQueryData.mockReturnValue({
+      id: "question-1",
+      prompt: "What is electric flux?",
+      content: {
+        type: "mcq",
+        options: [
+          {
+            id: "option-1",
+            option_text: "Surface integral of E dot da",
+          },
+        ],
+      },
+    });
+
+    render(<AssessmentRunner assessmentId="assessment-1" />, { locale: "id" });
+
+    expect(screen.getByText("What is electric flux?")).toBeInTheDocument();
+    expect(
+      screen.getByText("Surface integral of E dot da"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /kirim jawaban/i }),
     ).toBeInTheDocument();
   });
 

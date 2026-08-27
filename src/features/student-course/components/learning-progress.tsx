@@ -3,21 +3,20 @@ import { Check, Circle, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { learningObjectiveLabel } from "@/features/student-course/labels";
+import {
+  formatDomainCode,
+  learningObjectiveNumber,
+  soloLevelMessageKey,
+} from "@/features/student-course/labels";
 import type {
   LearningObjectiveConceptProgress,
   LearningRecordProgress,
 } from "@/features/student-course/types";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface LearningProgressProps {
   progress: LearningRecordProgress;
-}
-
-function formatSoloCode(code: string) {
-  return code
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function masteredLevelIndex(concept: LearningObjectiveConceptProgress) {
@@ -49,13 +48,15 @@ function MasterySummary({
   total: number;
   testId: string;
 }) {
+  const messages = useTranslations("course.progress");
+
   return (
     <div data-testid={testId} className="space-y-2">
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-muted-foreground">{label}</p>
 
         <p className="text-sm font-medium tabular-nums">
-          {mastered} of {total} mastered
+          {messages("masteredCount", { mastered, total })}
         </p>
       </div>
 
@@ -69,6 +70,8 @@ function ConceptProgress({
 }: {
   concept: LearningObjectiveConceptProgress;
 }) {
+  const messages = useTranslations("course.progress");
+  const course = useTranslations("course");
   const masteredIndex = masteredLevelIndex(concept);
   const masteredLevels = masteredIndex + 1;
   const totalLevels = concept.levels.length;
@@ -87,12 +90,14 @@ function ConceptProgress({
               {concept.concept.code}
             </Badge>
 
-            {!concept.is_required && <Badge variant="outline">Optional</Badge>}
+            {!concept.is_required && (
+              <Badge variant="outline">{messages("optional")}</Badge>
+            )}
 
             {concept.mastered_at && (
               <Badge>
                 <Check className="size-3" />
-                Concept mastered
+                {messages("conceptMastered")}
               </Badge>
             )}
           </div>
@@ -103,7 +108,10 @@ function ConceptProgress({
         </div>
 
         <p className="shrink-0 text-sm font-medium tabular-nums">
-          {masteredLevels} of {totalLevels} levels mastered
+          {messages("levelsMastered", {
+            mastered: masteredLevels,
+            total: totalLevels,
+          })}
         </p>
       </div>
 
@@ -125,6 +133,7 @@ function ConceptProgress({
             >
               {concept.levels.map((level, index) => {
                 const mastered = index <= masteredIndex;
+                const soloKey = soloLevelMessageKey(level.solo_level.code);
 
                 return (
                   <div
@@ -152,7 +161,9 @@ function ConceptProgress({
                           !mastered && "text-muted-foreground",
                         )}
                       >
-                        {formatSoloCode(level.solo_level.code)}
+                        {soloKey
+                          ? course(`soloLevels.${soloKey}`)
+                          : formatDomainCode(level.solo_level.code)}
                       </p>
 
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -171,7 +182,16 @@ function ConceptProgress({
 }
 
 export function LearningProgress({ progress }: LearningProgressProps) {
+  const messages = useTranslations("course.progress");
   const learningObjectives = progress.learning_objectives;
+
+  function objectiveLabel(code: string, displayOrder?: number | null) {
+    const number = learningObjectiveNumber(code, displayOrder);
+
+    return number === null
+      ? messages("learningObjective")
+      : messages("learningObjectiveNumbered", { number });
+  }
 
   const masteredLearningObjectives = learningObjectives.filter(
     (learningObjective) => learningObjective.mastered_at !== null,
@@ -189,11 +209,10 @@ export function LearningProgress({ progress }: LearningProgressProps) {
     <Card className="overflow-hidden">
       <CardHeader>
         <div className="space-y-1">
-          <CardTitle>Learning Progress</CardTitle>
+          <CardTitle>{messages("title")}</CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            Concept mastery across the configured learning objectives and SOLO
-            levels.
+            {messages("description")}
           </p>
         </div>
       </CardHeader>
@@ -201,17 +220,17 @@ export function LearningProgress({ progress }: LearningProgressProps) {
       <CardContent className="space-y-6">
         <section className="rounded-xl bg-muted/30 p-4 sm:p-5">
           <div>
-            <p className="font-medium">Course mastery</p>
+            <p className="font-medium">{messages("courseMastery")}</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              Your progress across learning objectives and required concepts.
+              {messages("courseMasteryDescription")}
             </p>
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2 md:divide-x">
             <div className="md:pr-5">
               <MasterySummary
-                label="Learning Objectives"
+                label={messages("learningObjectives")}
                 mastered={masteredLearningObjectives}
                 total={learningObjectives.length}
                 testId="learning-objective-summary"
@@ -220,7 +239,7 @@ export function LearningProgress({ progress }: LearningProgressProps) {
 
             <div className="md:pl-5">
               <MasterySummary
-                label="Required Concepts"
+                label={messages("requiredConcepts")}
                 mastered={masteredRequiredConcepts}
                 total={requiredConcepts.length}
                 testId="required-concept-summary"
@@ -235,13 +254,13 @@ export function LearningProgress({ progress }: LearningProgressProps) {
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">
-                    {learningObjectiveLabel(lo.code, lo.display_order)}
+                    {objectiveLabel(lo.code, lo.display_order)}
                   </Badge>
 
                   {lo.mastered_at && (
                     <Badge>
                       <Trophy className="size-3" />
-                      Mastered
+                      {messages("mastered")}
                     </Badge>
                   )}
                 </div>

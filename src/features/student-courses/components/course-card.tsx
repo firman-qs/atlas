@@ -12,34 +12,39 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { StudentEnrollment } from "@/features/student-courses/types";
+import {
+  formatDomainCode,
+  semesterMessageKey,
+} from "@/features/student-course/labels";
+import { useTranslations } from "next-intl";
 
 interface CourseCardProps {
   enrollment: StudentEnrollment;
 }
 
-function formatSemester(value: string) {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 export function CourseCard({ enrollment }: CourseCardProps) {
+  const courseMessages = useTranslations("course");
+  const assessmentMessages = useTranslations("assessment");
   const offering = enrollment.course_offering;
   const course = offering.course;
   const learningRecord = enrollment.learning_record;
   const activeAssessment = learningRecord?.active_assessment ?? null;
+  const semesterKey = semesterMessageKey(offering.academic_term.semester);
+  const semester = semesterKey
+    ? courseMessages(`semesters.${semesterKey}`)
+    : formatDomainCode(offering.academic_term.semester);
 
-  let stateLabel = "Not started";
+  let stateLabel = courseMessages("states.notStarted");
   let stateVariant: "secondary" | "default" | "outline" = "secondary";
 
   if (activeAssessment) {
-    stateLabel = "Assessment in progress";
+    stateLabel = courseMessages("states.assessmentInProgress");
     stateVariant = "default";
   } else if (learningRecord?.completed_at) {
-    stateLabel = "Completed";
+    stateLabel = courseMessages("states.completed");
     stateVariant = "outline";
   } else if (learningRecord) {
-    stateLabel = "Learning in progress";
+    stateLabel = courseMessages("states.learningInProgress");
     stateVariant = "outline";
   }
 
@@ -64,26 +69,33 @@ export function CourseCard({ enrollment }: CourseCardProps) {
       <CardContent className="flex-1 space-y-4">
         <div className="grid gap-2 text-sm">
           <div className="flex justify-between gap-4">
-            <span className="text-muted-foreground">Credits</span>
+            <span className="text-muted-foreground">
+              {courseMessages("labels.credits")}
+            </span>
             <span>{course.credits}</span>
           </div>
 
           <div className="flex justify-between gap-4">
-            <span className="text-muted-foreground">Section</span>
+            <span className="text-muted-foreground">
+              {courseMessages("labels.section")}
+            </span>
             <span>{offering.section}</span>
           </div>
 
           <div className="flex justify-between gap-4">
-            <span className="text-muted-foreground">Instructor</span>
+            <span className="text-muted-foreground">
+              {courseMessages("labels.instructor")}
+            </span>
             <span className="text-right">{offering.instructor.full_name}</span>
           </div>
 
           <div className="flex justify-between gap-4">
-            <span className="text-muted-foreground">Academic term</span>
+            <span className="text-muted-foreground">
+              {courseMessages("labels.academicTerm")}
+            </span>
 
             <span className="text-right">
-              {formatSemester(offering.academic_term.semester)}{" "}
-              {offering.academic_term.year}
+              {semester} {offering.academic_term.year}
             </span>
           </div>
         </div>
@@ -92,13 +104,11 @@ export function CourseCard({ enrollment }: CourseCardProps) {
           <div className="rounded-lg border bg-muted/40 p-3">
             <div className="flex items-center gap-2 text-sm font-medium">
               <ClipboardCheck className="size-4" />
-              Active assessment
+              {courseMessages("activeAssessment")}
             </div>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              {activeAssessment.mode === "progress"
-                ? "Progress assessment"
-                : "Review assessment"}
+              {assessmentMessages(`modeAssessment.${activeAssessment.mode}`)}
             </p>
           </div>
         )}
@@ -117,12 +127,12 @@ export function CourseCard({ enrollment }: CourseCardProps) {
           {activeAssessment ? (
             <>
               <ClipboardCheck />
-              Continue assessment
+              {courseMessages("continueAssessment")}
             </>
           ) : (
             <>
               <BookOpen />
-              Open course
+              {courseMessages("openCourse")}
             </>
           )}
 

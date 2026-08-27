@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CourseWorkspace } from "@/features/student-course/components/course-workspace";
@@ -179,5 +179,20 @@ describe("CourseWorkspace", () => {
     });
 
     expect(assessmentsTab).toHaveTextContent("1");
+  });
+
+  it("localizes course presentation without translating course data", () => {
+    render(<CourseWorkspace enrollmentId="enrollment-1" />, { locale: "id" });
+
+    expect(
+      screen.getByRole("tab", { name: "Progres Pembelajaran" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Electromagnetics")).toBeInTheDocument();
+    expect(screen.getByText("UM032EM000")).toBeInTheDocument();
+    expect(
+      screen.getByText("Electromagnetics Instructor"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("20/8/2026")).toBeInTheDocument();
+    expect(screen.getByText("21/8/2026, 7.00.00")).toBeInTheDocument();
   });
 });

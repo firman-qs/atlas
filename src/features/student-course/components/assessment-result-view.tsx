@@ -9,12 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { learningObjectiveLabel } from "@/features/student-course/labels";
+import { learningObjectiveNumber } from "@/features/student-course/labels";
 import { useAssessmentResult } from "@/features/student-course/queries";
 import type {
   AssessmentResultAnswer,
   AssessmentResultQuestionContent,
 } from "@/features/student-course/types";
+import { useTranslations } from "next-intl";
 
 interface AssessmentResultViewProps {
   assessmentId: string;
@@ -48,6 +49,9 @@ function getMcqSelectedOptionText(
 export function AssessmentResultView({
   assessmentId,
 }: AssessmentResultViewProps) {
+  const messages = useTranslations("assessment");
+  const course = useTranslations("course");
+  const errors = useTranslations("errors");
   const resultQuery = useAssessmentResult(assessmentId);
 
   if (resultQuery.isPending) {
@@ -67,7 +71,7 @@ export function AssessmentResultView({
           <AlertDescription>
             {resultQuery.error instanceof Error
               ? resultQuery.error.message
-              : "Unable to load assessment result."}
+              : errors("assessmentResult")}
           </AlertDescription>
         </Alert>
       </div>
@@ -80,6 +84,10 @@ export function AssessmentResultView({
     return null;
   }
 
+  const objectiveNumber = learningObjectiveNumber(
+    result.learning_objective.code,
+  );
+
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <Button
@@ -88,20 +96,28 @@ export function AssessmentResultView({
         render={<Link href="/student/assessments" />}
       >
         <ArrowLeft />
-        Assessment history
+        {messages("history")}
       </Button>
 
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary">
-            {result.mode === "progress" ? "Progress" : "Review"}
+            {messages(`modes.${result.mode}`)}
           </Badge>
-          <Badge variant="outline">{result.status}</Badge>
-          <Badge variant="outline">{result.total_attempts} attempts</Badge>
+          <Badge variant="outline">
+            {messages(`statuses.${result.status}`)}
+          </Badge>
+          <Badge variant="outline">
+            {messages("attemptCount", { count: result.total_attempts })}
+          </Badge>
         </div>
 
         <h1 className="text-3xl font-semibold tracking-tight">
-          {learningObjectiveLabel(result.learning_objective.code)}
+          {objectiveNumber === null
+            ? course("progress.learningObjective")
+            : course("progress.learningObjectiveNumbered", {
+                number: objectiveNumber,
+              })}
         </h1>
 
         <p className="max-w-3xl text-muted-foreground">
@@ -134,13 +150,12 @@ export function AssessmentResultView({
                       </p>
 
                       <p className="text-xs text-muted-foreground">
-                        SOLO level {level.solo_level}
+                        {messages("soloLevel", { number: level.solo_level })}
                       </p>
                     </div>
 
                     <Badge variant="outline">
-                      {level.cycles.length} cycle
-                      {level.cycles.length === 1 ? "" : "s"}
+                      {messages("cycleCount", { count: level.cycles.length })}
                     </Badge>
                   </div>
 
@@ -154,24 +169,26 @@ export function AssessmentResultView({
                         <div className="flex flex-col justify-between gap-3 border-b bg-muted/20 p-4 sm:flex-row sm:items-center sm:p-5">
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="mr-1 font-semibold">
-                              Cycle {cycle.cycle_number}
+                              {messages("cycle", { number: cycle.cycle_number })}
                             </p>
 
                             <Badge variant="outline">
-                              Score {percent(cycle.score)}
+                              {messages("score", {
+                                score: percent(cycle.score),
+                              })}
                             </Badge>
 
                             {cycle.passed === true && (
                               <Badge>
                                 <CheckCircle2 />
-                                Mastered
+                                {messages("mastered")}
                               </Badge>
                             )}
 
                             {cycle.passed === false && (
                               <Badge variant="secondary">
                                 <CircleX />
-                                Not mastered
+                                {messages("notMastered")}
                               </Badge>
                             )}
                           </div>
@@ -189,8 +206,8 @@ export function AssessmentResultView({
 
                             const unavailableAnswer =
                               attempt.question_type === "essay"
-                                ? "Submitted answer is unavailable."
-                                : "Selected option is unavailable.";
+                                ? messages("submittedAnswerUnavailable")
+                                : messages("selectedOptionUnavailable");
 
                             return (
                               <article
@@ -200,19 +217,21 @@ export function AssessmentResultView({
                               >
                                 <div className="flex flex-wrap items-center justify-between gap-3">
                                   <p className="font-medium">
-                                    Question {index + 1}
+                                    {messages("questionNumber", {
+                                      number: index + 1,
+                                    })}
                                   </p>
 
                                   <Badge variant="secondary">
-                                    {attempt.question_type === "mcq"
-                                      ? "Multiple choice"
-                                      : "Essay"}
+                                    {messages(
+                                      `questionTypes.${attempt.question_type}`,
+                                    )}
                                   </Badge>
                                 </div>
 
                                 <section className="space-y-2">
                                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    Assessment question
+                                    {messages("assessmentQuestion")}
                                   </p>
 
                                   <div className="rounded-xl border bg-muted/20 p-4">
@@ -225,7 +244,7 @@ export function AssessmentResultView({
 
                                 <section className="space-y-2">
                                   <p className="text-sm font-medium">
-                                    Your answer
+                                    {messages("yourAnswer")}
                                   </p>
 
                                   <div className="rounded-xl border bg-background p-4">
@@ -248,7 +267,7 @@ export function AssessmentResultView({
                                 >
                                   <div className="flex flex-wrap items-center gap-2">
                                     <p className="text-base font-semibold">
-                                      Answer evaluated
+                                      {messages("answerEvaluated")}
                                     </p>
 
                                     {attempt.is_correct !== null && (
@@ -260,14 +279,16 @@ export function AssessmentResultView({
                                         }
                                       >
                                         {attempt.is_correct
-                                          ? "Correct"
-                                          : "Incorrect"}
+                                          ? messages("correct")
+                                          : messages("incorrect")}
                                       </Badge>
                                     )}
 
                                     {attempt.score !== null && (
                                       <Badge variant="outline">
-                                        Score {percent(attempt.score)}
+                                        {messages("score", {
+                                          score: percent(attempt.score),
+                                        })}
                                       </Badge>
                                     )}
                                   </div>
@@ -275,7 +296,7 @@ export function AssessmentResultView({
                                   {attempt.feedback && (
                                     <div className="mt-4 rounded-lg bg-background p-4 ring-1 ring-foreground/10">
                                       <p className="text-sm font-medium">
-                                        Feedback
+                                        {messages("feedback")}
                                       </p>
 
                                       <AtlasRichTextViewer

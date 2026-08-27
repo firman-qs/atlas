@@ -6,6 +6,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  formatDomainCode,
+  semesterMessageKey,
+} from "@/features/student-course/labels";
 import { useLearningRecordProgress } from "@/features/student-course/queries";
 import { useStudentCourses } from "@/features/student-courses/queries";
 import type {
@@ -21,6 +25,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 function coursePriority(enrollment: StudentEnrollment) {
   if (enrollment.learning_record?.active_assessment) {
@@ -36,12 +41,6 @@ function coursePriority(enrollment: StudentEnrollment) {
   }
 
   return 3;
-}
-
-function formatSemester(value: string) {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function DashboardSkeleton() {
@@ -97,11 +96,19 @@ function ContinueLearningCard({
   enrollment,
   learningRecord,
 }: ContinueLearningCardProps) {
+  const dashboard = useTranslations("dashboard");
+  const student = useTranslations("student");
+  const courseMessages = useTranslations("course");
+  const assessmentMessages = useTranslations("assessment");
   const progressQuery = useLearningRecordProgress(learningRecord.id);
 
   const offering = enrollment.course_offering;
   const course = offering.course;
   const activeAssessment = learningRecord.active_assessment;
+  const semesterKey = semesterMessageKey(offering.academic_term.semester);
+  const semester = semesterKey
+    ? courseMessages(`semesters.${semesterKey}`)
+    : formatDomainCode(offering.academic_term.semester);
 
   const learningObjectives = progressQuery.data?.learning_objectives ?? [];
 
@@ -136,7 +143,9 @@ function ContinueLearningCard({
                   {course.code}
                 </p>
 
-                {activeAssessment && <Badge>Assessment in progress</Badge>}
+                {activeAssessment && (
+                  <Badge>{courseMessages("assessmentInProgress")}</Badge>
+                )}
               </div>
 
               <h3 className="mt-1 text-xl font-semibold tracking-tight">
@@ -144,22 +153,18 @@ function ContinueLearningCard({
               </h3>
 
               <p className="mt-2 text-sm text-muted-foreground">
-                Section {offering.section}
-                {" · "}
-                {formatSemester(offering.academic_term.semester)}{" "}
-                {offering.academic_term.year}
-                {" · "}
-                {course.credits} credit
-                {course.credits === 1 ? "" : "s"}
-                {" · "}
-                {offering.instructor.full_name}
+                {courseMessages("courseSummary", {
+                  section: offering.section,
+                  semester,
+                  year: offering.academic_term.year,
+                  credits: courseMessages("credits", { count: course.credits }),
+                  instructor: offering.instructor.full_name,
+                })}
               </p>
 
               {activeAssessment && (
                 <p className="mt-3 text-sm font-medium">
-                  {activeAssessment.mode === "progress"
-                    ? "Progress assessment"
-                    : "Review assessment"}
+                  {assessmentMessages(`modeAssessment.${activeAssessment.mode}`)}
                 </p>
               )}
             </div>
@@ -171,7 +176,7 @@ function ContinueLearningCard({
                   className={cn(buttonVariants())}
                 >
                   <ClipboardCheck />
-                  Continue assessment
+                  {courseMessages("continueAssessment")}
                   <ArrowRight />
                 </Link>
               ) : (
@@ -184,7 +189,7 @@ function ContinueLearningCard({
                   )}
                 >
                   <BookOpen />
-                  Open course
+                  {courseMessages("openCourse")}
                   <ArrowRight />
                 </Link>
               )}
@@ -198,14 +203,14 @@ function ContinueLearningCard({
                 )}
               >
                 <Bot />
-                AI Tutor
+                {student("aiTutor")}
               </Link>
             </div>
           </div>
         </div>
 
         <div className="border-t bg-muted/20 p-5 sm:p-6">
-          <p className="text-sm font-medium">Course progress</p>
+          <p className="text-sm font-medium">{dashboard("courseProgress")}</p>
 
           {progressQuery.isPending ? (
             <div className="mt-4 space-y-4">
@@ -214,19 +219,21 @@ function ContinueLearningCard({
             </div>
           ) : progressQuery.isError ? (
             <p className="mt-2 text-sm text-muted-foreground">
-              Learning progress is temporarily unavailable.
+              {dashboard("progressUnavailable")}
             </p>
           ) : (
             <div className="mt-4 grid gap-5 md:grid-cols-2">
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-sm text-muted-foreground">
-                    Learning Objectives
+                    {courseMessages("progress.learningObjectives")}
                   </span>
 
                   <span className="text-sm font-medium">
-                    {masteredLearningObjectives} of {learningObjectives.length}{" "}
-                    mastered
+                    {courseMessages("progress.masteredCount", {
+                      mastered: masteredLearningObjectives,
+                      total: learningObjectives.length,
+                    })}
                   </span>
                 </div>
 
@@ -236,11 +243,14 @@ function ContinueLearningCard({
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-sm text-muted-foreground">
-                    Concepts
+                    {courseMessages("progress.concepts")}
                   </span>
 
                   <span className="text-sm font-medium">
-                    {masteredConcepts} of {concepts.length} mastered
+                    {courseMessages("progress.masteredCount", {
+                      mastered: masteredConcepts,
+                      total: concepts.length,
+                    })}
                   </span>
                 </div>
 
@@ -255,6 +265,10 @@ function ContinueLearningCard({
 }
 
 export function StudentDashboard() {
+  const dashboard = useTranslations("dashboard");
+  const student = useTranslations("student");
+  const assessmentMessages = useTranslations("assessment");
+  const errors = useTranslations("errors");
   const coursesQuery = useStudentCourses({
     page: 1,
     pageSize: 100,
@@ -270,7 +284,7 @@ export function StudentDashboard() {
         <AlertDescription>
           {coursesQuery.error instanceof Error
             ? coursesQuery.error.message
-            : "Unable to load your dashboard."}
+            : errors("dashboard")}
         </AlertDescription>
       </Alert>
     );
@@ -313,14 +327,14 @@ export function StudentDashboard() {
             <div className="grid sm:grid-cols-3">
               <DashboardMetric
                 icon={<GraduationCap className="size-5" />}
-                label="Enrolled Courses"
+                label={dashboard("enrolledCourses")}
                 value={data.total}
               />
 
               <div className="border-t sm:border-t-0 sm:border-l">
                 <DashboardMetric
                   icon={<BookOpen className="size-5" />}
-                  label="Courses Started"
+                  label={dashboard("coursesStarted")}
                   value={startedCount}
                 />
               </div>
@@ -328,7 +342,7 @@ export function StudentDashboard() {
               <div className="border-t sm:border-t-0 sm:border-l">
                 <DashboardMetric
                   icon={<ClipboardCheck className="size-5" />}
-                  label="Active Assessments"
+                  label={dashboard("activeAssessments")}
                   value={activeAssessmentCount}
                 />
               </div>
@@ -340,11 +354,11 @@ export function StudentDashboard() {
       <section className="space-y-3">
         <div>
           <h2 className="text-xl font-semibold tracking-tight">
-            Continue Learning
+            {dashboard("continueLearning")}
           </h2>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            Continue your current learning activity or assessment.
+            {dashboard("continueLearningDescription")}
           </p>
         </div>
 
@@ -358,11 +372,12 @@ export function StudentDashboard() {
             <CardContent className="py-8 text-center">
               <BookOpen className="mx-auto size-7 text-muted-foreground" />
 
-              <p className="mt-3 font-medium">Nothing to continue right now</p>
+              <p className="mt-3 font-medium">
+                {dashboard("nothingToContinue")}
+              </p>
 
               <p className="mt-1 text-sm text-muted-foreground">
-                Open one of your courses to continue learning or start an
-                assessment.
+                {dashboard("nothingToContinueDescription")}
               </p>
             </CardContent>
           </Card>
@@ -370,7 +385,9 @@ export function StudentDashboard() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">Quick Access</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          {dashboard("quickAccess")}
+        </h2>
 
         <div className="grid gap-3 sm:grid-cols-2">
           <Link
@@ -382,9 +399,9 @@ export function StudentDashboard() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="font-medium">My Courses</p>
+              <p className="font-medium">{student("myCourses")}</p>
               <p className="text-sm text-muted-foreground">
-                Open your learning workspaces.
+                {dashboard("courseWorkspacesDescription")}
               </p>
             </div>
 
@@ -400,9 +417,9 @@ export function StudentDashboard() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="font-medium">Assessment History</p>
+              <p className="font-medium">{assessmentMessages("history")}</p>
               <p className="text-sm text-muted-foreground">
-                Continue or review formative assessments.
+                {dashboard("assessmentHistoryDescription")}
               </p>
             </div>
 

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
-import { learningObjectiveLabel } from "@/features/student-course/labels";
+import { learningObjectiveNumber } from "@/features/student-course/labels";
 import {
   studentAssessmentKeys,
   useAssessment,
@@ -32,13 +32,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface AssessmentRunnerProps {
   assessmentId: string;
-}
-
-function formatMode(mode: "progress" | "review") {
-  return mode === "progress" ? "Progress" : "Review";
 }
 
 function isConflictError(error: unknown): boolean {
@@ -46,6 +43,9 @@ function isConflictError(error: unknown): boolean {
 }
 
 export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
+  const messages = useTranslations("assessment");
+  const course = useTranslations("course");
+  const errors = useTranslations("errors");
   const queryClient = useQueryClient();
 
   const assessmentQuery = useAssessment(assessmentId);
@@ -146,7 +146,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           <AlertDescription>
             {assessmentQuery.error instanceof Error
               ? assessmentQuery.error.message
-              : "Unable to load assessment."}
+              : errors("assessment")}
           </AlertDescription>
         </Alert>
 
@@ -163,7 +163,9 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             <RefreshCw />
           )}
 
-          {assessmentQuery.isFetching ? "Retrying..." : "Retry"}
+          {assessmentQuery.isFetching
+            ? messages("retrying")
+            : messages("retry")}
         </Button>
       </div>
     );
@@ -175,6 +177,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
 
   const question = queryClient.getQueryData<AssessmentQuestion>(
     studentAssessmentKeys.question(assessmentId),
+  );
+  const objectiveNumber = learningObjectiveNumber(
+    assessment.learning_objective.code,
+    assessment.learning_objective.display_order,
   );
 
   function handleSubmit(question: AssessmentQuestion) {
@@ -264,7 +270,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             render={<Link href="/student/courses" />}
           >
             <ArrowLeft />
-            Back to courses
+            {messages("backToCourses")}
           </Button>
 
           {assessment.status === "running" && (
@@ -287,20 +293,27 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {learningObjectiveLabel(
-                assessment.learning_objective.code,
-                assessment.learning_objective.display_order,
-              )}
+              {objectiveNumber === null
+                ? course("progress.learningObjective")
+                : course("progress.learningObjectiveNumbered", {
+                    number: objectiveNumber,
+                  })}
             </h1>
 
             <div className="flex flex-wrap items-center gap-1.5">
-              <Badge variant="secondary">{formatMode(assessment.mode)}</Badge>
+              <Badge variant="secondary">
+                {messages(`modes.${assessment.mode}`)}
+              </Badge>
 
-              <Badge variant="outline">{assessment.status}</Badge>
+              <Badge variant="outline">
+                {messages(`statuses.${assessment.status}`)}
+              </Badge>
 
               {assessment.current_cycle_number !== null && (
                 <Badge variant="outline">
-                  Cycle {assessment.current_cycle_number}
+                  {messages("cycle", {
+                    number: assessment.current_cycle_number,
+                  })}
                 </Badge>
               )}
             </div>
@@ -315,12 +328,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
       {assessment.status === "completed" && !attemptResult ? (
         <Card>
           <CardHeader>
-            <CardTitle>Assessment completed</CardTitle>
+            <CardTitle>{messages("completedTitle")}</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              This assessment has been completed.
+              {messages("completedDescription")}
             </p>
 
             <Button
@@ -329,7 +342,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 <Link href={`/student/assessments/${assessment.id}/result`} />
               }
             >
-              View assessment result
+              {messages("viewAssessmentResult")}
               <ArrowRight />
             </Button>
           </CardContent>
@@ -337,12 +350,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
       ) : assessment.status === "canceled" ? (
         <Card>
           <CardHeader>
-            <CardTitle>Assessment canceled</CardTitle>
+            <CardTitle>{messages("canceledTitle")}</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              This assessment has been canceled and cannot be continued.
+              {messages("canceledDescription")}
             </p>
 
             <Button
@@ -350,7 +363,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               nativeButton={false}
               render={<Link href="/student/courses" />}
             >
-              Return to courses
+              {messages("returnToCourses")}
             </Button>
           </CardContent>
         </Card>
@@ -359,8 +372,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           <ClipboardCheck className="size-4" />
 
           <AlertDescription>
-            This assessment has not been started yet. Return to the course
-            workspace and start it before answering questions.
+            {messages("notStartedDescription")}
           </AlertDescription>
         </Alert>
       ) : issueQuestion.isPending && !question ? (
@@ -368,14 +380,14 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
           <CardContent className="flex min-h-64 items-center justify-center">
             <div className="flex items-center gap-3 text-muted-foreground">
               <LoaderCircle className="size-5 animate-spin" />
-              Preparing your question...
+              {messages("preparingQuestion")}
             </div>
           </CardContent>
         </Card>
       ) : issueQuestion.isError && !question ? (
         <Card>
           <CardHeader>
-            <CardTitle>Unable to prepare question</CardTitle>
+            <CardTitle>{messages("unableToPrepareQuestion")}</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -383,7 +395,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               <AlertDescription>
                 {issueQuestion.error instanceof Error
                   ? issueQuestion.error.message
-                  : "Unable to load the assessment question."}
+                  : errors("assessmentQuestion")}
               </AlertDescription>
             </Alert>
 
@@ -398,7 +410,9 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 <RefreshCw />
               )}
 
-              {issueQuestion.isPending ? "Retrying..." : "Retry question"}
+              {issueQuestion.isPending
+                ? messages("retrying")
+                : messages("retryQuestion")}
             </Button>
           </CardContent>
         </Card>
@@ -406,10 +420,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         <Card className="overflow-visible">
           <CardHeader className="border-b">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <CardTitle className="text-lg">Assessment question</CardTitle>
+              <CardTitle className="text-lg">
+                {messages("assessmentQuestion")}
+              </CardTitle>
 
               <Badge variant="secondary">
-                {question.content.type === "mcq" ? "Multiple choice" : "Essay"}
+                {messages(`questionTypes.${question.content.type}`)}
               </Badge>
             </div>
           </CardHeader>
@@ -420,7 +436,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               className="rounded-xl border bg-muted/20 p-4 sm:p-5"
             >
               <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Question
+                {messages("question")}
               </p>
 
               <AtlasRichTextViewer
@@ -431,12 +447,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
 
             <section data-testid="answer-section" className="space-y-4">
               <div>
-                <p className="font-medium">Your answer</p>
+                <p className="font-medium">{messages("yourAnswer")}</p>
 
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
                   {question.content.type === "mcq"
-                    ? "Choose the best answer, then submit your response."
-                    : "Write your response below. You can include supporting images when needed."}
+                    ? messages("mcqHint")
+                    : messages("essayHint")}
                 </p>
               </div>
 
@@ -494,8 +510,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                         )}
 
                         {submitAttempt.isPending
-                          ? "Submitting..."
-                          : "Submit answer"}
+                          ? messages("submitting")
+                          : messages("submitAnswer")}
                       </Button>
                     </div>
                   )}
@@ -506,7 +522,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                     value={essayAnswer}
                     onChange={setEssayAnswer}
                     disabled={submitAttempt.isPending || attemptResult !== null}
-                    placeholder="Write your answer here..."
+                    placeholder={messages("essayPlaceholder")}
                     mediaPurpose="attempt"
                     className="min-h-48"
                   />
@@ -525,8 +541,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                         )}
 
                         {submitAttempt.isPending
-                          ? "Evaluating..."
-                          : "Submit answer"}
+                          ? messages("evaluating")
+                          : messages("submitAnswer")}
                       </Button>
                     </div>
                   )}
@@ -538,10 +554,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               <Alert variant="destructive">
                 <AlertDescription>
                   {isConflictError(submitAttempt.error)
-                    ? "The assessment changed while your answer was being submitted. ATLAS is synchronizing with the current assessment state."
+                    ? messages("conflictError")
                     : submitAttempt.error instanceof Error
                       ? submitAttempt.error.message
-                      : "Unable to submit your answer."}
+                      : errors("submitAnswer")}
                 </AlertDescription>
               </Alert>
             )}
@@ -550,7 +566,9 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
               <div className="animate-in space-y-5 rounded-xl border bg-muted/20 p-4 duration-200 fade-in-0 sm:p-5">
                 <section data-testid="evaluation-section" className="space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base font-semibold">Answer evaluated</p>
+                    <p className="text-base font-semibold">
+                      {messages("answerEvaluated")}
+                    </p>
 
                     {attemptResult.is_correct !== null && (
                       <Badge
@@ -558,20 +576,26 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                           attemptResult.is_correct ? "default" : "destructive"
                         }
                       >
-                        {attemptResult.is_correct ? "Correct" : "Incorrect"}
+                        {attemptResult.is_correct
+                          ? messages("correct")
+                          : messages("incorrect")}
                       </Badge>
                     )}
 
                     {attemptResult.score !== null && (
                       <Badge variant="outline">
-                        Score {Math.round(attemptResult.score * 100)}%
+                        {messages("score", {
+                          score: `${Math.round(attemptResult.score * 100)}%`,
+                        })}
                       </Badge>
                     )}
                   </div>
 
                   {attemptResult.feedback && (
                     <div className="rounded-lg bg-background p-4 ring-1 ring-foreground/10">
-                      <p className="text-sm font-medium">Feedback</p>
+                      <p className="text-sm font-medium">
+                        {messages("feedback")}
+                      </p>
 
                       <AtlasRichTextViewer
                         value={attemptResult.feedback}
@@ -586,13 +610,16 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                     data-testid="cycle-outcome"
                     className="rounded-lg bg-background/70 p-4 ring-1 ring-foreground/10"
                   >
-                    <p className="text-sm font-medium">Cycle complete</p>
+                    <p className="text-sm font-medium">
+                      {messages("cycleComplete")}
+                    </p>
 
                     <div className="mt-2 flex flex-wrap gap-2">
                       {attemptResult.cycle_score !== null && (
                         <Badge variant="outline">
-                          Cycle score{" "}
-                          {Math.round(attemptResult.cycle_score * 100)}%
+                          {messages("cycleScore", {
+                            score: `${Math.round(attemptResult.cycle_score * 100)}%`,
+                          })}
                         </Badge>
                       )}
 
@@ -602,8 +629,8 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                         }
                       >
                         {attemptResult.level_mastered
-                          ? "Level mastered"
-                          : "Level not yet mastered"}
+                          ? messages("levelMastered")
+                          : messages("levelNotMastered")}
                       </Badge>
                     </div>
                   </section>
@@ -619,7 +646,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                         />
                       }
                     >
-                      View result
+                      {messages("viewResult")}
                       <ArrowRight />
                     </Button>
 
@@ -628,7 +655,7 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                       nativeButton={false}
                       render={<Link href="/student/courses" />}
                     >
-                      Return to courses
+                      {messages("returnToCourses")}
                     </Button>
                   </div>
                 ) : (
@@ -643,7 +670,9 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                       <ArrowRight />
                     )}
 
-                    {issueQuestion.isPending ? "Preparing..." : "Next question"}
+                    {issueQuestion.isPending
+                      ? messages("preparing")
+                      : messages("nextQuestion")}
                   </Button>
                 )}
               </div>

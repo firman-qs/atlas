@@ -4,8 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useActiveRole } from "@/features/auth/active-role-provider";
 import { useAuth } from "@/features/auth/auth-provider";
 import { StudentDashboard } from "@/features/dashboard/components/student-dashboard";
+import { useTranslations } from "next-intl";
 
 export default function DashboardPage() {
+  const messages = useTranslations("dashboard");
   const { user } = useAuth();
   const { activeRole } = useActiveRole();
 
@@ -16,7 +18,9 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8">
       <div>
-        <p className="text-sm text-muted-foreground">Welcome back</p>
+        <p className="text-sm text-muted-foreground">
+          {messages("welcomeBack")}
+        </p>
 
         <h1 className="mt-1 text-3xl font-semibold tracking-tight">
           {user?.full_name}
@@ -24,10 +28,10 @@ export default function DashboardPage() {
 
         <p className="mt-2 text-muted-foreground">
           {activeRole === "student"
-            ? "Continue your learning and formative assessment."
+            ? messages("roleDescription.student")
             : activeRole === "instructor"
-              ? "Manage your teaching and student learning."
-              : "Manage ATLAS curriculum, delivery, and administration."}
+              ? messages("roleDescription.instructor")
+              : messages("roleDescription.admin")}
         </p>
       </div>
 
@@ -37,8 +41,8 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="py-10 text-muted-foreground">
             {activeRole === "instructor"
-              ? "Instructor dashboard is being prepared."
-              : "Administrator dashboard is being prepared."}
+              ? messages("rolePending.instructor")
+              : messages("rolePending.admin")}
           </CardContent>
         </Card>
       )}

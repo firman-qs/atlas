@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AssessmentResultView } from "@/features/student-course/components/assessment-result-view";
@@ -188,5 +188,22 @@ describe("AssessmentResultView", () => {
 
     expect(essayEvaluation).toHaveTextContent("Answer evaluated");
     expect(essayEvaluation).toHaveTextContent("Score 100%");
+  });
+
+  it("localizes result labels without translating persisted evidence", () => {
+    render(<AssessmentResultView assessmentId="assessment-1" />, {
+      locale: "id",
+    });
+
+    expect(
+      screen.getByRole("heading", { name: "Tujuan Pembelajaran 1" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Progres")).toBeInTheDocument();
+    expect(
+      screen.getByText("Explain electric flux."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("assessment-attempt-attempt-essay"),
+    ).toHaveTextContent("Good physical reasoning.");
   });
 });

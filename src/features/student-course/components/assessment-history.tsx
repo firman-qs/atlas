@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
-import { learningObjectiveLabel } from "@/features/student-course/labels";
+import { learningObjectiveNumber } from "@/features/student-course/labels";
 import {
   useAssessments,
   useStartAssessment,
@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, ClipboardCheck, LoaderCircle, Play } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 type AssessmentPresentationState = "ready" | "active" | "historical";
 
@@ -33,23 +34,9 @@ function assessmentPresentationState(
   return "historical";
 }
 
-function assessmentStatusLabel(status: Assessment["status"]) {
-  switch (status) {
-    case "created":
-      return "Ready to start";
-
-    case "running":
-      return "In progress";
-
-    case "completed":
-      return "Completed";
-
-    case "canceled":
-      return "Canceled";
-  }
-}
-
 function AssessmentActions({ assessment }: { assessment: Assessment }) {
+  const messages = useTranslations("assessment");
+  const errors = useTranslations("errors");
   const router = useRouter();
   const startAssessment = useStartAssessment(assessment.learning_record_id);
 
@@ -77,7 +64,9 @@ function AssessmentActions({ assessment }: { assessment: Assessment }) {
               <Play />
             )}
 
-            {startAssessment.isPending ? "Starting..." : "Start assessment"}
+            {startAssessment.isPending
+              ? messages("starting")
+              : messages("startAssessment")}
           </Button>
 
           <CancelAssessmentButton
@@ -91,7 +80,7 @@ function AssessmentActions({ assessment }: { assessment: Assessment }) {
             <AlertDescription>
               {startAssessment.error instanceof Error
                 ? startAssessment.error.message
-                : "Unable to start assessment."}
+                : errors("startAssessment")}
             </AlertDescription>
           </Alert>
         )}
@@ -106,7 +95,7 @@ function AssessmentActions({ assessment }: { assessment: Assessment }) {
           nativeButton={false}
           render={<Link href={`/student/assessments/${assessment.id}`} />}
         >
-          Continue
+          {messages("continue")}
           <ArrowRight />
         </Button>
 
@@ -125,7 +114,7 @@ function AssessmentActions({ assessment }: { assessment: Assessment }) {
         nativeButton={false}
         render={<Link href={`/student/assessments/${assessment.id}/result`} />}
       >
-        View result
+        {messages("viewResult")}
         <ArrowRight />
       </Button>
     );
@@ -135,6 +124,9 @@ function AssessmentActions({ assessment }: { assessment: Assessment }) {
 }
 
 export function AssessmentHistory() {
+  const messages = useTranslations("assessment");
+  const course = useTranslations("course");
+  const errors = useTranslations("errors");
   const assessments = useAssessments(1, 20);
 
   if (assessments.isPending) {
@@ -153,7 +145,7 @@ export function AssessmentHistory() {
         <AlertDescription>
           {assessments.error instanceof Error
             ? assessments.error.message
-            : "Unable to load assessment history."}
+            : errors("assessmentHistory")}
         </AlertDescription>
       </Alert>
     );
@@ -164,11 +156,12 @@ export function AssessmentHistory() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Assessments</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          {messages("title")}
+        </h1>
 
         <p className="mt-1 text-muted-foreground">
-          Start or continue active assessments and review your previous
-          formative assessment evidence.
+          {messages("historyDescription")}
         </p>
       </div>
 
@@ -177,7 +170,7 @@ export function AssessmentHistory() {
           <CardContent className="py-10 text-center">
             <ClipboardCheck className="mx-auto size-8 text-muted-foreground" />
 
-            <p className="mt-3 font-medium">No assessments yet</p>
+            <p className="mt-3 font-medium">{messages("noAssessments")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -185,6 +178,10 @@ export function AssessmentHistory() {
           {data.items.map((assessment) => {
             const presentationState = assessmentPresentationState(
               assessment.status,
+            );
+            const objectiveNumber = learningObjectiveNumber(
+              assessment.learning_objective.code,
+              assessment.learning_objective.display_order,
             );
 
             return (
@@ -204,16 +201,15 @@ export function AssessmentHistory() {
                     <div className="min-w-0 space-y-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <CardTitle>
-                          {learningObjectiveLabel(
-                            assessment.learning_objective.code,
-                            assessment.learning_objective.display_order,
-                          )}
+                          {objectiveNumber === null
+                            ? course("progress.learningObjective")
+                            : course("progress.learningObjectiveNumbered", {
+                                number: objectiveNumber,
+                              })}
                         </CardTitle>
 
                         <Badge variant="secondary">
-                          {assessment.mode === "progress"
-                            ? "Progress"
-                            : "Review"}
+                          {messages(`modes.${assessment.mode}`)}
                         </Badge>
 
                         <Badge
@@ -225,7 +221,7 @@ export function AssessmentHistory() {
                                 : "outline"
                           }
                         >
-                          {assessmentStatusLabel(assessment.status)}
+                          {messages(`statuses.${assessment.status}`)}
                         </Badge>
                       </div>
 
@@ -235,15 +231,13 @@ export function AssessmentHistory() {
 
                       {presentationState === "active" && (
                         <p className="text-xs font-medium text-primary">
-                          Continue your current assessment from where you left
-                          off.
+                          {messages("statusHint.running")}
                         </p>
                       )}
 
                       {presentationState === "ready" && (
                         <p className="text-xs text-muted-foreground">
-                          This assessment has been created and is ready to
-                          begin.
+                          {messages("statusHint.created")}
                         </p>
                       )}
                     </div>
@@ -260,7 +254,10 @@ export function AssessmentHistory() {
       )}
 
       <p className="text-xs text-muted-foreground">
-        Showing {data.items.length} of {data.total} assessments.
+        {messages("assessmentCount", {
+          shown: data.items.length,
+          total: data.total,
+        })}
       </p>
     </div>
   );

@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@/test/render";
 import { describe, expect, it } from "vitest";
 
 import { LearningProgress } from "@/features/student-course/components/learning-progress";
@@ -359,5 +359,47 @@ describe("LearningProgress", () => {
     expect(screen.queryByText(/mastery threshold/i)).not.toBeInTheDocument();
     expect(screen.queryByText("80%")).not.toBeInTheDocument();
     expect(screen.getByText("Learning Objective 1")).toBeInTheDocument();
+  });
+
+  it("localizes progress labels without translating academic content", () => {
+    const progress: LearningRecordProgress = {
+      learning_record_id: "learning-record-1",
+      completed_at: null,
+      learning_objectives: [
+        {
+          id: "lo-1",
+          code: "lo1",
+          description: "Explain electric flux.",
+          display_order: 1,
+          mastered_at: null,
+          concepts: [
+            {
+              learning_objective_concept_id: "loc-1",
+              is_required: true,
+              display_order: 1,
+              mastered_loc_level_id: null,
+              mastered_at: null,
+              concept: {
+                id: "concept-1",
+                code: "em-c001",
+                name: "Electric Flux",
+                description: "Electric flux through surfaces.",
+              },
+              levels: [],
+            },
+          ],
+        },
+      ],
+    };
+
+    render(<LearningProgress progress={progress} />, { locale: "id" });
+
+    expect(screen.getByText("Progres Pembelajaran")).toBeInTheDocument();
+    expect(screen.getByText("Tujuan Pembelajaran 1")).toBeInTheDocument();
+    expect(screen.getByText("Explain electric flux.")).toBeInTheDocument();
+    expect(screen.getByText("Electric Flux")).toBeInTheDocument();
+    expect(
+      screen.getByText("Electric flux through surfaces."),
+    ).toBeInTheDocument();
   });
 });

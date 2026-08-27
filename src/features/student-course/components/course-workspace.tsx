@@ -12,21 +12,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentOptionsPanel } from "@/features/student-course/components/assessment-options";
 import { LearningProgress } from "@/features/student-course/components/learning-progress";
 import {
+  formatDomainCode,
+  semesterMessageKey,
+} from "@/features/student-course/labels";
+import {
   useAssessmentOptions,
   useCreateLearningRecord,
   useLearningRecordProgress,
   useStudentEnrollment,
 } from "@/features/student-course/queries";
 import { cn } from "@/lib/utils";
+import { useFormatter, useTranslations } from "next-intl";
 
 interface CourseWorkspaceProps {
   enrollmentId: string;
-}
-
-function formatSemester(value: string) {
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 interface ActiveLearningWorkspaceProps {
@@ -36,16 +35,18 @@ interface ActiveLearningWorkspaceProps {
 function ActiveLearningWorkspace({
   learningRecordId,
 }: ActiveLearningWorkspaceProps) {
+  const course = useTranslations("course");
+  const errors = useTranslations("errors");
   const progressQuery = useLearningRecordProgress(learningRecordId);
   const assessmentOptionsQuery = useAssessmentOptions(learningRecordId);
 
   return (
     <Tabs defaultValue="progress" className="min-w-0">
       <TabsList className="mb-4">
-        <TabsTrigger value="progress">Learning Progress</TabsTrigger>
+        <TabsTrigger value="progress">{course("learningProgress")}</TabsTrigger>
 
         <TabsTrigger value="assessments">
-          Assessments
+          {course("assessments")}
           {!assessmentOptionsQuery.isPending &&
             !assessmentOptionsQuery.isError &&
             assessmentOptionsQuery.data.active_assessment && (
@@ -76,7 +77,7 @@ function ActiveLearningWorkspace({
             <AlertDescription>
               {progressQuery.error instanceof Error
                 ? progressQuery.error.message
-                : "Unable to load learning progress."}
+                : errors("learningProgress")}
             </AlertDescription>
           </Alert>
         ) : (
@@ -100,7 +101,7 @@ function ActiveLearningWorkspace({
             <AlertDescription>
               {assessmentOptionsQuery.error instanceof Error
                 ? assessmentOptionsQuery.error.message
-                : "Unable to load assessment options."}
+                : errors("assessmentOptions")}
             </AlertDescription>
           </Alert>
         ) : (
@@ -115,6 +116,10 @@ function ActiveLearningWorkspace({
 }
 
 export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
+  const courseMessages = useTranslations("course");
+  const student = useTranslations("student");
+  const errors = useTranslations("errors");
+  const format = useFormatter();
   const enrollmentQuery = useStudentEnrollment(enrollmentId);
   const createLearningRecord = useCreateLearningRecord(enrollmentId);
 
@@ -133,7 +138,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
         <AlertDescription>
           {enrollmentQuery.error instanceof Error
             ? enrollmentQuery.error.message
-            : "Unable to load this course."}
+            : errors("course")}
         </AlertDescription>
       </Alert>
     );
@@ -143,6 +148,10 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
   const offering = enrollment.course_offering;
   const course = offering.course;
   const learningRecord = enrollment.learning_record;
+  const semesterKey = semesterMessageKey(offering.academic_term.semester);
+  const semester = semesterKey
+    ? courseMessages(`semesters.${semesterKey}`)
+    : formatDomainCode(offering.academic_term.semester);
 
   return (
     <div className="space-y-6">
@@ -157,7 +166,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
         )}
       >
         <ArrowLeft />
-        My Courses
+        {courseMessages("backToCourses")}
       </Link>
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
@@ -171,7 +180,8 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
           </h1>
 
           <p className="mt-2 text-muted-foreground">
-            Section {offering.section} · {course.credits} credits
+            {courseMessages("section", { section: offering.section })} ·{" "}
+            {courseMessages("credits", { count: course.credits })}
           </p>
         </div>
 
@@ -179,7 +189,9 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
           className="shrink-0"
           variant={learningRecord ? "outline" : "secondary"}
         >
-          {learningRecord ? "Learning started" : "Not started"}
+          {learningRecord
+            ? courseMessages("states.learningStarted")
+            : courseMessages("states.notStarted")}
         </Badge>
       </div>
 
@@ -188,13 +200,12 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
           {!learningRecord ? (
             <Card>
               <CardHeader>
-                <CardTitle>Start learning</CardTitle>
+                <CardTitle>{courseMessages("startLearning")}</CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <p className="max-w-2xl text-muted-foreground">
-                  Start your learning record to begin tracking conceptual
-                  progress and formative assessments for this course.
+                  {courseMessages("startLearningDescription")}
                 </p>
 
                 {createLearningRecord.isError && (
@@ -202,7 +213,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
                     <AlertDescription>
                       {createLearningRecord.error instanceof Error
                         ? createLearningRecord.error.message
-                        : "Unable to start learning."}
+                        : errors("startLearning")}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -218,8 +229,8 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
                   )}
 
                   {createLearningRecord.isPending
-                    ? "Starting..."
-                    : "Start Learning"}
+                    ? courseMessages("starting")
+                    : courseMessages("startLearningAction")}
                 </Button>
               </CardContent>
             </Card>
@@ -231,40 +242,58 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
         <aside className="space-y-4 lg:sticky lg:top-4">
           <Card>
             <CardHeader>
-              <CardTitle>Course details</CardTitle>
+              <CardTitle>{courseMessages("courseDetails")}</CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-4 text-sm">
               <div>
-                <p className="text-muted-foreground">Instructor</p>
+                <p className="text-muted-foreground">
+                  {courseMessages("labels.instructor")}
+                </p>
                 <p className="mt-0.5 font-medium">
                   {offering.instructor.full_name}
                 </p>
               </div>
 
               <div>
-                <p className="text-muted-foreground">Academic term</p>
+                <p className="text-muted-foreground">
+                  {courseMessages("labels.academicTerm")}
+                </p>
 
                 <p className="mt-0.5 font-medium">
-                  {formatSemester(offering.academic_term.semester)}{" "}
-                  {offering.academic_term.year}
+                  {semester} {offering.academic_term.year}
                 </p>
               </div>
 
               <div>
-                <p className="text-muted-foreground">Enrollment</p>
+                <p className="text-muted-foreground">
+                  {courseMessages("labels.enrollment")}
+                </p>
 
                 <p className="mt-0.5 font-medium">
-                  {new Date(enrollment.enrolled_at).toLocaleDateString()}
+                  {format.dateTime(new Date(enrollment.enrolled_at), {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
 
               {learningRecord && (
                 <div>
-                  <p className="text-muted-foreground">Started</p>
+                  <p className="text-muted-foreground">
+                    {courseMessages("labels.started")}
+                  </p>
 
                   <p className="mt-0.5 font-medium">
-                    {new Date(learningRecord.started_at).toLocaleString()}
+                    {format.dateTime(new Date(learningRecord.started_at), {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
                   </p>
                 </div>
               )}
@@ -276,14 +305,13 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bot className="size-5" />
-                  AI Tutor
+                  {student("aiTutor")}
                 </CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Ask questions about this course and get guidance grounded in
-                  the curriculum and your current learning progress.
+                  {student("aiTutorDescription")}
                 </p>
 
                 <Link
@@ -291,7 +319,7 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
                   className={cn(buttonVariants(), "w-full")}
                 >
                   <Bot />
-                  Open AI Tutor
+                  {student("openAiTutor")}
                 </Link>
               </CardContent>
             </Card>

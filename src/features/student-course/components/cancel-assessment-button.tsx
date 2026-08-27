@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCancelAssessment } from "@/features/student-course/queries";
 import { ApiError } from "@/lib/api/api-error";
+import { useTranslations } from "next-intl";
 
 interface CancelAssessmentButtonProps {
   assessmentId: string;
@@ -32,6 +33,8 @@ export function CancelAssessmentButton({
   size = "default",
   onCanceled,
 }: CancelAssessmentButtonProps) {
+  const messages = useTranslations("assessment.cancel");
+  const errors = useTranslations("errors");
   const cancelAssessment = useCancelAssessment();
   const [open, setOpen] = useState(false);
 
@@ -53,7 +56,7 @@ export function CancelAssessmentButton({
     cancelAssessment.error instanceof ApiError
       ? cancelAssessment.error.message
       : cancelAssessment.isError
-        ? "Unable to cancel assessment."
+        ? errors("cancelAssessment")
         : null;
 
   return (
@@ -75,19 +78,17 @@ export function CancelAssessmentButton({
         render={
           <Button variant="outline" size={size}>
             <Ban />
-            Cancel assessment
+            {messages("action")}
           </Button>
         }
       />
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Cancel this assessment?</AlertDialogTitle>
+          <AlertDialogTitle>{messages("title")}</AlertDialogTitle>
 
           <AlertDialogDescription>
-            The assessment will stop immediately. Submitted attempts remain in
-            your assessment history, but you will not be able to continue this
-            assessment after cancellation.
+            {messages("description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -99,7 +100,7 @@ export function CancelAssessmentButton({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={cancelAssessment.isPending}>
-            Keep assessment
+            {messages("keep")}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -116,7 +117,9 @@ export function CancelAssessmentButton({
               <Ban />
             )}
 
-            {cancelAssessment.isPending ? "Canceling..." : "Cancel assessment"}
+            {cancelAssessment.isPending
+              ? messages("canceling")
+              : messages("action")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
