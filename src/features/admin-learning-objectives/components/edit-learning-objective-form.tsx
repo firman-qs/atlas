@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,10 @@ export function EditLearningObjectiveForm({
   onCancel,
   onSaved,
 }: EditLearningObjectiveFormProps) {
+  const t = useTranslations("admin.learningObjectives");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const updateLearningObjective = useUpdateLearningObjective();
 
   const form = useForm<EditLearningObjectiveFormValues>({
@@ -73,13 +78,13 @@ export function EditLearningObjectiveForm({
           <AlertDescription>
             {updateLearningObjective.error instanceof Error
               ? updateLearningObjective.error.message
-              : "Unable to update learning objective."}
+              : tErrors("updateLearningObjective")}
           </AlertDescription>
         </Alert>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor={`lo-code-${learningObjective.id}`}>Code</Label>
+        <Label htmlFor={`lo-code-${learningObjective.id}`}>{t("labels.code")}</Label>
 
         <Input
           id={`lo-code-${learningObjective.id}`}
@@ -96,7 +101,7 @@ export function EditLearningObjectiveForm({
 
       <div className="space-y-2">
         <Label htmlFor={`lo-description-${learningObjective.id}`}>
-          Description
+          {t("labels.description")}
         </Label>
 
         <Textarea
@@ -120,7 +125,7 @@ export function EditLearningObjectiveForm({
           onClick={onCancel}
           disabled={updateLearningObjective.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={updateLearningObjective.isPending}>
@@ -128,7 +133,7 @@ export function EditLearningObjectiveForm({
             <Loader2 className="animate-spin" />
           )}
 
-          {updateLearningObjective.isPending ? "Saving..." : "Save changes"}
+          {updateLearningObjective.isPending ? t("actions.saving") : t("actions.save")}
         </Button>
       </div>
     </form>

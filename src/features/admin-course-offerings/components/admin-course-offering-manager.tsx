@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowRight, GraduationCap } from "lucide-react";
 import Link from "next/link";
 
@@ -11,12 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { CreateCourseOfferingForm } from "@/features/admin-course-offerings/components/create-course-offering-form";
 import { useAdminCourseOfferings } from "@/features/admin-course-offerings/queries";
-
-function formatSemester(semester: string) {
-  return semester
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
+import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
 
 function CourseOfferingListSkeleton() {
   return (
@@ -29,6 +25,14 @@ function CourseOfferingListSkeleton() {
 }
 
 export function AdminCourseOfferingManager() {
+  const t = useTranslations("admin.courseOfferings");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+
+  function getSemesterLabel(semester: string) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
+
   const offeringsQuery = useAdminCourseOfferings({
     page: 1,
     pageSize: 100,
@@ -38,11 +42,11 @@ export function AdminCourseOfferingManager() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">
-          Course Offerings
+          {t("title")}
         </h1>
 
         <p className="mt-1 text-muted-foreground">
-          Configure course delivery by academic term, section, and instructor.
+          {t("description")}
         </p>
       </div>
 
@@ -52,17 +56,16 @@ export function AdminCourseOfferingManager() {
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <CardTitle>Configured Course Offerings</CardTitle>
+              <CardTitle>{t("configured")}</CardTitle>
 
               <p className="mt-1 text-sm text-muted-foreground">
-                Existing course deliveries available in ATLAS.
+                {t("configuredDescription")}
               </p>
             </div>
 
             {!offeringsQuery.isPending && !offeringsQuery.isError && (
               <Badge variant="outline">
-                {offeringsQuery.data?.total ?? 0} offering
-                {(offeringsQuery.data?.total ?? 0) === 1 ? "" : "s"}
+                {t("count", { count: offeringsQuery.data?.total ?? 0 })}
               </Badge>
             )}
           </div>
@@ -76,7 +79,7 @@ export function AdminCourseOfferingManager() {
               <AlertDescription>
                 {offeringsQuery.error instanceof Error
                   ? offeringsQuery.error.message
-                  : "Unable to load course offerings."}
+                  : tErrors("loadCourseOfferings")}
               </AlertDescription>
             </Alert>
           ) : offeringsQuery.data.items.length === 0 ? (
@@ -85,11 +88,10 @@ export function AdminCourseOfferingManager() {
                 <GraduationCap className="size-4 text-muted-foreground" />
               </div>
 
-              <p className="mt-3 font-medium">No course offerings configured</p>
+              <p className="mt-3 font-medium">{t("noOfferings")}</p>
 
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Create a course offering to assign an active course to an
-                instructor for an academic term.
+                {t("noOfferingsDescription")}
               </p>
             </div>
           ) : (
@@ -104,11 +106,11 @@ export function AdminCourseOfferingManager() {
                       <Badge variant="secondary">{offering.course.code}</Badge>
 
                       <Badge variant="outline">
-                        Section {offering.section}
+                        {t("section", { section: offering.section })}
                       </Badge>
 
                       <Badge variant="outline">
-                        {formatSemester(offering.academic_term.semester)}{" "}
+                        {getSemesterLabel(offering.academic_term.semester)}{" "}
                         {offering.academic_term.year}
                       </Badge>
                     </div>
@@ -131,7 +133,7 @@ export function AdminCourseOfferingManager() {
                       <Link href={`/admin/course-offerings/${offering.id}`} />
                     }
                   >
-                    Manage
+                    {t("manage")}
                     <ArrowRight />
                   </Button>
                 </div>

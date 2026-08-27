@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Save } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 
@@ -20,6 +21,10 @@ interface EditCourseOfferingFormProps {
 export function EditCourseOfferingForm({
   offering,
 }: EditCourseOfferingFormProps) {
+  const t = useTranslations("admin.courseOfferings.form");
+  const tDetail = useTranslations("admin.courseOfferings.detail");
+  const tErrors = useTranslations("admin.errors");
+
   const usersQuery = useAdminUsers({
     page: 1,
     pageSize: 100,
@@ -78,7 +83,7 @@ export function EditCourseOfferingForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit Course Offering</CardTitle>
+        <CardTitle>{tDetail("editOffering")}</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -86,7 +91,7 @@ export function EditCourseOfferingForm({
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="edit-course-offering-instructor">
-                Instructor
+                {t("instructor")}
               </Label>
 
               <select
@@ -114,7 +119,7 @@ export function EditCourseOfferingForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="edit-course-offering-section">Section</Label>
+              <Label htmlFor="edit-course-offering-section">{t("section")}</Label>
 
               <Input
                 id="edit-course-offering-section"
@@ -130,7 +135,7 @@ export function EditCourseOfferingForm({
               <AlertDescription>
                 {usersQuery.error instanceof Error
                   ? usersQuery.error.message
-                  : "Unable to load instructors."}
+                  : tErrors("loadUsers")}
               </AlertDescription>
             </Alert>
           )}
@@ -140,7 +145,7 @@ export function EditCourseOfferingForm({
               <AlertDescription>
                 {updateOffering.error instanceof Error
                   ? updateOffering.error.message
-                  : "Unable to update course offering."}
+                  : tErrors("updateCourseOffering")}
               </AlertDescription>
             </Alert>
           )}
@@ -161,7 +166,7 @@ export function EditCourseOfferingForm({
                 <Save />
               )}
 
-              {updateOffering.isPending ? "Saving..." : "Save changes"}
+              {updateOffering.isPending ? t("saving") : t("save")}
             </Button>
           </div>
         </form>

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "@/test/render";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/features/admin-question-import/components/question-import", () => ({

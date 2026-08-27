@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -41,6 +42,9 @@ function QuestionDetailSkeleton() {
 }
 
 export function AdminQuestionDetail({ questionId }: AdminQuestionDetailProps) {
+  const t = useTranslations("admin.questions.detail");
+  const tErrors = useTranslations("admin.errors");
+
   const questionQuery = useAdminQuestion(questionId);
 
   const conceptId = questionQuery.data?.concept_id ?? "";
@@ -84,14 +88,14 @@ export function AdminQuestionDetail({ questionId }: AdminQuestionDetailProps) {
           render={<Link href="/admin/questions" />}
         >
           <ArrowLeft />
-          Questions
+          {t("backToQuestions")}
         </Button>
 
         <Alert variant="destructive">
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Unable to load question details."}
+              : tErrors("loadQuestionDetails")}
           </AlertDescription>
         </Alert>
       </div>
@@ -104,7 +108,7 @@ export function AdminQuestionDetail({ questionId }: AdminQuestionDetailProps) {
     return (
       <Alert variant="destructive">
         <AlertDescription>
-          Question response did not contain data.
+          {t("incompleteData")}
         </AlertDescription>
       </Alert>
     );
@@ -129,17 +133,17 @@ export function AdminQuestionDetail({ questionId }: AdminQuestionDetailProps) {
         render={<Link href="/admin/questions" />}
       >
         <ArrowLeft />
-        Questions
+        {t("backToQuestions")}
       </Button>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">
-            Question Detail
+            {t("title")}
           </h1>
 
           <p className="mt-1 text-muted-foreground">
-            Review the question, curriculum placement, and assessment content.
+            {t("description")}
           </p>
         </div>
 

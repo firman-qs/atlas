@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CreateQuestionForm } from "@/features/admin-questions/components/create-question-form";

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -51,6 +52,10 @@ export function CreateCourseForm({
   onCreated,
   onCancel,
 }: CreateCourseFormProps) {
+  const t = useTranslations("admin.courses.form");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const createCourse = useCreateAdminCourse();
 
   const form = useForm<CreateCourseFormValues>({
@@ -83,14 +88,14 @@ export function CreateCourseForm({
     createCourse.error instanceof ApiError
       ? createCourse.error.message
       : createCourse.isError
-        ? "Unable to create course."
+        ? tErrors("createCourse")
         : null;
 
   return (
     <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field data-invalid={!!form.formState.errors.code}>
-          <FieldLabel htmlFor="course-code">Code</FieldLabel>
+          <FieldLabel htmlFor="course-code">{t("code")}</FieldLabel>
 
           <Input
             id="course-code"
@@ -104,7 +109,7 @@ export function CreateCourseForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.title}>
-          <FieldLabel htmlFor="course-title">Title</FieldLabel>
+          <FieldLabel htmlFor="course-title">{t("title")}</FieldLabel>
 
           <Input
             id="course-title"
@@ -118,7 +123,7 @@ export function CreateCourseForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.description}>
-          <FieldLabel htmlFor="course-description">Description</FieldLabel>
+          <FieldLabel htmlFor="course-description">{t("description")}</FieldLabel>
 
           <Textarea
             id="course-description"
@@ -132,7 +137,7 @@ export function CreateCourseForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.credits}>
-          <FieldLabel htmlFor="course-credits">Credits</FieldLabel>
+          <FieldLabel htmlFor="course-credits">{t("credits")}</FieldLabel>
 
           <Input
             id="course-credits"
@@ -164,14 +169,14 @@ export function CreateCourseForm({
             onClick={onCancel}
             disabled={createCourse.isPending}
           >
-            Cancel
+            {common("cancel")}
           </Button>
         )}
 
         <Button type="submit" disabled={createCourse.isPending}>
           {createCourse.isPending && <Loader2 className="animate-spin" />}
 
-          {createCourse.isPending ? "Creating..." : "Create course"}
+          {createCourse.isPending ? t("creating") : t("create")}
         </Button>
       </div>
     </form>

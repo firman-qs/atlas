@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Power, PowerOff, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -30,6 +31,11 @@ interface CourseLifecycleActionsProps {
 export function CourseLifecycleActions({
   course,
 }: CourseLifecycleActionsProps) {
+  const t = useTranslations("admin.courses.lifecycle");
+  const tCourses = useTranslations("admin.courses");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -72,7 +78,9 @@ export function CourseLifecycleActions({
           <AlertDescription>
             {lifecycleError instanceof Error
               ? lifecycleError.message
-              : "Unable to change course status."}
+              : course.is_active
+                ? tErrors("deactivateCourse")
+                : tErrors("activateCourse")}
           </AlertDescription>
         </Alert>
       )}
@@ -93,11 +101,11 @@ export function CourseLifecycleActions({
 
           {lifecyclePending
             ? course.is_active
-              ? "Deactivating..."
-              : "Activating..."
+              ? t("deactivating")
+              : t("activating")
             : course.is_active
-              ? "Deactivate"
-              : "Activate"}
+              ? tCourses("inactive")
+              : tCourses("active")}
         </Button>
 
         <Button
@@ -109,7 +117,7 @@ export function CourseLifecycleActions({
           disabled={lifecyclePending || deleteCourse.isPending}
         >
           <Trash2 />
-          Delete course
+          {t("delete")}
         </Button>
       </div>
 
@@ -123,12 +131,13 @@ export function CourseLifecycleActions({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete course?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.deleteTitle")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              This will permanently delete {course.code} — {course.title}. The
-              operation can fail if dependent academic records reference this
-              course.
+              {t("dialog.deleteDescription", {
+                code: course.code,
+                title: course.title,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -137,14 +146,14 @@ export function CourseLifecycleActions({
               <AlertDescription>
                 {deleteCourse.error instanceof Error
                   ? deleteCourse.error.message
-                  : "Unable to delete course."}
+                  : tErrors("deleteCourse")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteCourse.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -157,7 +166,7 @@ export function CourseLifecycleActions({
             >
               {deleteCourse.isPending && <Loader2 className="animate-spin" />}
 
-              {deleteCourse.isPending ? "Deleting..." : "Delete course"}
+              {deleteCourse.isPending ? t("deleting") : t("delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

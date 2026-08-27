@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,6 +29,10 @@ export function AdminUserDelete({
   userId,
   userName,
 }: AdminUserDeleteProps) {
+  const t = useTranslations("admin.users.delete");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const router = useRouter();
   const deleteUser = useDeleteAdminUser(userId);
 
@@ -48,15 +53,15 @@ export function AdminUserDelete({
     <>
       <Card className="border-destructive/30">
         <CardHeader>
-          <CardTitle>Delete User</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
           <div>
-            <p className="font-medium">Delete this user account</p>
+            <p className="font-medium">{t("sectionTitle")}</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              This will deactivate the account and mark it as deleted.
+              {t("sectionDescription")}
             </p>
           </div>
 
@@ -70,7 +75,7 @@ export function AdminUserDelete({
             }}
           >
             <Trash2 />
-            Delete user
+            {t("deleteButton")}
           </Button>
         </CardContent>
       </Card>
@@ -89,11 +94,10 @@ export function AdminUserDelete({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete user?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              This will deactivate the account and mark it as deleted.{" "}
-              {userName} will no longer be able to use the account.
+              {t("dialog.description", { name: userName })}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -102,14 +106,14 @@ export function AdminUserDelete({
               <AlertDescription>
                 {deleteUser.error instanceof Error
                   ? deleteUser.error.message
-                  : "Unable to delete user."}
+                  : tErrors("deleteUser")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteUser.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -125,8 +129,8 @@ export function AdminUserDelete({
               )}
 
               {deleteUser.isPending
-                ? "Deleting..."
-                : "Confirm delete"}
+                ? t("dialog.deleting")
+                : t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

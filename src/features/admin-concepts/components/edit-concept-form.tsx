@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -42,6 +43,10 @@ export function EditConceptForm({
   onCancel,
   onSaved,
 }: EditConceptFormProps) {
+  const t = useTranslations("admin.concepts");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const updateConcept = useUpdateConcept(concept.course_id);
 
   const form = useForm<EditConceptFormValues>({
@@ -77,14 +82,14 @@ export function EditConceptForm({
           <AlertDescription>
             {updateConcept.error instanceof Error
               ? updateConcept.error.message
-              : "Unable to update concept."}
+              : tErrors("updateConcept")}
           </AlertDescription>
         </Alert>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor={`concept-code-${concept.id}`}>Code</Label>
+          <Label htmlFor={`concept-code-${concept.id}`}>{t("labels.code")}</Label>
 
           <Input
             id={`concept-code-${concept.id}`}
@@ -100,7 +105,7 @@ export function EditConceptForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={`concept-name-${concept.id}`}>Name</Label>
+          <Label htmlFor={`concept-name-${concept.id}`}>{t("labels.name")}</Label>
 
           <Input
             id={`concept-name-${concept.id}`}
@@ -117,7 +122,7 @@ export function EditConceptForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`concept-description-${concept.id}`}>Description</Label>
+        <Label htmlFor={`concept-description-${concept.id}`}>{t("labels.description")}</Label>
 
         <Textarea
           id={`concept-description-${concept.id}`}
@@ -140,13 +145,13 @@ export function EditConceptForm({
           onClick={onCancel}
           disabled={updateConcept.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={updateConcept.isPending}>
           {updateConcept.isPending && <Loader2 className="animate-spin" />}
 
-          {updateConcept.isPending ? "Saving..." : "Save changes"}
+          {updateConcept.isPending ? t("actions.saving") : t("actions.save")}
         </Button>
       </div>
     </form>

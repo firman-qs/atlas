@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { FileQuestion, Loader2, Unlink } from "lucide-react";
 
@@ -51,6 +52,10 @@ export function QuestionBankQuestionList({
   questionBankId,
   courseId,
 }: QuestionBankQuestionListProps) {
+  const t = useTranslations("admin.questionBanks.questionList");
+  const tBrowser = useTranslations("admin.questionBanks.browser");
+  const tErrors = useTranslations("admin.errors");
+
   const questionsQuery = useQuestionBankQuestions(questionBankId, {
     page: 1,
     pageSize: 100,
@@ -92,7 +97,7 @@ export function QuestionBankQuestionList({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Questions</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -100,7 +105,7 @@ export function QuestionBankQuestionList({
             <AlertDescription>
               {questionsQuery.error instanceof Error
                 ? questionsQuery.error.message
-                : "Unable to load question-bank questions."}
+                : tErrors("loadQuestions")}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -114,11 +119,10 @@ export function QuestionBankQuestionList({
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle>Questions</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
 
           <Badge variant="outline">
-            {questionsQuery.data.total} question
-            {questionsQuery.data.total === 1 ? "" : "s"}
+            {t("count", { count: questionsQuery.data.total })}
           </Badge>
         </div>
       </CardHeader>
@@ -130,10 +134,10 @@ export function QuestionBankQuestionList({
               <FileQuestion className="size-4 text-muted-foreground" />
             </div>
 
-            <p className="mt-3 font-medium">No questions attached</p>
+            <p className="mt-3 font-medium">{t("noQuestions")}</p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              This question bank does not currently contain any questions.
+              {t("noQuestionsDescription")}
             </p>
           </div>
         ) : (
@@ -143,7 +147,7 @@ export function QuestionBankQuestionList({
                 <AlertDescription>
                   {detachQuestion.error instanceof Error
                     ? detachQuestion.error.message
-                    : "Unable to detach question."}
+                    : tErrors("detachQuestion")}
                 </AlertDescription>
               </Alert>
             )}
@@ -187,7 +191,7 @@ export function QuestionBankQuestionList({
                       ) : (
                         <Unlink />
                       )}
-                      Detach
+                      {t("detach")}
                     </Button>
                   </div>
 
@@ -200,15 +204,15 @@ export function QuestionBankQuestionList({
                     title={`LOC level: ${question.concept_level_id}`}
                   >
                     <Badge variant="outline">
-                      {learningObjective?.code.toUpperCase() ?? "Unknown LO"}
+                      {learningObjective?.code.toUpperCase() ?? tBrowser("unknownLO")}
                     </Badge>
 
                     <Badge variant="outline">
-                      {concept?.name ?? "Unknown concept"}
+                      {concept?.name ?? tBrowser("unknownConcept")}
                     </Badge>
 
                     <Badge variant="outline" className="capitalize">
-                      {soloLevel?.code ?? "Unknown SOLO level"}
+                      {soloLevel?.code ?? tBrowser("unknownSOLO")}
                     </Badge>
                   </div>
                 </div>
@@ -216,9 +220,10 @@ export function QuestionBankQuestionList({
             })}
 
             <p className="text-sm text-muted-foreground">
-              Showing {questions.length} of {questionsQuery.data.total} attached
-              question
-              {questionsQuery.data.total === 1 ? "" : "s"}.
+              {t("showingCount", {
+                count: questions.length,
+                total: questionsQuery.data.total,
+              })}
             </p>
           </div>
         )}

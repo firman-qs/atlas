@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -28,6 +29,10 @@ interface DeleteQuestionBankButtonProps {
 export function DeleteQuestionBankButton({
   bank,
 }: DeleteQuestionBankButtonProps) {
+  const t = useTranslations("admin.questionBanks.detail");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const router = useRouter();
   const deleteQuestionBank = useDeleteQuestionBank();
   const [open, setOpen] = useState(false);
@@ -46,7 +51,7 @@ export function DeleteQuestionBankButton({
     deleteQuestionBank.error instanceof ApiError
       ? deleteQuestionBank.error.message
       : deleteQuestionBank.isError
-        ? "Unable to delete question bank."
+        ? tErrors("deleteQuestionBank")
         : null;
 
   return (
@@ -66,19 +71,17 @@ export function DeleteQuestionBankButton({
         render={
           <Button variant="destructive">
             <Trash2 />
-            Delete bank
+            {t("deleteBank")}
           </Button>
         }
       />
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete question bank?</AlertDialogTitle>
+          <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
           <AlertDialogDescription>
-            This will permanently delete &quot;{bank.name}&quot;. Attached
-            question membership will be removed, but the questions themselves
-            will not be deleted.
+            {t("dialog.description", { name: bank.name })}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -90,7 +93,7 @@ export function DeleteQuestionBankButton({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteQuestionBank.isPending}>
-            Cancel
+            {common("cancel")}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -108,8 +111,8 @@ export function DeleteQuestionBankButton({
             )}
 
             {deleteQuestionBank.isPending
-              ? "Deleting..."
-              : "Delete question bank"}
+              ? t("dialog.deleting")
+              : t("dialog.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

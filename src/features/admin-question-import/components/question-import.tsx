@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FileUp, Loader2 } from "lucide-react";
 import { useState } from "react";
 
@@ -57,26 +58,27 @@ function SkippedQuestionRow({ question }: { question: SkippedQuestion }) {
 }
 
 function ImportResult({ result }: { result: ImportQuestionResult }) {
+  const t = useTranslations("admin.questionImport");
+
   return (
     <div className="space-y-4">
       <Alert>
-        <AlertDescription>Import completed successfully.</AlertDescription>
+        <AlertDescription>{t("success")}</AlertDescription>
       </Alert>
 
       <div className="flex flex-wrap gap-2">
-        <Badge variant="outline">{result.inserted} inserted</Badge>
+        <Badge variant="outline">{t("inserted", { count: result.inserted })}</Badge>
 
-        <Badge variant="outline">{result.skipped} skipped</Badge>
+        <Badge variant="outline">{t("skipped", { count: result.skipped })}</Badge>
       </div>
 
       {result.skipped_questions.length > 0 && (
         <div className="space-y-3">
           <div>
-            <h3 className="font-semibold">Skipped questions</h3>
+            <h3 className="font-semibold">{t("skippedTitle")}</h3>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              These questions were not inserted. Review the reason for each
-              skipped item below.
+              {t("skippedDescription")}
             </p>
           </div>
 
@@ -102,6 +104,9 @@ function ImportResult({ result }: { result: ImportQuestionResult }) {
 }
 
 export function QuestionImport() {
+  const t = useTranslations("admin.questionImport");
+  const tErrors = useTranslations("admin.errors");
+
   const importQuestions = useImportQuestions();
 
   const [file, setFile] = useState<File | null>(null);
@@ -128,19 +133,17 @@ export function QuestionImport() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Import Question Package</CardTitle>
+        <CardTitle>{t("cardTitle")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-5">
         <p className="text-sm text-muted-foreground">
-          Upload an ATLAS TOML question package containing MCQ and essay
-          questions mapped to configured learning objectives, concepts, and SOLO
-          levels.
+          {t("cardDescription")}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="question-package">Question package</Label>
+            <Label htmlFor="question-package">{t("packageLabel")}</Label>
 
             <Input
               id="question-package"
@@ -155,7 +158,7 @@ export function QuestionImport() {
             />
 
             <p className="text-xs text-muted-foreground">
-              Select exactly one UTF-8 .toml question package.
+              {t("helpText")}
             </p>
           </div>
 
@@ -164,7 +167,7 @@ export function QuestionImport() {
               <AlertDescription>
                 {importQuestions.error instanceof Error
                   ? importQuestions.error.message
-                  : "Unable to import question package."}
+                  : tErrors("importQuestions")}
               </AlertDescription>
             </Alert>
           )}
@@ -176,7 +179,7 @@ export function QuestionImport() {
               <FileUp />
             )}
 
-            {importQuestions.isPending ? "Importing..." : "Import questions"}
+            {importQuestions.isPending ? t("importing") : t("importButton")}
           </Button>
         </form>
 

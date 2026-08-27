@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -111,6 +112,9 @@ const initialFilters: QuestionLibraryFilterValue = {
 };
 
 export function AdminQuestionManager() {
+  const t = useTranslations("admin.questions");
+  const tErrors = useTranslations("admin.errors");
+
   const [filters, setFilters] =
     useState<QuestionLibraryFilterValue>(initialFilters);
 
@@ -142,10 +146,10 @@ export function AdminQuestionManager() {
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <CardTitle>Question Library</CardTitle>
+            <CardTitle>{t("libraryTitle")}</CardTitle>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              Search and filter assessment questions across the curriculum.
+              {t("libraryDescription")}
             </p>
           </div>
 
@@ -156,8 +160,7 @@ export function AdminQuestionManager() {
               )}
 
               <Badge variant="outline">
-                {questions.total} question
-                {questions.total === 1 ? "" : "s"}
+                {t("count", { count: questions.total })}
               </Badge>
             </div>
           )}
@@ -172,7 +175,7 @@ export function AdminQuestionManager() {
             <AlertDescription>
               {questionsQuery.error instanceof Error
                 ? questionsQuery.error.message
-                : "Unable to load questions."}
+                : tErrors("loadQuestions")}
             </AlertDescription>
           </Alert>
         )}
@@ -182,13 +185,13 @@ export function AdminQuestionManager() {
         ) : !questions ? null : questions.items.length === 0 ? (
           <div className="rounded-lg border border-dashed p-8 text-center">
             <p className="font-medium">
-              {hasFilters ? "No matching questions" : "No questions yet"}
+              {hasFilters ? t("noMatchingQuestions") : t("noQuestions")}
             </p>
 
             <p className="mt-1 text-sm text-muted-foreground">
               {hasFilters
-                ? "No questions match the current filters."
-                : "No assessment questions have been created yet."}
+                ? t("noMatchingDescription")
+                : t("noQuestionsDescription")}
             </p>
           </div>
         ) : filters.courseId ? (
@@ -206,8 +209,10 @@ export function AdminQuestionManager() {
 
         {questions && questions.items.length > 0 && (
           <p className="text-sm text-muted-foreground">
-            Showing {questions.items.length} of {questions.total} question
-            {questions.total === 1 ? "" : "s"}.
+            {t("showingCount", {
+              count: questions.items.length,
+              total: questions.total,
+            })}
           </p>
         )}
       </CardContent>

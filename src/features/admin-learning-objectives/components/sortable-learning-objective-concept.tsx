@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Check, GripVertical, Link2, Loader2, Unlink } from "lucide-react";
@@ -28,6 +29,9 @@ export function SortableLearningObjectiveConcept({
   onToggleRequired,
   onDetach,
 }: SortableLearningObjectiveConceptProps) {
+  const t = useTranslations("admin.learningObjectives.concepts");
+  const tLO = useTranslations("admin.learningObjectives");
+
   const sortableId = `loc:${item.id}`;
 
   const {
@@ -65,7 +69,7 @@ export function SortableLearningObjectiveConcept({
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label={`Reorder ${item.concept.code}`}
+            aria-label={tLO("reorderAria", { code: item.concept.code })}
             disabled={disabled}
             className="cursor-grab touch-none active:cursor-grabbing"
             {...attributes}
@@ -76,14 +80,14 @@ export function SortableLearningObjectiveConcept({
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">Order {item.display_order}</Badge>
+              <Badge variant="secondary">{tLO("order", { order: item.display_order })}</Badge>
 
               <Badge variant="outline">{item.concept.code}</Badge>
 
               <p className="text-sm font-medium">{item.concept.name}</p>
 
               <Badge variant={item.is_required ? "default" : "secondary"}>
-                {item.is_required ? "Required" : "Optional"}
+                {item.is_required ? t("required") : t("optional")}
               </Badge>
             </div>
 
@@ -108,7 +112,7 @@ export function SortableLearningObjectiveConcept({
               <Link2 />
             )}
 
-            {item.is_required ? "Make optional" : "Make required"}
+            {item.is_required ? t("makeOptional") : t("makeRequired")}
           </Button>
 
           <Button
@@ -118,7 +122,7 @@ export function SortableLearningObjectiveConcept({
             onClick={onDetach}
           >
             <Unlink />
-            Detach
+            {t("detach")}
           </Button>
         </div>
       </div>

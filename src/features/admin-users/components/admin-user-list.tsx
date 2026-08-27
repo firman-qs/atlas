@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 import { ChevronRight, Search, Users } from "lucide-react";
 import Link from "next/link";
@@ -23,10 +24,6 @@ import type { AdminUserRole } from "@/features/admin-users/types";
 
 type ActiveFilter = "all" | "active" | "inactive";
 
-function formatRole(role: AdminUserRole) {
-  return role.charAt(0).toUpperCase() + role.slice(1);
-}
-
 function UserListSkeleton() {
   return (
     <div className="space-y-3">
@@ -48,6 +45,12 @@ function UserListSkeleton() {
 }
 
 export function AdminUserList() {
+  const t = useTranslations("admin.users");
+  const tFilters = useTranslations("admin.users.filters");
+  const tStatuses = useTranslations("admin.users.statuses");
+  const tRoles = useTranslations("admin.users.roles");
+  const tErrors = useTranslations("admin.errors");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] =
@@ -68,11 +71,17 @@ export function AdminUserList() {
     setSearch(searchInput.trim());
   }
 
+  function formatRole(role: AdminUserRole) {
+    if (role === "admin") return tRoles("admin");
+    if (role === "instructor") return tRoles("instructor");
+    return tRoles("student");
+  }
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>User Filters</CardTitle>
+          <CardTitle>{tFilters("title")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -86,13 +95,13 @@ export function AdminUserList() {
                 onChange={(event) =>
                   setSearchInput(event.target.value)
                 }
-                placeholder="Search by name or email"
-                aria-label="Search users"
+                placeholder={tFilters("searchPlaceholder")}
+                aria-label={tFilters("searchAria")}
               />
 
               <Button type="submit" variant="outline">
                 <Search />
-                Search
+                {tFilters("searchButton")}
               </Button>
             </form>
 
@@ -102,14 +111,14 @@ export function AdminUserList() {
                 setActiveFilter(value as ActiveFilter)
               }
             >
-              <SelectTrigger aria-label="Filter account status">
-                <SelectValue placeholder="Account status" />
+              <SelectTrigger aria-label={tFilters("statusAria")}>
+                <SelectValue placeholder={tFilters("statusPlaceholder")} />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All accounts</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="all">{tFilters("allAccounts")}</SelectItem>
+                <SelectItem value="active">{tFilters("active")}</SelectItem>
+                <SelectItem value="inactive">{tFilters("inactive")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -123,7 +132,7 @@ export function AdminUserList() {
           <AlertDescription>
             {usersQuery.error instanceof Error
               ? usersQuery.error.message
-              : "Unable to load users."}
+              : tErrors("loadUsers")}
           </AlertDescription>
         </Alert>
       ) : usersQuery.data.items.length === 0 ? (
@@ -133,11 +142,10 @@ export function AdminUserList() {
               <Users className="size-4 text-muted-foreground" />
             </div>
 
-            <p className="mt-3 font-medium">No users found</p>
+            <p className="mt-3 font-medium">{t("empty.title")}</p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              No accounts match the current search and account-status
-              filters.
+              {t("empty.description")}
             </p>
           </CardContent>
         </Card>
@@ -169,14 +177,14 @@ export function AdminUserList() {
                         }
                       >
                         {deleted
-                          ? "Deleted"
+                          ? tStatuses("deleted")
                           : user.is_active
-                            ? "Active"
-                            : "Inactive"}
+                            ? tStatuses("active")
+                            : tStatuses("inactive")}
                       </Badge>
 
                       {user.roles.length === 0 ? (
-                        <Badge variant="outline">No roles</Badge>
+                        <Badge variant="outline">{t("noRoles")}</Badge>
                       ) : (
                         user.roles.map((role) => (
                           <Badge
@@ -197,11 +205,11 @@ export function AdminUserList() {
                     render={
                       <Link
                         href={`/admin/users/${user.id}`}
-                        aria-label={`Manage ${user.full_name}`}
+                        aria-label={t("manageAria", { name: user.full_name })}
                       />
                     }
                   >
-                    Manage
+                    {t("manage")}
                     <ChevronRight />
                   </Button>
                 </CardContent>
@@ -210,8 +218,10 @@ export function AdminUserList() {
           })}
 
           <p className="text-sm text-muted-foreground">
-            Showing {usersQuery.data.items.length} of{" "}
-            {usersQuery.data.total} users.
+            {t("showingCount", {
+              count: usersQuery.data.items.length,
+              total: usersQuery.data.total,
+            })}
           </p>
         </div>
       )}

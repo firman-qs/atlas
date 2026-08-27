@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Plus, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -36,6 +37,9 @@ export function QuestionBankQuestionBrowser({
   questionBankId,
   courseId,
 }: QuestionBankQuestionBrowserProps) {
+  const t = useTranslations("admin.questionBanks.browser");
+  const tErrors = useTranslations("admin.errors");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
@@ -113,7 +117,7 @@ export function QuestionBankQuestionBrowser({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add Questions</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -124,7 +128,7 @@ export function QuestionBankQuestionBrowser({
             <Input
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search question prompts..."
+              placeholder={t("searchPlaceholder")}
               className="pl-8"
             />
           </div>
@@ -140,7 +144,7 @@ export function QuestionBankQuestionBrowser({
             <SelectTrigger className="w-full">
               <span>
                 {questionType === "all"
-                  ? "All types"
+                  ? t("allTypes")
                   : questionType === "mcq"
                     ? "MCQ"
                     : "Essay"}
@@ -148,7 +152,7 @@ export function QuestionBankQuestionBrowser({
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
+              <SelectItem value="all">{t("allTypes")}</SelectItem>
               <SelectItem value="mcq">MCQ</SelectItem>
               <SelectItem value="essay">Essay</SelectItem>
             </SelectContent>
@@ -169,17 +173,17 @@ export function QuestionBankQuestionBrowser({
             <SelectTrigger className="w-full">
               <span>
                 {status === "all"
-                  ? "All statuses"
+                  ? t("allStatuses")
                   : status === "draft"
-                    ? "Draft"
-                    : "Published"}
+                    ? t("draft")
+                    : t("published")}
               </span>
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="all">{t("allStatuses")}</SelectItem>
+              <SelectItem value="published">{t("published")}</SelectItem>
+              <SelectItem value="draft">{t("draft")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -189,7 +193,7 @@ export function QuestionBankQuestionBrowser({
             <AlertDescription>
               {attachQuestion.error instanceof Error
                 ? attachQuestion.error.message
-                : "Unable to attach question."}
+                : tErrors("attachQuestion")}
             </AlertDescription>
           </Alert>
         )}
@@ -199,7 +203,7 @@ export function QuestionBankQuestionBrowser({
             <AlertDescription>
               {adminQuestionsQuery.error instanceof Error
                 ? adminQuestionsQuery.error.message
-                : "Unable to load available questions."}
+                : tErrors("loadQuestions")}
             </AlertDescription>
           </Alert>
         )}
@@ -220,11 +224,10 @@ export function QuestionBankQuestionBrowser({
           </div>
         ) : availableQuestions.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center">
-            <p className="font-medium">No available questions</p>
+            <p className="font-medium">{t("noQuestions")}</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              All matching questions are already attached, or no questions match
-              the current filters.
+              {t("noQuestionsDescription")}
             </p>
           </div>
         ) : (
@@ -267,7 +270,7 @@ export function QuestionBankQuestionBrowser({
                       ) : (
                         <Plus />
                       )}
-                      Add to bank
+                      {t("addToBank")}
                     </Button>
                   </div>
 
@@ -277,15 +280,15 @@ export function QuestionBankQuestionBrowser({
 
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Badge variant="outline">
-                      {learningObjective?.code.toUpperCase() ?? "Unknown LO"}
+                      {learningObjective?.code.toUpperCase() ?? t("unknownLO")}
                     </Badge>
 
                     <Badge variant="outline">
-                      {concept?.name ?? "Unknown concept"}
+                      {concept?.name ?? t("unknownConcept")}
                     </Badge>
 
                     <Badge variant="outline" className="capitalize">
-                      {soloLevel?.code ?? "Unknown SOLO level"}
+                      {soloLevel?.code ?? t("unknownSOLO")}
                     </Badge>
                   </div>
                 </div>
@@ -293,8 +296,9 @@ export function QuestionBankQuestionBrowser({
             })}
 
             <p className="text-sm text-muted-foreground">
-              Showing {availableQuestions.length} available question
-              {availableQuestions.length === 1 ? "" : "s"}.
+              {t("showingCount", {
+                count: availableQuestions.length,
+              })}
             </p>
           </div>
         )}

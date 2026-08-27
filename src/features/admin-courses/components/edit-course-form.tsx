@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -45,6 +46,10 @@ export function EditCourseForm({
   onCancel,
   onSaved,
 }: EditCourseFormProps) {
+  const t = useTranslations("admin.courses.form");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const updateCourse = useUpdateAdminCourse(course.id);
 
   const {
@@ -83,13 +88,13 @@ export function EditCourseForm({
           <AlertDescription>
             {updateCourse.error instanceof Error
               ? updateCourse.error.message
-              : "Unable to update course."}
+              : tErrors("updateCourse")}
           </AlertDescription>
         </Alert>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="edit-course-code">Code</Label>
+        <Label htmlFor="edit-course-code">{t("code")}</Label>
         <Input
           id="edit-course-code"
           {...register("code")}
@@ -101,7 +106,7 @@ export function EditCourseForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="edit-course-title">Title</Label>
+        <Label htmlFor="edit-course-title">{t("title")}</Label>
         <Input
           id="edit-course-title"
           {...register("title")}
@@ -113,7 +118,7 @@ export function EditCourseForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="edit-course-description">Description</Label>
+        <Label htmlFor="edit-course-description">{t("description")}</Label>
         <Textarea
           id="edit-course-description"
           {...register("description")}
@@ -128,7 +133,7 @@ export function EditCourseForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="edit-course-credits">Credits</Label>
+        <Label htmlFor="edit-course-credits">{t("credits")}</Label>
         <Input
           id="edit-course-credits"
           type="number"
@@ -150,12 +155,12 @@ export function EditCourseForm({
           onClick={onCancel}
           disabled={updateCourse.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={updateCourse.isPending}>
           {updateCourse.isPending && <Loader2 className="animate-spin" />}
-          {updateCourse.isPending ? "Saving..." : "Save changes"}
+          {updateCourse.isPending ? t("saving") : t("save")}
         </Button>
       </div>
     </form>

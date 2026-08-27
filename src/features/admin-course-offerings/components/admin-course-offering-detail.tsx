@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   CalendarDays,
@@ -33,15 +34,10 @@ import {
   useAdminCourseOffering,
   useDeleteAdminCourseOffering,
 } from "@/features/admin-course-offerings/queries";
+import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
 
 interface AdminCourseOfferingDetailProps {
   courseOfferingId: string;
-}
-
-function formatSemester(semester: string) {
-  return semester
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function DetailSkeleton() {
@@ -57,6 +53,16 @@ function DetailSkeleton() {
 export function AdminCourseOfferingDetail({
   courseOfferingId,
 }: AdminCourseOfferingDetailProps) {
+  const t = useTranslations("admin.courseOfferings");
+  const tDetail = useTranslations("admin.courseOfferings.detail");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
+  function getSemesterLabel(semester: string) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
+
   const router = useRouter();
 
   const offeringQuery = useAdminCourseOffering(courseOfferingId);
@@ -74,7 +80,7 @@ export function AdminCourseOfferingDetail({
         <AlertDescription>
           {offeringQuery.error instanceof Error
             ? offeringQuery.error.message
-            : "Unable to load course offering."}
+            : tErrors("loadCourseOffering")}
         </AlertDescription>
       </Alert>
     );
@@ -92,6 +98,8 @@ export function AdminCourseOfferingDetail({
     }
   }
 
+  const formattedSemester = getSemesterLabel(offering.academic_term.semester);
+
   return (
     <>
       <div className="space-y-6">
@@ -102,17 +110,17 @@ export function AdminCourseOfferingDetail({
           render={<Link href="/admin/course-offerings" />}
         >
           <ArrowLeft />
-          Course Offerings
+          {tDetail("backToOfferings")}
         </Button>
 
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary">{offering.course.code}</Badge>
 
-            <Badge variant="outline">Section {offering.section}</Badge>
+            <Badge variant="outline">{t("section", { section: offering.section })}</Badge>
 
             <Badge variant="outline">
-              {formatSemester(offering.academic_term.semester)}{" "}
+              {formattedSemester}{" "}
               {offering.academic_term.year}
             </Badge>
           </div>
@@ -123,14 +131,14 @@ export function AdminCourseOfferingDetail({
             </h1>
 
             <p className="mt-1 text-muted-foreground">
-              Managed course delivery configuration.
+              {t("description")}
             </p>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Course Offering</CardTitle>
+            <CardTitle>{tDetail("labels.course")}</CardTitle>
           </CardHeader>
 
           <CardContent>
@@ -138,7 +146,7 @@ export function AdminCourseOfferingDetail({
               <div>
                 <dt className="flex items-center gap-2 text-sm text-muted-foreground">
                   <GraduationCap className="size-4" />
-                  Course
+                  {tDetail("labels.course")}
                 </dt>
 
                 <dd className="mt-1 font-medium">
@@ -149,11 +157,11 @@ export function AdminCourseOfferingDetail({
               <div>
                 <dt className="flex items-center gap-2 text-sm text-muted-foreground">
                   <CalendarDays className="size-4" />
-                  Academic term
+                  {tDetail("labels.academicTerm")}
                 </dt>
 
                 <dd className="mt-1 font-medium">
-                  {formatSemester(offering.academic_term.semester)}{" "}
+                  {formattedSemester}{" "}
                   {offering.academic_term.year}
                 </dd>
               </div>
@@ -161,7 +169,7 @@ export function AdminCourseOfferingDetail({
               <div>
                 <dt className="flex items-center gap-2 text-sm text-muted-foreground">
                   <UserRound className="size-4" />
-                  Instructor
+                  {tDetail("labels.instructor")}
                 </dt>
 
                 <dd className="mt-1">
@@ -174,9 +182,9 @@ export function AdminCourseOfferingDetail({
               </div>
 
               <div>
-                <dt className="text-sm text-muted-foreground">Section</dt>
+                <dt className="text-sm text-muted-foreground">{tDetail("labels.section")}</dt>
 
-                <dd className="mt-1 font-medium">Section {offering.section}</dd>
+                <dd className="mt-1 font-medium">{t("section", { section: offering.section })}</dd>
               </div>
             </dl>
           </CardContent>
@@ -186,15 +194,21 @@ export function AdminCourseOfferingDetail({
 
         <Card className="border-destructive/30">
           <CardHeader>
-            <CardTitle>Delete Course Offering</CardTitle>
+            <CardTitle>{tDetail("deleteOffering")}</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <div>
-              <p className="font-medium">Delete this course offering</p>
+              <p className="font-medium">{tDetail("deleteOffering")}</p>
 
               <p className="mt-1 text-sm text-muted-foreground">
-                Deletion is only allowed when no students are enrolled.
+                {tDetail("dialog.description", {
+                  courseTitle: offering.course.title,
+                  section: offering.section,
+                  semester: formattedSemester,
+                  year: offering.academic_term.year,
+                  instructorName: offering.instructor.full_name,
+                })}
               </p>
             </div>
 
@@ -203,7 +217,7 @@ export function AdminCourseOfferingDetail({
                 <AlertDescription>
                   {deleteOffering.error instanceof Error
                     ? deleteOffering.error.message
-                    : "Unable to delete course offering."}
+                    : tErrors("deleteCourseOffering")}
                 </AlertDescription>
               </Alert>
             )}
@@ -214,7 +228,7 @@ export function AdminCourseOfferingDetail({
               onClick={() => setDeleteOpen(true)}
             >
               <Trash2 />
-              Delete course offering
+              {tDetail("deleteOffering")}
             </Button>
           </CardContent>
         </Card>
@@ -230,12 +244,16 @@ export function AdminCourseOfferingDetail({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete course offering?</AlertDialogTitle>
+            <AlertDialogTitle>{tDetail("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              Delete {offering.course.code}, Section {offering.section},{" "}
-              {formatSemester(offering.academic_term.semester)}{" "}
-              {offering.academic_term.year}? This action cannot be undone.
+              {tDetail("dialog.description", {
+                courseTitle: offering.course.title,
+                section: offering.section,
+                semester: formattedSemester,
+                year: offering.academic_term.year,
+                instructorName: offering.instructor.full_name,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -244,14 +262,14 @@ export function AdminCourseOfferingDetail({
               <AlertDescription>
                 {deleteOffering.error instanceof Error
                   ? deleteOffering.error.message
-                  : "Unable to delete course offering."}
+                  : tErrors("deleteCourseOffering")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteOffering.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -264,7 +282,7 @@ export function AdminCourseOfferingDetail({
             >
               {deleteOffering.isPending && <Loader2 className="animate-spin" />}
 
-              {deleteOffering.isPending ? "Deleting..." : "Confirm delete"}
+              {deleteOffering.isPending ? tDetail("dialog.deleting") : tDetail("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

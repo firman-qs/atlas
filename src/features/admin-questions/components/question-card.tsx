@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,8 @@ export function QuestionCard({
   conceptName,
   soloLevelCode,
 }: QuestionCardProps) {
+  const t = useTranslations("admin.questions");
+
   return (
     <div className="rounded-lg border bg-background p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -53,7 +56,7 @@ export function QuestionCard({
           variant="outline"
           render={<Link href={`/admin/questions/${question.id}`} />}
         >
-          Open
+          {t("open")}
           <ArrowRight />
         </Button>
       </div>
@@ -67,18 +70,17 @@ export function QuestionCard({
         {question.content.type === "mcq" ? (
           <>
             <span>
-              {question.content.options.length} option
-              {question.content.options.length === 1 ? "" : "s"}
+              {t("optionCount", { count: question.content.options.length })}
             </span>
 
             <span>
               {question.content.is_option_shuffled
-                ? "Options shuffled"
-                : "Fixed option order"}
+                ? t("optionsShuffled")
+                : t("fixedOptionOrder")}
             </span>
           </>
         ) : (
-          <span>Essay response</span>
+          <span>{t("essayResponse")}</span>
         )}
 
         <span className="font-mono" title={question.id}>

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { QuestionBankQuestionList } from "@/features/admin-question-banks/components/question-bank-question-list";

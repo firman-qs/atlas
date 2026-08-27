@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2 } from "lucide-react";
@@ -31,6 +32,9 @@ export function SortableMcqOption({
   onSelectCorrect,
   onRemove,
 }: SortableMcqOptionProps) {
+  const t = useTranslations("admin.questions.form");
+  const common = useTranslations("common");
+
   const {
     attributes,
     listeners,
@@ -62,7 +66,7 @@ export function SortableMcqOption({
           type="button"
           variant="ghost"
           size="icon"
-          aria-label={`Reorder option ${label}`}
+          aria-label={t("reorderAria", { label })}
           disabled={disabled}
           className="cursor-grab touch-none active:cursor-grabbing"
           {...attributes}
@@ -90,10 +94,10 @@ export function SortableMcqOption({
                   <span className="size-2 rounded-full bg-primary" />
                 )}
               </span>
-              Option {label}
+              {t("optionLabel", { label })}
               {isCorrect && (
                 <span className="text-xs text-muted-foreground">
-                  Correct answer
+                  {t("correctAnswer")}
                 </span>
               )}
             </button>
@@ -106,7 +110,7 @@ export function SortableMcqOption({
               onClick={onRemove}
             >
               <Trash2 />
-              Remove
+              {common("delete")}
             </Button>
           </div>
 
@@ -115,7 +119,7 @@ export function SortableMcqOption({
             onChange={onChange}
             mediaPurpose="authoring"
             disabled={disabled}
-            placeholder={`Write option ${label}...`}
+            placeholder={t("writeOptionPlaceholder", { label })}
             className="min-h-24"
           />
         </div>

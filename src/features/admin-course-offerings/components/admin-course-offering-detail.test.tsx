@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminCourseOfferingDetail } from "@/features/admin-course-offerings/components/admin-course-offering-detail";
@@ -159,11 +159,11 @@ describe("AdminCourseOfferingDetail", () => {
 
     expect(screen.getByRole("alertdialog")).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /confirm delete/i,
-      }),
-    );
+    const deleteButtons = screen.getAllByRole("button", {
+      name: /delete course offering/i,
+    });
+    // The dialog action button
+    fireEvent.click(deleteButtons[deleteButtons.length - 1]);
 
     await waitFor(() => {
       expect(deleteMutateAsync).toHaveBeenCalledTimes(1);

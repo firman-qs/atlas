@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   closestCenter,
   DndContext,
@@ -59,6 +60,8 @@ export function McqQuestionFields({
   errors,
   disabled = false,
 }: McqQuestionFieldsProps) {
+  const t = useTranslations("admin.questions.form");
+
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: "options",
@@ -136,10 +139,10 @@ export function McqQuestionFields({
   return (
     <div className="space-y-5">
       <div>
-        <Label>Answer options</Label>
+        <Label>{t("optionsLabel")}</Label>
 
         <p className="mt-1 text-sm text-muted-foreground">
-          Provide at least two options and select exactly one correct answer.
+          {t("optionsDescription")}
         </p>
       </div>
 
@@ -211,15 +214,15 @@ export function McqQuestionFields({
         onClick={handleAddOption}
       >
         <Plus />
-        Add option
+        {t("addOption")}
       </Button>
 
       <div className="flex items-start justify-between gap-4 rounded-lg border p-4">
         <div>
-          <Label htmlFor="shuffle-mcq-options">Shuffle options</Label>
+          <Label htmlFor="shuffle-mcq-options">{t("shuffleOptions")}</Label>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            Randomize option order when the question is presented to students.
+            {t("shuffleDescription")}
           </p>
         </div>
 

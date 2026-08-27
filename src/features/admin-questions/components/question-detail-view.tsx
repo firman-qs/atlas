@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +23,9 @@ export function QuestionDetailView({
   conceptName,
   soloLevelCode,
 }: QuestionDetailViewProps) {
+  const t = useTranslations("admin.questions");
+  const tDetail = useTranslations("admin.questions.detail");
+
   return (
     <div className="space-y-6">
       <Card>
@@ -34,7 +38,7 @@ export function QuestionDetailView({
             <Badge
               variant={question.status === "published" ? "default" : "outline"}
             >
-              {question.status === "published" ? "Published" : "Draft"}
+              {question.status === "published" ? t("statuses.published") : t("statuses.draft")}
             </Badge>
 
             {courseCode && (
@@ -58,7 +62,7 @@ export function QuestionDetailView({
             )}
           </div>
 
-          <CardTitle className="mt-3">Question</CardTitle>
+          <CardTitle className="mt-3">{tDetail("questionTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -71,7 +75,7 @@ export function QuestionDetailView({
 
       <Card>
         <CardHeader>
-          <CardTitle>Question Content</CardTitle>
+          <CardTitle>{tDetail("contentTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -81,7 +85,7 @@ export function QuestionDetailView({
 
       <Card>
         <CardHeader>
-          <CardTitle>Feedback</CardTitle>
+          <CardTitle>{tDetail("feedbackTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -89,7 +93,7 @@ export function QuestionDetailView({
             <AtlasRichTextViewer value={question.feedback} />
           ) : (
             <p className="text-sm text-muted-foreground">
-              No feedback provided.
+              {tDetail("noFeedback")}
             </p>
           )}
         </CardContent>
@@ -97,7 +101,7 @@ export function QuestionDetailView({
 
       <Card>
         <CardHeader>
-          <CardTitle>AI guidelines</CardTitle>
+          <CardTitle>{tDetail("aiGuidelinesTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -107,7 +111,7 @@ export function QuestionDetailView({
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              No AI guidelines provided.
+              {tDetail("noAiGuidelines")}
             </p>
           )}
         </CardContent>

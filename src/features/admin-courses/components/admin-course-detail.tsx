@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, BookOpen, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -41,6 +42,10 @@ function AdminCourseDetailSkeleton() {
 }
 
 export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
+  const t = useTranslations("admin.courses");
+  const tDetail = useTranslations("admin.courses.detail");
+  const tErrors = useTranslations("admin.errors");
+
   const courseQuery = useAdminCourse(courseId);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -54,7 +59,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
         <AlertDescription>
           {courseQuery.error instanceof Error
             ? courseQuery.error.message
-            : "Unable to load course."}
+            : tErrors("loadCourse")}
         </AlertDescription>
       </Alert>
     );
@@ -70,7 +75,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
         render={<Link href="/admin/courses" />}
       >
         <ArrowLeft />
-        Courses
+        {tDetail("backToCourses")}
       </Button>
 
       <Card>
@@ -83,14 +88,13 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
                 <Badge variant="outline">{course.code}</Badge>
 
                 {course.is_active ? (
-                  <Badge>Active</Badge>
+                  <Badge>{t("active")}</Badge>
                 ) : (
-                  <Badge variant="secondary">Inactive</Badge>
+                  <Badge variant="secondary">{t("inactive")}</Badge>
                 )}
 
                 <Badge variant="secondary">
-                  {course.credits} credit
-                  {course.credits === 1 ? "" : "s"}
+                  {t("credits", { count: course.credits })}
                 </Badge>
               </div>
 
@@ -102,7 +106,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
               onClick={() => setIsEditing((current) => !current)}
             >
               <Pencil />
-              {isEditing ? "Close editor" : "Edit course"}
+              {isEditing ? tDetail("closeEditor") : tDetail("editCourse")}
             </Button>
           </div>
         </CardHeader>
@@ -117,7 +121,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
           ) : (
             <>
               <div>
-                <p className="text-sm font-medium">Description</p>
+                <p className="text-sm font-medium">{tDetail("description")}</p>
 
                 <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
                   {course.description}
@@ -125,7 +129,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
               </div>
 
               <div>
-                <p className="text-sm font-medium">Course ID</p>
+                <p className="text-sm font-medium">{tDetail("courseId")}</p>
 
                 <p className="mt-1 break-all font-mono text-sm text-muted-foreground">
                   {course.id}
@@ -133,7 +137,7 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
               </div>
 
               <div>
-                <p className="text-sm font-medium">Credits</p>
+                <p className="text-sm font-medium">{tDetail("credits")}</p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
                   {course.credits}

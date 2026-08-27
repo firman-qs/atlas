@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Plus } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 
@@ -13,14 +14,17 @@ import { useAdminAcademicTerms } from "@/features/admin-academic-terms/queries";
 import { useCreateAdminCourseOffering } from "@/features/admin-course-offerings/queries";
 import { useAdminCourses } from "@/features/admin-courses/queries";
 import { useAdminUsers } from "@/features/admin-users/queries";
-
-function formatSemester(semester: string) {
-  return semester
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
+import { formatAcademicSemester } from "@/features/admin-academic-terms/semester";
 
 export function CreateCourseOfferingForm() {
+  const t = useTranslations("admin.courseOfferings.form");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+
+  function getSemesterLabel(semester: string) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
+
   const coursesQuery = useAdminCourses({
     page: 1,
     pageSize: 100,
@@ -96,22 +100,21 @@ export function CreateCourseOfferingForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Course Offering</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
 
       <CardContent>
         {dependencyError ? (
           <Alert variant="destructive">
             <AlertDescription>
-              Unable to load the courses, instructors, or academic terms
-              required to create a course offering.
+              {tErrors("loadCourseOfferings")}
             </AlertDescription>
           </Alert>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid gap-5 lg:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="course-offering-course">Course</Label>
+                <Label htmlFor="course-offering-course">{t("course")}</Label>
 
                 <select
                   id="course-offering-course"
@@ -120,7 +123,7 @@ export function CreateCourseOfferingForm() {
                   disabled={loadingDependencies || createOffering.isPending}
                   className="flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="">Select course</option>
+                  <option value="">{t("selectCourse")}</option>
 
                   {(coursesQuery.data?.items ?? []).map((course) => (
                     <option key={course.id} value={course.id}>
@@ -131,7 +134,7 @@ export function CreateCourseOfferingForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="course-offering-term">Academic term</Label>
+                <Label htmlFor="course-offering-term">{t("academicTerm")}</Label>
 
                 <select
                   id="course-offering-term"
@@ -140,18 +143,18 @@ export function CreateCourseOfferingForm() {
                   disabled={loadingDependencies || createOffering.isPending}
                   className="flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="">Select academic term</option>
+                  <option value="">{t("selectTerm")}</option>
 
                   {(academicTermsQuery.data?.items ?? []).map((term) => (
                     <option key={term.id} value={term.id}>
-                      {formatSemester(term.semester)} {term.year}
+                      {getSemesterLabel(term.semester)} {term.year}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="course-offering-instructor">Instructor</Label>
+                <Label htmlFor="course-offering-instructor">{t("instructor")}</Label>
 
                 <select
                   id="course-offering-instructor"
@@ -160,7 +163,7 @@ export function CreateCourseOfferingForm() {
                   disabled={loadingDependencies || createOffering.isPending}
                   className="flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option value="">Select instructor</option>
+                  <option value="">{t("selectInstructor")}</option>
 
                   {instructors.map((instructor) => (
                     <option key={instructor.id} value={instructor.id}>
@@ -171,13 +174,13 @@ export function CreateCourseOfferingForm() {
 
                 {!loadingDependencies && instructors.length === 0 && (
                   <p className="text-xs text-muted-foreground">
-                    No active users with the instructor role are available.
+                    {t("noInstructors")}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="course-offering-section">Section</Label>
+                <Label htmlFor="course-offering-section">{t("section")}</Label>
 
                 <Input
                   id="course-offering-section"
@@ -194,7 +197,7 @@ export function CreateCourseOfferingForm() {
                 <AlertDescription>
                   {createOffering.error instanceof Error
                     ? createOffering.error.message
-                    : "Unable to create course offering."}
+                    : tErrors("createCourseOffering")}
                 </AlertDescription>
               </Alert>
             )}
@@ -219,8 +222,8 @@ export function CreateCourseOfferingForm() {
                 )}
 
                 {createOffering.isPending
-                  ? "Creating..."
-                  : "Create course offering"}
+                  ? t("creating")
+                  : t("create")}
               </Button>
             </div>
           </form>

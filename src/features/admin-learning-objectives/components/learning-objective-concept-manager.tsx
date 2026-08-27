@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -51,6 +52,11 @@ export function LearningObjectiveConceptManager({
   learningObjectiveId,
   courseId,
 }: LearningObjectiveConceptManagerProps) {
+  const t = useTranslations("admin.learningObjectives.concepts");
+  const tLO = useTranslations("admin.learningObjectives");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const [showAttachBrowser, setShowAttachBrowser] = useState(false);
   const [detachTarget, setDetachTarget] = useState<AdminConcept | null>(null);
 
@@ -115,7 +121,7 @@ export function LearningObjectiveConceptManager({
         <AlertDescription>
           {attachedQuery.error instanceof Error
             ? attachedQuery.error.message
-            : "Unable to load attached concepts."}
+            : tErrors("loadConcepts")}
         </AlertDescription>
       </Alert>
     );
@@ -153,7 +159,7 @@ export function LearningObjectiveConceptManager({
         <div className="flex items-center gap-2">
           <BookOpenText className="size-4" />
 
-          <p className="font-medium">Concepts</p>
+          <p className="font-medium">{t("title")}</p>
 
           <Badge variant="outline">{attached.length}</Badge>
         </div>
@@ -165,7 +171,7 @@ export function LearningObjectiveConceptManager({
           onClick={() => setShowAttachBrowser((current) => !current)}
         >
           <Plus />
-          {showAttachBrowser ? "Close" : "Attach concept"}
+          {showAttachBrowser ? t("closeForm") : t("attachTitle")}
         </Button>
       </div>
 
@@ -174,7 +180,7 @@ export function LearningObjectiveConceptManager({
           <AlertDescription>
             {attachConcept.error instanceof Error
               ? attachConcept.error.message
-              : "Unable to attach concept."}
+              : tErrors("attachConcept")}
           </AlertDescription>
         </Alert>
       )}
@@ -184,7 +190,7 @@ export function LearningObjectiveConceptManager({
           <AlertDescription>
             {updateSettings.error instanceof Error
               ? updateSettings.error.message
-              : "Unable to update concept settings."}
+              : tErrors("attachConcept")}
           </AlertDescription>
         </Alert>
       )}
@@ -194,7 +200,7 @@ export function LearningObjectiveConceptManager({
           <AlertDescription>
             {detachConcept.error instanceof Error
               ? detachConcept.error.message
-              : "Unable to detach concept."}
+              : tErrors("detachConcept")}
           </AlertDescription>
         </Alert>
       )}
@@ -204,17 +210,17 @@ export function LearningObjectiveConceptManager({
           <AlertDescription>
             {reorderConcepts.error instanceof Error
               ? reorderConcepts.error.message
-              : "Unable to reorder concepts."}
+              : tErrors("reorder")}
           </AlertDescription>
         </Alert>
       )}
 
       {attached.length === 0 ? (
         <div className="rounded-md border border-dashed p-4 text-center">
-          <p className="text-sm font-medium">No concepts attached</p>
+          <p className="text-sm font-medium">{t("noConcepts")}</p>
 
           <p className="mt-1 text-xs text-muted-foreground">
-            Attach a course concept to define the learning objective structure.
+            {t("noConceptsDescription")}
           </p>
         </div>
       ) : (
@@ -259,11 +265,10 @@ export function LearningObjectiveConceptManager({
       {showAttachBrowser && (
         <div className="space-y-3 rounded-md border bg-background p-3">
           <div>
-            <p className="text-sm font-medium">Available course concepts</p>
+            <p className="text-sm font-medium">{t("availableTitle")}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              Only concepts not already attached to this learning objective are
-              shown.
+              {t("availableDescription")}
             </p>
           </div>
 
@@ -277,16 +282,15 @@ export function LearningObjectiveConceptManager({
               <AlertDescription>
                 {conceptsQuery.error instanceof Error
                   ? conceptsQuery.error.message
-                  : "Unable to load course concepts."}
+                  : tErrors("loadConcepts")}
               </AlertDescription>
             </Alert>
           ) : availableConcepts.length === 0 ? (
             <div className="rounded-md border border-dashed p-4 text-center">
-              <p className="text-sm font-medium">No concepts available</p>
+              <p className="text-sm font-medium">{t("noConceptsAvailable")}</p>
 
               <p className="mt-1 text-xs text-muted-foreground">
-                Every course concept is already attached to this learning
-                objective.
+                {t("noConceptsAvailableDescription")}
               </p>
             </div>
           ) : (
@@ -330,7 +334,7 @@ export function LearningObjectiveConceptManager({
                     ) : (
                       <Plus />
                     )}
-                    Attach
+                    {t("attach")}
                   </Button>
                 </div>
               ))}
@@ -349,12 +353,15 @@ export function LearningObjectiveConceptManager({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Detach concept?</AlertDialogTitle>
+            <AlertDialogTitle>{tLO("dialog.detachTitle")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {detachTarget
-                ? `Detach ${detachTarget.code} — ${detachTarget.name} from this learning objective? The course-level concept itself will not be deleted.`
-                : "Detach this concept from the learning objective?"}
+                ? tLO("dialog.detachDescription", {
+                    code: detachTarget.code,
+                    name: detachTarget.name,
+                  })
+                : tLO("dialog.detachTitle")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -363,14 +370,14 @@ export function LearningObjectiveConceptManager({
               <AlertDescription>
                 {detachConcept.error instanceof Error
                   ? detachConcept.error.message
-                  : "Unable to detach concept."}
+                  : tErrors("detachConcept")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={detachConcept.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -395,7 +402,9 @@ export function LearningObjectiveConceptManager({
             >
               {detachConcept.isPending && <Loader2 className="animate-spin" />}
 
-              {detachConcept.isPending ? "Detaching..." : "Detach concept"}
+              {detachConcept.isPending
+                ? tLO("dialog.detaching")
+                : tLO("dialog.confirmDetach")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

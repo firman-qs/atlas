@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -45,6 +46,7 @@ function SoloPlacement({
   conceptId,
   disabled = false,
 }: SoloPlacementProps) {
+  const t = useTranslations("admin.questions.placement");
   const levelsQuery = useLearningObjectiveConceptLevels(
     learningObjectiveId,
     conceptId,
@@ -71,18 +73,17 @@ function SoloPlacement({
         <span>
           {value.soloLevelId
             ? (levels.find((level) => level.solo_level.id === value.soloLevelId)
-                ?.solo_level.code ?? "SOLO level")
+                ?.solo_level.code ?? t("soloLevel"))
             : levels.length === 0
-              ? "No configured SOLO levels"
-              : "Select SOLO level"}
+              ? t("noSoloLevels")
+              : t("selectSoloLevel")}
         </span>
       </SelectTrigger>
 
       <SelectContent>
         {levels.map((level) => (
           <SelectItem key={level.id} value={level.solo_level.id}>
-            {level.solo_level.code} — threshold{" "}
-            {Math.round(level.mastery_threshold * 100)}%
+            {level.solo_level.code} — {t("threshold", { percent: Math.round(level.mastery_threshold * 100) })}
           </SelectItem>
         ))}
       </SelectContent>
@@ -96,6 +97,7 @@ function ConceptPlacement({
   learningObjectiveId,
   disabled = false,
 }: ConceptPlacementProps) {
+  const t = useTranslations("admin.questions.placement");
   const conceptsQuery = useLearningObjectiveConcepts(learningObjectiveId);
 
   if (conceptsQuery.isPending) {
@@ -126,10 +128,10 @@ function ConceptPlacement({
           <span>
             {value.conceptId
               ? (concepts.find((item) => item.concept.id === value.conceptId)
-                  ?.concept.name ?? "Concept")
+                  ?.concept.name ?? t("concept"))
               : concepts.length === 0
-                ? "No attached concepts"
-                : "Select concept"}
+                ? t("noConcepts")
+                : t("selectConcept")}
           </span>
         </SelectTrigger>
 
@@ -153,7 +155,7 @@ function ConceptPlacement({
       ) : (
         <Select disabled value="">
           <SelectTrigger className="w-full">
-            <span>Select concept first</span>
+            <span>{t("selectConceptFirst")}</span>
           </SelectTrigger>
         </Select>
       )}
@@ -167,6 +169,7 @@ function LearningObjectivePlacement({
   courseId,
   disabled = false,
 }: LearningObjectivePlacementProps) {
+  const t = useTranslations("admin.questions.placement");
   const learningObjectivesQuery = useLearningObjectives({
     courseId,
     page: 1,
@@ -208,10 +211,10 @@ function LearningObjectivePlacement({
             {value.learningObjectiveId
               ? (learningObjectives
                   .find((lo) => lo.id === value.learningObjectiveId)
-                  ?.code.toUpperCase() ?? "Learning objective")
+                  ?.code.toUpperCase() ?? t("learningObjective"))
               : learningObjectives.length === 0
-                ? "No learning objectives"
-                : "Select learning objective"}
+                ? t("noLOs")
+                : t("selectLO")}
           </span>
         </SelectTrigger>
 
@@ -236,13 +239,13 @@ function LearningObjectivePlacement({
         <>
           <Select disabled value="">
             <SelectTrigger className="w-full">
-              <span>Select learning objective first</span>
+              <span>{t("selectLOFirst")}</span>
             </SelectTrigger>
           </Select>
 
           <Select disabled value="">
             <SelectTrigger className="w-full">
-              <span>Select concept first</span>
+              <span>{t("selectConceptFirst")}</span>
             </SelectTrigger>
           </Select>
         </>
@@ -256,6 +259,7 @@ export function QuestionPlacementFields({
   onChange,
   disabled = false,
 }: QuestionPlacementFieldsProps) {
+  const t = useTranslations("admin.questions.placement");
   const coursesQuery = useAdminCourses({
     page: 1,
     pageSize: 100,
@@ -291,10 +295,10 @@ export function QuestionPlacementFields({
           <span>
             {value.courseId
               ? (courses.find((course) => course.id === value.courseId)?.code ??
-                "Course")
+                t("course"))
               : courses.length === 0
-                ? "No courses"
-                : "Select course"}
+                ? t("noCourses")
+                : t("selectCourse")}
           </span>
         </SelectTrigger>
 
@@ -318,19 +322,19 @@ export function QuestionPlacementFields({
         <>
           <Select disabled value="">
             <SelectTrigger className="w-full">
-              <span>Select course first</span>
+              <span>{t("selectCourseFirst")}</span>
             </SelectTrigger>
           </Select>
 
           <Select disabled value="">
             <SelectTrigger className="w-full">
-              <span>Select learning objective first</span>
+              <span>{t("selectLOFirst")}</span>
             </SelectTrigger>
           </Select>
 
           <Select disabled value="">
             <SelectTrigger className="w-full">
-              <span>Select concept first</span>
+              <span>{t("selectConceptFirst")}</span>
             </SelectTrigger>
           </Select>
         </>

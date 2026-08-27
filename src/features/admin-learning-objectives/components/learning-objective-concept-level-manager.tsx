@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   closestCenter,
   DndContext,
@@ -54,6 +55,11 @@ export function LearningObjectiveConceptLevelManager({
   learningObjectiveId,
   conceptId,
 }: LearningObjectiveConceptLevelManagerProps) {
+  const t = useTranslations("admin.learningObjectives.soloLevels");
+  const tLO = useTranslations("admin.learningObjectives");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const [showAddBrowser, setShowAddBrowser] = useState(false);
 
   const [addThreshold, setAddThreshold] = useState(0.8);
@@ -128,7 +134,7 @@ export function LearningObjectiveConceptLevelManager({
         <AlertDescription>
           {levelsQuery.error instanceof Error
             ? levelsQuery.error.message
-            : "Unable to load configured SOLO levels."}
+            : tErrors("addSoloLevel")}
         </AlertDescription>
       </Alert>
     );
@@ -175,7 +181,7 @@ export function LearningObjectiveConceptLevelManager({
         <div className="flex items-center gap-2">
           <Layers3 className="size-4" />
 
-          <p className="text-sm font-medium">SOLO levels</p>
+          <p className="text-sm font-medium">{t("title")}</p>
 
           <Badge variant="outline">{levels.length}</Badge>
         </div>
@@ -188,7 +194,7 @@ export function LearningObjectiveConceptLevelManager({
           onClick={() => setShowAddBrowser((current) => !current)}
         >
           <Plus />
-          {showAddBrowser ? "Close" : "Add SOLO level"}
+          {showAddBrowser ? t("closeForm") : t("addLevel")}
         </Button>
       </div>
 
@@ -197,7 +203,7 @@ export function LearningObjectiveConceptLevelManager({
           <AlertDescription>
             {addLevel.error instanceof Error
               ? addLevel.error.message
-              : "Unable to add SOLO level."}
+              : tErrors("addSoloLevel")}
           </AlertDescription>
         </Alert>
       )}
@@ -207,7 +213,7 @@ export function LearningObjectiveConceptLevelManager({
           <AlertDescription>
             {updateLevel.error instanceof Error
               ? updateLevel.error.message
-              : "Unable to update mastery threshold."}
+              : tErrors("addSoloLevel")}
           </AlertDescription>
         </Alert>
       )}
@@ -217,7 +223,7 @@ export function LearningObjectiveConceptLevelManager({
           <AlertDescription>
             {removeLevel.error instanceof Error
               ? removeLevel.error.message
-              : "Unable to remove SOLO level."}
+              : tErrors("removeSoloLevel")}
           </AlertDescription>
         </Alert>
       )}
@@ -227,18 +233,17 @@ export function LearningObjectiveConceptLevelManager({
           <AlertDescription>
             {reorderLevels.error instanceof Error
               ? reorderLevels.error.message
-              : "Unable to reorder SOLO levels."}
+              : tErrors("reorder")}
           </AlertDescription>
         </Alert>
       )}
 
       {levels.length === 0 ? (
         <div className="rounded-md border border-dashed p-4 text-center">
-          <p className="text-sm font-medium">No SOLO levels configured</p>
+          <p className="text-sm font-medium">{t("noLevels")}</p>
 
           <p className="mt-1 text-xs text-muted-foreground">
-            Add at least one SOLO level to define the adaptive progression for
-            this concept.
+            {t("noLevelsDescription")}
           </p>
         </div>
       ) : (
@@ -278,16 +283,16 @@ export function LearningObjectiveConceptLevelManager({
       {showAddBrowser && (
         <div className="space-y-3 rounded-md border bg-muted/20 p-3">
           <div>
-            <p className="text-sm font-medium">Available SOLO levels</p>
+            <p className="text-sm font-medium">{t("availableTitle")}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              Only levels not already configured for this concept are shown.
+              {t("availableDescription")}
             </p>
           </div>
 
           <div className="max-w-48 space-y-2">
             <Label htmlFor={`add-threshold-${conceptId}`}>
-              Mastery threshold
+              {t("threshold")}
             </Label>
 
             <Input
@@ -302,7 +307,7 @@ export function LearningObjectiveConceptLevelManager({
             />
 
             <p className="text-xs text-muted-foreground">
-              Enter a value from 0 to 1. Example: 0.80 = 80%.
+              {t("thresholdHint")}
             </p>
           </div>
 
@@ -316,15 +321,15 @@ export function LearningObjectiveConceptLevelManager({
               <AlertDescription>
                 {soloLevelsQuery.error instanceof Error
                   ? soloLevelsQuery.error.message
-                  : "Unable to load SOLO levels."}
+                  : tErrors("addSoloLevel")}
               </AlertDescription>
             </Alert>
           ) : availableSoloLevels.length === 0 ? (
             <div className="rounded-md border border-dashed p-4 text-center">
-              <p className="text-sm font-medium">No SOLO levels available</p>
+              <p className="text-sm font-medium">{t("noLevelsAvailable")}</p>
 
               <p className="mt-1 text-xs text-muted-foreground">
-                Every defined SOLO level is already configured for this concept.
+                {t("noLevelsAvailableDescription")}
               </p>
             </div>
           ) : (
@@ -338,7 +343,7 @@ export function LearningObjectiveConceptLevelManager({
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="outline">{level.code}</Badge>
 
-                      <Badge variant="secondary">SOLO {level.level}</Badge>
+                      <Badge variant="secondary">{t("soloBadge", { level: level.level })}</Badge>
                     </div>
 
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -378,7 +383,7 @@ export function LearningObjectiveConceptLevelManager({
                     ) : (
                       <Plus />
                     )}
-                    Add
+                    {tLO("actions.create")}
                   </Button>
                 </div>
               ))}
@@ -397,12 +402,14 @@ export function LearningObjectiveConceptLevelManager({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Edit mastery threshold</AlertDialogTitle>
+            <AlertDialogTitle>{tLO("dialog.editThresholdTitle")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {editingLevel
-                ? `Update the mastery threshold for ${editingLevel.solo_level.code}.`
-                : "Update this mastery threshold."}
+                ? tLO("dialog.editThresholdDescription", {
+                    code: editingLevel.solo_level.code,
+                  })
+                : tLO("dialog.editThresholdTitle")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -411,14 +418,14 @@ export function LearningObjectiveConceptLevelManager({
               <AlertDescription>
                 {updateLevel.error instanceof Error
                   ? updateLevel.error.message
-                  : "Unable to update mastery threshold."}
+                  : tErrors("addSoloLevel")}
               </AlertDescription>
             </Alert>
           )}
 
           <div className="space-y-2">
             <Label htmlFor={`edit-threshold-${conceptId}`}>
-              Mastery threshold
+              {t("threshold")}
             </Label>
 
             <Input
@@ -435,17 +442,17 @@ export function LearningObjectiveConceptLevelManager({
             />
 
             <p className="text-xs text-muted-foreground">
-              Current value represents{" "}
-              {Number.isFinite(editingThreshold)
-                ? Math.round(editingThreshold * 100)
-                : 0}
-              % mastery.
+              {t("thresholdCurrentPercent", {
+                percent: Number.isFinite(editingThreshold)
+                  ? Math.round(editingThreshold * 100)
+                  : 0,
+              })}
             </p>
           </div>
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={updateLevel.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -478,7 +485,7 @@ export function LearningObjectiveConceptLevelManager({
             >
               {updateLevel.isPending && <Loader2 className="animate-spin" />}
 
-              {updateLevel.isPending ? "Saving..." : "Save threshold"}
+              {updateLevel.isPending ? tLO("actions.saving") : t("saveThreshold")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -494,12 +501,14 @@ export function LearningObjectiveConceptLevelManager({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove SOLO level?</AlertDialogTitle>
+            <AlertDialogTitle>{tLO("dialog.deleteLevelTitle")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {removeTarget
-                ? `Remove ${removeTarget.solo_level.code} from this concept's configured progression? The global SOLO level itself will not be deleted.`
-                : "Remove this configured SOLO level?"}
+                ? tLO("dialog.deleteLevelDescription", {
+                    code: removeTarget.solo_level.code,
+                  })
+                : tLO("dialog.deleteLevelTitle")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -508,14 +517,14 @@ export function LearningObjectiveConceptLevelManager({
               <AlertDescription>
                 {removeLevel.error instanceof Error
                   ? removeLevel.error.message
-                  : "Unable to remove SOLO level."}
+                  : tErrors("removeSoloLevel")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={removeLevel.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -540,7 +549,7 @@ export function LearningObjectiveConceptLevelManager({
             >
               {removeLevel.isPending && <Loader2 className="animate-spin" />}
 
-              {removeLevel.isPending ? "Removing..." : "Remove level"}
+              {removeLevel.isPending ? tLO("dialog.removing") : tLO("dialog.confirmRemove")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

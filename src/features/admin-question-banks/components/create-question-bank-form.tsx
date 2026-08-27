@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -57,6 +58,9 @@ const createQuestionBankSchema = z.object({
 type CreateQuestionBankFormValues = z.infer<typeof createQuestionBankSchema>;
 
 export function CreateQuestionBankForm() {
+  const t = useTranslations("admin.questionBanks.form");
+  const tErrors = useTranslations("admin.errors");
+
   const createQuestionBank = useCreateQuestionBank();
 
   const coursesQuery = useAdminCourses({
@@ -97,7 +101,7 @@ export function CreateQuestionBankForm() {
     createQuestionBank.error instanceof ApiError
       ? createQuestionBank.error.message
       : createQuestionBank.isError
-        ? "Unable to create question bank."
+        ? tErrors("createQuestionBank")
         : null;
 
   const selectedCourseId = useWatch({
@@ -117,10 +121,10 @@ export function CreateQuestionBankForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Question Bank</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
 
         <CardDescription>
-          Create a reusable question pool for a course.
+          {t("description")}
         </CardDescription>
       </CardHeader>
 
@@ -128,14 +132,14 @@ export function CreateQuestionBankForm() {
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field data-invalid={!!form.formState.errors.course_id}>
-              <FieldLabel>Course</FieldLabel>
+              <FieldLabel>{t("course")}</FieldLabel>
 
               {coursesQuery.isError ? (
                 <Alert variant="destructive">
                   <AlertDescription>
                     {coursesQuery.error instanceof Error
                       ? coursesQuery.error.message
-                      : "Unable to load courses."}
+                      : tErrors("loadCourses")}
                   </AlertDescription>
                 </Alert>
               ) : (
@@ -159,10 +163,10 @@ export function CreateQuestionBankForm() {
                   >
                     <span className="truncate">
                       {coursesQuery.isPending
-                        ? "Loading courses..."
+                        ? t("loadingCourses")
                         : selectedCourse
                           ? `${selectedCourse.code} — ${selectedCourse.title}`
-                          : "Select a course"}
+                          : t("selectCourse")}
                     </span>
                   </SelectTrigger>
 
@@ -180,29 +184,29 @@ export function CreateQuestionBankForm() {
             </Field>
 
             <Field data-invalid={!!form.formState.errors.code}>
-              <FieldLabel htmlFor="question-bank-code">Code</FieldLabel>
+              <FieldLabel htmlFor="question-bank-code">{t("code")}</FieldLabel>
 
               <Input
                 id="question-bank-code"
-                placeholder="conceptual-review"
+                placeholder={t("codePlaceholder")}
                 disabled={createQuestionBank.isPending}
                 aria-invalid={!!form.formState.errors.code}
                 {...form.register("code")}
               />
 
               <FieldDescription>
-                Unique within the selected course. Maximum 50 characters.
+                {t("codeDescription")}
               </FieldDescription>
 
               <FieldError errors={[form.formState.errors.code]} />
             </Field>
 
             <Field data-invalid={!!form.formState.errors.name}>
-              <FieldLabel htmlFor="question-bank-name">Name</FieldLabel>
+              <FieldLabel htmlFor="question-bank-name">{t("name")}</FieldLabel>
 
               <Input
                 id="question-bank-name"
-                placeholder="Conceptual Review Bank"
+                placeholder={t("namePlaceholder")}
                 disabled={createQuestionBank.isPending}
                 aria-invalid={!!form.formState.errors.name}
                 {...form.register("name")}
@@ -213,12 +217,12 @@ export function CreateQuestionBankForm() {
 
             <Field>
               <FieldLabel htmlFor="question-bank-description">
-                Description
+                {t("formDescription")}
               </FieldLabel>
 
               <Textarea
                 id="question-bank-description"
-                placeholder="Optional description of this question bank."
+                placeholder={t("descriptionPlaceholder")}
                 disabled={createQuestionBank.isPending}
                 {...form.register("description")}
               />
@@ -227,12 +231,11 @@ export function CreateQuestionBankForm() {
             <Field orientation="horizontal">
               <div className="flex-1">
                 <FieldLabel htmlFor="student-selectable">
-                  Student selectable
+                  {t("studentSelectable")}
                 </FieldLabel>
 
                 <FieldDescription>
-                  Allow students to choose this bank when an assessment supports
-                  question-bank selection.
+                  {t("studentSelectableDescription")}
                 </FieldDescription>
               </div>
 
@@ -270,8 +273,8 @@ export function CreateQuestionBankForm() {
             )}
 
             {createQuestionBank.isPending
-              ? "Creating..."
-              : "Create question bank"}
+              ? t("creating")
+              : t("create")}
           </Button>
         </form>
       </CardContent>

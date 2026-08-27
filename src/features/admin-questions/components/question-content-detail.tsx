@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { CheckCircle2, Shuffle } from "lucide-react";
 
 import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
@@ -11,6 +12,8 @@ interface QuestionContentDetailProps {
 export function QuestionContentDetail({
   question,
 }: QuestionContentDetailProps) {
+  const t = useTranslations("admin.questions.detail");
+
   if (question.content.type === "mcq") {
     const options = [...question.content.options].sort(
       (left, right) => left.display_order - right.display_order,
@@ -19,12 +22,12 @@ export function QuestionContentDetail({
     return (
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="font-medium">Multiple-choice options</p>
+          <p className="font-medium">{t("mcqTitle")}</p>
 
           {question.content.is_option_shuffled && (
             <Badge variant="outline">
               <Shuffle />
-              Options shuffled
+              {t("optionsShuffled")}
             </Badge>
           )}
         </div>
@@ -46,7 +49,7 @@ export function QuestionContentDetail({
               {option.is_correct && (
                 <Badge>
                   <CheckCircle2 />
-                  Correct
+                  {t("correct")}
                 </Badge>
               )}
             </div>
@@ -59,7 +62,7 @@ export function QuestionContentDetail({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="font-medium">Rubric</p>
+        <p className="font-medium">{t("rubric")}</p>
 
         <div className="rounded-lg border bg-muted/10 p-4">
           <AtlasRichTextViewer value={question.content.rubric} />
@@ -67,7 +70,7 @@ export function QuestionContentDetail({
       </div>
 
       <div className="space-y-2">
-        <p className="font-medium">Ideal answer</p>
+        <p className="font-medium">{t("idealAnswer")}</p>
 
         <div className="rounded-lg border bg-muted/10 p-4">
           <AtlasRichTextViewer value={question.content.ideal_answer} />

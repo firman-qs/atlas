@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -26,6 +27,7 @@ import {
   formatAcademicSemester,
   isAcademicSemester,
 } from "@/features/admin-academic-terms/semester";
+import type { AcademicSemester } from "@/features/admin-academic-terms/types";
 import { ApiError } from "@/lib/api/api-error";
 
 const createAcademicTermSchema = z
@@ -67,6 +69,15 @@ export function CreateAcademicTermForm({
   onCreated,
   onCancel,
 }: CreateAcademicTermFormProps) {
+  const t = useTranslations("admin.academicTerms");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
+  function getSemesterLabel(semester: AcademicSemester) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
+
   const createAcademicTerm = useCreateAdminAcademicTerm();
 
   const form = useForm<CreateAcademicTermFormValues>({
@@ -110,14 +121,14 @@ export function CreateAcademicTermForm({
     createAcademicTerm.error instanceof ApiError
       ? createAcademicTerm.error.message
       : createAcademicTerm.isError
-        ? "Unable to create academic term."
+        ? tErrors("createAcademicTerm")
         : null;
 
   return (
     <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field data-invalid={!!form.formState.errors.year}>
-          <FieldLabel htmlFor="academic-term-year">Year</FieldLabel>
+          <FieldLabel htmlFor="academic-term-year">{t("labels.year")}</FieldLabel>
 
           <Input
             id="academic-term-year"
@@ -135,7 +146,7 @@ export function CreateAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.semester}>
-          <FieldLabel>Semester</FieldLabel>
+          <FieldLabel>{t("labels.semester")}</FieldLabel>
 
           <Select
             value={selectedSemester}
@@ -151,16 +162,16 @@ export function CreateAcademicTermForm({
           >
             <SelectTrigger
               className="w-full"
-              aria-label="Academic term semester"
+              aria-label={t("semesterAria")}
               aria-invalid={!!form.formState.errors.semester}
             >
-              <span>{formatAcademicSemester(selectedSemester)}</span>
+              <span>{getSemesterLabel(selectedSemester)}</span>
             </SelectTrigger>
 
             <SelectContent>
               {academicSemesterOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+                  {getSemesterLabel(option.value)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -170,7 +181,7 @@ export function CreateAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.starts_at}>
-          <FieldLabel htmlFor="academic-term-start">Start date</FieldLabel>
+          <FieldLabel htmlFor="academic-term-start">{t("labels.startDate")}</FieldLabel>
 
           <Input
             id="academic-term-start"
@@ -184,7 +195,7 @@ export function CreateAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.ends_at}>
-          <FieldLabel htmlFor="academic-term-end">End date</FieldLabel>
+          <FieldLabel htmlFor="academic-term-end">{t("labels.endDate")}</FieldLabel>
 
           <Input
             id="academic-term-end"
@@ -212,7 +223,7 @@ export function CreateAcademicTermForm({
             disabled={createAcademicTerm.isPending}
             onClick={onCancel}
           >
-            Cancel
+            {common("cancel")}
           </Button>
         )}
 
@@ -220,8 +231,8 @@ export function CreateAcademicTermForm({
           {createAcademicTerm.isPending && <Loader2 className="animate-spin" />}
 
           {createAcademicTerm.isPending
-            ? "Creating..."
-            : "Create academic term"}
+            ? t("actions.creating")
+            : t("actions.create")}
         </Button>
       </div>
     </form>

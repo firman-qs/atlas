@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   ArrowDownAZ,
   BookOpen,
@@ -53,6 +54,9 @@ function CourseListSkeleton() {
 }
 
 export function AdminCourseManager() {
+  const t = useTranslations("admin.courses");
+  const tErrors = useTranslations("admin.errors");
+
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
@@ -88,23 +92,23 @@ export function AdminCourseManager() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Courses</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage ATLAS courses and their curriculum.
+            {t("description")}
           </p>
         </div>
 
         <Button onClick={() => setShowCreateForm((current) => !current)}>
           <Plus />
-          {showCreateForm ? "Close form" : "Create course"}
+          {showCreateForm ? t("closeForm") : t("createCourse")}
         </Button>
       </div>
 
       {showCreateForm && (
         <Card>
           <CardHeader>
-            <CardTitle>Create course</CardTitle>
+            <CardTitle>{t("createCourse")}</CardTitle>
           </CardHeader>
 
           <CardContent>
@@ -118,7 +122,7 @@ export function AdminCourseManager() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Course catalog</CardTitle>
+          <CardTitle>{t("catalog")}</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -129,7 +133,7 @@ export function AdminCourseManager() {
               <Input
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Search by code or title..."
+                placeholder={t("searchPlaceholder")}
                 className="pl-8"
               />
             </div>
@@ -149,17 +153,17 @@ export function AdminCourseManager() {
               <SelectTrigger className="w-full">
                 <span>
                   {activeFilter === "all"
-                    ? "All statuses"
+                    ? t("allStatuses")
                     : activeFilter === "active"
-                      ? "Active"
-                      : "Inactive"}
+                      ? t("active")
+                      : t("inactive")}
                 </span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All statuses</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="all">{t("allStatuses")}</SelectItem>
+                <SelectItem value="active">{t("active")}</SelectItem>
+                <SelectItem value="inactive">{t("inactive")}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -178,17 +182,17 @@ export function AdminCourseManager() {
               <SelectTrigger className="w-full">
                 <span>
                   {sort === "code"
-                    ? "Sort by code"
+                    ? t("sortByCode")
                     : sort === "title"
-                      ? "Sort by title"
-                      : "Sort by credits"}
+                      ? t("sortByTitle")
+                      : t("sortByCredits")}
                 </span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="code">Sort by code</SelectItem>
-                <SelectItem value="title">Sort by title</SelectItem>
-                <SelectItem value="credits">Sort by credits</SelectItem>
+                <SelectItem value="code">{t("sortByCode")}</SelectItem>
+                <SelectItem value="title">{t("sortByTitle")}</SelectItem>
+                <SelectItem value="credits">{t("sortByCredits")}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -199,7 +203,7 @@ export function AdminCourseManager() {
               }
             >
               <ArrowDownAZ />
-              {order === "asc" ? "Ascending" : "Descending"}
+              {order === "asc" ? t("ascending") : t("descending")}
             </Button>
           </div>
 
@@ -208,7 +212,7 @@ export function AdminCourseManager() {
               <AlertDescription>
                 {coursesQuery.error instanceof Error
                   ? coursesQuery.error.message
-                  : "Unable to load courses."}
+                  : tErrors("loadCourses")}
               </AlertDescription>
             </Alert>
           )}
@@ -221,10 +225,10 @@ export function AdminCourseManager() {
                 <BookOpen className="size-5 text-muted-foreground" />
               </div>
 
-              <h2 className="mt-4 text-lg font-semibold">No courses found</h2>
+              <h2 className="mt-4 text-lg font-semibold">{t("noCourses")}</h2>
 
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                No courses match the current search and filters.
+                {t("noCoursesDescription")}
               </p>
             </div>
           ) : (
@@ -237,9 +241,9 @@ export function AdminCourseManager() {
                         <Badge variant="outline">{course.code}</Badge>
 
                         {course.is_active ? (
-                          <Badge>Active</Badge>
+                          <Badge>{t("active")}</Badge>
                         ) : (
-                          <Badge variant="secondary">Inactive</Badge>
+                          <Badge variant="secondary">{t("inactive")}</Badge>
                         )}
                       </div>
 
@@ -253,8 +257,7 @@ export function AdminCourseManager() {
 
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-sm text-muted-foreground">
-                          {course.credits} credit
-                          {course.credits === 1 ? "" : "s"}
+                          {t("credits", { count: course.credits })}
                         </p>
 
                         <Button
@@ -263,7 +266,7 @@ export function AdminCourseManager() {
                           size="sm"
                           render={<Link href={`/admin/courses/${course.id}`} />}
                         >
-                          Manage
+                          {t("manage")}
                           <ChevronRight />
                         </Button>
                       </div>
@@ -273,8 +276,10 @@ export function AdminCourseManager() {
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Showing {courses.length} of {totalCourses} course
-                {totalCourses === 1 ? "" : "s"}.
+                {t("showingCount", {
+                  count: courses.length,
+                  total: totalCourses,
+                })}
               </p>
             </div>
           )}

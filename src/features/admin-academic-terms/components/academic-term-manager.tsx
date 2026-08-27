@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CalendarDays, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -65,19 +66,28 @@ function AcademicTermCard({
   academicTerm: AdminAcademicTerm;
   onEdit: () => void;
 }) {
-  const deleteAcademicTerm = useDeleteAdminAcademicTerm(academicTerm.id);
+  const t = useTranslations("admin.academicTerms");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
 
+  const deleteAcademicTerm = useDeleteAdminAcademicTerm(academicTerm.id);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  function getSemesterLabel(semester: AcademicSemester) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
 
   async function handleDelete() {
     try {
       await deleteAcademicTerm.mutateAsync();
-
       setDeleteOpen(false);
     } catch {
       // Mutation error is rendered in the dialog.
     }
   }
+
+  const formattedSemester = getSemesterLabel(academicTerm.semester);
 
   return (
     <>
@@ -87,11 +97,11 @@ function AcademicTermCard({
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-medium">
-                  {formatAcademicSemester(academicTerm.semester)}{" "}
+                  {formattedSemester}{" "}
                   {academicTerm.year}
                 </p>
 
-                <Badge variant="outline">{academicTerm.semester}</Badge>
+                <Badge variant="outline">{formattedSemester}</Badge>
               </div>
 
               <p className="mt-1 text-sm text-muted-foreground">
@@ -105,12 +115,13 @@ function AcademicTermCard({
                 size="sm"
                 variant="outline"
                 onClick={onEdit}
-                aria-label={`Edit ${formatAcademicSemester(
-                  academicTerm.semester,
-                )} ${academicTerm.year}`}
+                aria-label={t("actions.editAria", {
+                  semester: formattedSemester,
+                  year: academicTerm.year,
+                })}
               >
                 <Pencil />
-                Edit
+                {t("actions.edit")}
               </Button>
 
               <Button
@@ -121,12 +132,13 @@ function AcademicTermCard({
                   deleteAcademicTerm.reset();
                   setDeleteOpen(true);
                 }}
-                aria-label={`Delete ${formatAcademicSemester(
-                  academicTerm.semester,
-                )} ${academicTerm.year}`}
+                aria-label={t("actions.deleteAria", {
+                  semester: formattedSemester,
+                  year: academicTerm.year,
+                })}
               >
                 <Trash2 />
-                Delete
+                {t("actions.delete")}
               </Button>
             </div>
           </div>
@@ -147,12 +159,13 @@ function AcademicTermCard({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete academic term?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              Delete {formatAcademicSemester(academicTerm.semester)}{" "}
-              {academicTerm.year}? Academic terms referenced by course offerings
-              cannot be deleted.
+              {t("dialog.description", {
+                semester: formattedSemester,
+                year: academicTerm.year,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -161,14 +174,14 @@ function AcademicTermCard({
               <AlertDescription>
                 {deleteAcademicTerm.error instanceof Error
                   ? deleteAcademicTerm.error.message
-                  : "Unable to delete academic term."}
+                  : tErrors("deleteAcademicTerm")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteAcademicTerm.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -176,7 +189,6 @@ function AcademicTermCard({
               disabled={deleteAcademicTerm.isPending}
               onClick={(event) => {
                 event.preventDefault();
-
                 void handleDelete();
               }}
             >
@@ -185,8 +197,8 @@ function AcademicTermCard({
               )}
 
               {deleteAcademicTerm.isPending
-                ? "Deleting..."
-                : "Delete academic term"}
+                ? t("dialog.deleting")
+                : t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -196,13 +208,19 @@ function AcademicTermCard({
 }
 
 export function AcademicTermManager() {
+  const t = useTranslations("admin.academicTerms");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+
   const [semesterFilter, setSemesterFilter] = useState<SemesterFilter>("all");
-
   const [showCreateForm, setShowCreateForm] = useState(false);
-
   const [editingTerm, setEditingTerm] = useState<AdminAcademicTerm | null>(
     null,
   );
+
+  function getSemesterLabel(semester: AcademicSemester) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
 
   const academicTermsQuery = useAdminAcademicTerms({
     page: 1,
@@ -217,11 +235,11 @@ export function AcademicTermManager() {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">
-            Academic Terms
+            {t("title")}
           </h1>
 
           <p className="mt-1 text-muted-foreground">
-            Manage academic periods used by ATLAS course offerings.
+            {t("description")}
           </p>
         </div>
 
@@ -233,14 +251,14 @@ export function AcademicTermManager() {
           }}
         >
           <Plus />
-          New academic term
+          {t("newTerm")}
         </Button>
       </div>
 
       {showCreateForm && (
         <Card>
           <CardHeader>
-            <CardTitle>Create Academic Term</CardTitle>
+            <CardTitle>{t("createTerm")}</CardTitle>
           </CardHeader>
 
           <CardContent>
@@ -256,8 +274,10 @@ export function AcademicTermManager() {
         <Card>
           <CardHeader>
             <CardTitle>
-              Edit {formatAcademicSemester(editingTerm.semester)}{" "}
-              {editingTerm.year}
+              {t("editTerm", {
+                semester: getSemesterLabel(editingTerm.semester),
+                year: editingTerm.year,
+              })}
             </CardTitle>
           </CardHeader>
 
@@ -273,7 +293,7 @@ export function AcademicTermManager() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Academic Term Directory</CardTitle>
+          <CardTitle>{t("directory")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -291,20 +311,20 @@ export function AcademicTermManager() {
                 }
               }}
             >
-              <SelectTrigger aria-label="Filter academic semester">
+              <SelectTrigger aria-label={t("filterAria")}>
                 <span>
                   {semesterFilter === "all"
-                    ? "All semesters"
-                    : formatAcademicSemester(semesterFilter)}
+                    ? t("allSemesters")
+                    : getSemesterLabel(semesterFilter)}
                 </span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All semesters</SelectItem>
+                <SelectItem value="all">{t("allSemesters")}</SelectItem>
 
                 {academicSemesterOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    {getSemesterLabel(option.value)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -320,7 +340,7 @@ export function AcademicTermManager() {
           <AlertDescription>
             {academicTermsQuery.error instanceof Error
               ? academicTermsQuery.error.message
-              : "Unable to load academic terms."}
+              : tErrors("loadAcademicTerms")}
           </AlertDescription>
         </Alert>
       ) : academicTerms.length === 0 ? (
@@ -331,10 +351,10 @@ export function AcademicTermManager() {
                 <CalendarDays className="size-5 text-muted-foreground" />
               </div>
 
-              <p className="mt-3 font-medium">No academic terms</p>
+              <p className="mt-3 font-medium">{t("noTerms")}</p>
 
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Create an academic term before creating course offerings.
+                {t("noTermsDescription")}
               </p>
             </div>
           </CardContent>
@@ -353,8 +373,10 @@ export function AcademicTermManager() {
           ))}
 
           <p className="text-sm text-muted-foreground">
-            Showing {academicTerms.length} of{" "}
-            {academicTermsQuery.data?.total ?? 0} academic terms.
+            {t("showingCount", {
+              count: academicTerms.length,
+              total: academicTermsQuery.data?.total ?? 0,
+            })}
           </p>
         </div>
       )}

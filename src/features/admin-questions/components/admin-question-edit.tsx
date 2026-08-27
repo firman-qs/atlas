@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -26,6 +27,9 @@ function QuestionEditSkeleton() {
 }
 
 export function AdminQuestionEdit({ questionId }: AdminQuestionEditProps) {
+  const t = useTranslations("admin.questions.detail");
+  const tErrors = useTranslations("admin.errors");
+
   const questionQuery = useAdminQuestion(questionId);
 
   const conceptId = questionQuery.data?.concept_id ?? "";
@@ -48,14 +52,14 @@ export function AdminQuestionEdit({ questionId }: AdminQuestionEditProps) {
           render={<Link href={`/admin/questions/${questionId}`} />}
         >
           <ArrowLeft />
-          Question detail
+          {t("backToDetail")}
         </Button>
 
         <Alert variant="destructive">
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Unable to load question for editing."}
+              : tErrors("loadQuestions")}
           </AlertDescription>
         </Alert>
       </div>
@@ -68,7 +72,7 @@ export function AdminQuestionEdit({ questionId }: AdminQuestionEditProps) {
   if (!question || !concept) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>Question edit data was incomplete.</AlertDescription>
+        <AlertDescription>{t("incompleteData")}</AlertDescription>
       </Alert>
     );
   }
@@ -82,12 +86,12 @@ export function AdminQuestionEdit({ questionId }: AdminQuestionEditProps) {
           render={<Link href={`/admin/questions/${questionId}`} />}
         >
           <ArrowLeft />
-          Question detail
+          {t("backToDetail")}
         </Button>
 
         <Alert>
           <AlertDescription>
-            Published questions must be unpublished before they can be edited.
+            {t("mustUnpublish")}
           </AlertDescription>
         </Alert>
       </div>
@@ -102,7 +106,7 @@ export function AdminQuestionEdit({ questionId }: AdminQuestionEditProps) {
         render={<Link href={`/admin/questions/${questionId}`} />}
       >
         <ArrowLeft />
-        Question detail
+        {t("backToDetail")}
       </Button>
 
       <EditQuestionForm question={question} courseId={concept.course_id} />

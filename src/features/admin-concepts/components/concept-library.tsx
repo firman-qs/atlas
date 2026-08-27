@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   BookOpenText,
   Loader2,
@@ -61,6 +62,10 @@ function ConceptLibrarySkeleton() {
 }
 
 export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
+  const t = useTranslations("admin.concepts");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -92,7 +97,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Concept Library</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -100,7 +105,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
             <AlertDescription>
               {conceptsQuery.error instanceof Error
                 ? conceptsQuery.error.message
-                : "Unable to load concepts."}
+                : tErrors("loadConcepts")}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -128,10 +133,10 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <CardTitle>Concept Library</CardTitle>
+            <CardTitle>{t("title")}</CardTitle>
 
             <p className="text-sm text-muted-foreground">
-              Manage reusable concepts defined for this course.
+              {t("description")}
             </p>
           </div>
 
@@ -141,7 +146,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
           >
             <Plus />
 
-            {isCreating ? "Close form" : "Create concept"}
+            {isCreating ? t("closeForm") : t("createConcept")}
           </Button>
         </div>
       </CardHeader>
@@ -161,7 +166,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
           <Input
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
-            placeholder="Search concepts by code or name..."
+            placeholder={t("searchPlaceholder")}
             className="pl-8"
           />
         </div>
@@ -173,13 +178,13 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
             </div>
 
             <p className="mt-3 font-medium">
-              {search ? "No matching concepts" : "No concepts yet"}
+              {search ? t("noMatching") : t("noConcepts")}
             </p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
               {search
-                ? "No course concepts match the current search."
-                : "Create the first reusable concept for this course."}
+                ? t("noMatchingDescription")
+                : t("noConceptsDescription")}
             </p>
           </div>
         ) : (
@@ -216,7 +221,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
                         onClick={() => setEditingId(concept.id)}
                       >
                         <Pencil />
-                        Edit
+                        {t("actions.edit")}
                       </Button>
 
                       <Button
@@ -228,7 +233,7 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
                         }}
                       >
                         <Trash2 />
-                        Delete
+                        {t("actions.delete")}
                       </Button>
                     </div>
                   </div>
@@ -237,8 +242,10 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
             ))}
 
             <p className="text-sm text-muted-foreground">
-              Showing {concepts.length} of {conceptsQuery.data.total} concept
-              {conceptsQuery.data.total === 1 ? "" : "s"}.
+              {t("showingCount", {
+                count: concepts.length,
+                total: conceptsQuery.data.total,
+              })}
             </p>
           </div>
         )}
@@ -254,12 +261,15 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete concept?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {deleteTarget
-                ? `This permanently deletes ${deleteTarget.code} — ${deleteTarget.name} from the course concept library. This is different from detaching the concept from a single learning objective.`
-                : "This concept will be permanently deleted."}
+                ? t("dialog.description", {
+                    code: deleteTarget.code,
+                    name: deleteTarget.name,
+                  })
+                : t("dialog.title")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -268,14 +278,14 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
               <AlertDescription>
                 {deleteConcept.error instanceof Error
                   ? deleteConcept.error.message
-                  : "Unable to delete concept."}
+                  : tErrors("deleteConcept")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteConcept.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -288,7 +298,9 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
             >
               {deleteConcept.isPending && <Loader2 className="animate-spin" />}
 
-              {deleteConcept.isPending ? "Deleting..." : "Delete concept"}
+              {deleteConcept.isPending
+                ? t("dialog.deleting")
+                : t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

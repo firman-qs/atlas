@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,6 +43,13 @@ function optionalText(value: string): string | null {
 }
 
 export function CreateQuestionForm() {
+  const t = useTranslations("admin.questions");
+  const tForm = useTranslations("admin.questions.form");
+  const tPlacement = useTranslations("admin.questions.placement");
+  const tDetail = useTranslations("admin.questions.detail");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const [initialOptions] = useState(() => [
     createEmptyMcqOption(),
     createEmptyMcqOption(),
@@ -165,27 +173,25 @@ export function CreateQuestionForm() {
         render={<Link href="/admin/questions" />}
       >
         <ArrowLeft />
-        Questions
+        {tDetail("backToQuestions")}
       </Button>
 
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">
-          Create Question
+          {tForm("createTitle")}
         </h1>
 
         <p className="mt-1 text-muted-foreground">
-          Create a draft assessment question for a configured curriculum
-          location.
+          {tForm("createDescription")}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Curriculum Placement</CardTitle>
+          <CardTitle>{tPlacement("title")}</CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            Select the exact learning objective, concept, and configured SOLO
-            level this question assesses.
+            {tPlacement("description")}
           </p>
         </CardHeader>
 
@@ -223,7 +229,7 @@ export function CreateQuestionForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Question Type</CardTitle>
+          <CardTitle>{tForm("typeTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -241,32 +247,32 @@ export function CreateQuestionForm() {
             >
               <SelectTrigger className="w-full">
                 <span>
-                  {questionType === "mcq" ? "Multiple choice" : "Essay"}
+                  {questionType === "mcq" ? t("types.mcq") : t("types.essay")}
                 </span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="mcq">Multiple choice</SelectItem>
+                <SelectItem value="mcq">{t("types.mcq")}</SelectItem>
 
-                <SelectItem value="essay">Essay</SelectItem>
+                <SelectItem value="essay">{t("types.essay")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <p className="mt-3 text-sm text-muted-foreground">
             {questionType === "mcq"
-              ? "Students select exactly one correct answer."
-              : "Student responses are evaluated against a rubric and ideal answer."}
+              ? tForm("mcqDescription")
+              : tForm("essayDescription")}
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Question Content</CardTitle>
+          <CardTitle>{tForm("contentTitle")}</CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            Author the student-facing prompt and supporting feedback.
+            {tForm("contentDescription")}
           </p>
         </CardHeader>
 
@@ -283,10 +289,10 @@ export function CreateQuestionForm() {
       {questionType === "mcq" && (
         <Card>
           <CardHeader>
-            <CardTitle>Multiple Choice</CardTitle>
+            <CardTitle>{tForm("mcqTitle")}</CardTitle>
 
             <p className="text-sm text-muted-foreground">
-              Configure answer options and identify the single correct answer.
+              {tForm("mcqDescriptionSection")}
             </p>
           </CardHeader>
 
@@ -304,10 +310,10 @@ export function CreateQuestionForm() {
       {questionType === "essay" && (
         <Card>
           <CardHeader>
-            <CardTitle>Essay Evaluation</CardTitle>
+            <CardTitle>{tForm("essayTitle")}</CardTitle>
 
             <p className="text-sm text-muted-foreground">
-              Define the evaluation rubric and representative ideal response.
+              {tForm("essayDescriptionSection")}
             </p>
           </CardHeader>
 
@@ -326,7 +332,7 @@ export function CreateQuestionForm() {
           <AlertDescription>
             {createQuestion.error instanceof Error
               ? createQuestion.error.message
-              : "Unable to create question."}
+              : tErrors("createQuestion")}
           </AlertDescription>
         </Alert>
       )}
@@ -339,12 +345,12 @@ export function CreateQuestionForm() {
           disabled={createQuestion.isPending}
           render={<Link href="/admin/questions" />}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={createQuestion.isPending}>
           {createQuestion.isPending && <Loader2 className="animate-spin" />}
-          {createQuestion.isPending ? "Saving..." : "Save draft"}
+          {createQuestion.isPending ? tForm("saving") : tForm("saveDraft")}
         </Button>
       </div>
     </form>

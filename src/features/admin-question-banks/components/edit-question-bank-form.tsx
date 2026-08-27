@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -52,6 +53,10 @@ export function EditQuestionBankForm({
   onCancel,
   onSaved,
 }: EditQuestionBankFormProps) {
+  const t = useTranslations("admin.questionBanks.form");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const updateQuestionBank = useUpdateQuestionBank(bank.id);
 
   const form = useForm<EditQuestionBankFormValues>({
@@ -89,14 +94,14 @@ export function EditQuestionBankForm({
     updateQuestionBank.error instanceof ApiError
       ? updateQuestionBank.error.message
       : updateQuestionBank.isError
-        ? "Unable to update question bank."
+        ? tErrors("updateQuestionBank")
         : null;
 
   return (
     <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field data-invalid={!!form.formState.errors.code}>
-          <FieldLabel htmlFor="edit-bank-code">Code</FieldLabel>
+          <FieldLabel htmlFor="edit-bank-code">{t("code")}</FieldLabel>
 
           <Input
             id="edit-bank-code"
@@ -109,7 +114,7 @@ export function EditQuestionBankForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.name}>
-          <FieldLabel htmlFor="edit-bank-name">Name</FieldLabel>
+          <FieldLabel htmlFor="edit-bank-name">{t("name")}</FieldLabel>
 
           <Input
             id="edit-bank-name"
@@ -122,7 +127,7 @@ export function EditQuestionBankForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="edit-bank-description">Description</FieldLabel>
+          <FieldLabel htmlFor="edit-bank-description">{t("formDescription")}</FieldLabel>
 
           <Textarea
             id="edit-bank-description"
@@ -134,12 +139,11 @@ export function EditQuestionBankForm({
         <Field orientation="horizontal">
           <div className="flex-1">
             <FieldLabel htmlFor="edit-student-selectable">
-              Student selectable
+              {t("studentSelectable")}
             </FieldLabel>
 
             <FieldDescription>
-              Allow students to select this question bank for supported
-              assessments.
+              {t("studentSelectableEditDescription")}
             </FieldDescription>
           </div>
 
@@ -169,7 +173,7 @@ export function EditQuestionBankForm({
           onClick={onCancel}
           disabled={updateQuestionBank.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button
@@ -178,7 +182,7 @@ export function EditQuestionBankForm({
         >
           {updateQuestionBank.isPending && <Loader2 className="animate-spin" />}
 
-          {updateQuestionBank.isPending ? "Saving..." : "Save changes"}
+          {updateQuestionBank.isPending ? t("saving") : t("save")}
         </Button>
       </div>
     </form>

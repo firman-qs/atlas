@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "@/test/render";
 import { describe, expect, it, vi } from "vitest";
 
 import { AdminQuestionEdit } from "@/features/admin-questions/components/admin-question-edit";

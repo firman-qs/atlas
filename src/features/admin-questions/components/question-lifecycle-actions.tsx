@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Pencil, Send, Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,6 +32,10 @@ interface QuestionLifecycleActionsProps {
 export function QuestionLifecycleActions({
   question,
 }: QuestionLifecycleActionsProps) {
+  const t = useTranslations("admin.questions.lifecycle");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -72,7 +77,7 @@ export function QuestionLifecycleActions({
           <AlertDescription>
             {lifecycleError instanceof Error
               ? lifecycleError.message
-              : "Unable to change question status."}
+              : tErrors("questionStatusChange")}
           </AlertDescription>
         </Alert>
       )}
@@ -86,7 +91,7 @@ export function QuestionLifecycleActions({
             render={<Link href={`/admin/questions/${question.id}/edit`} />}
           >
             <Pencil />
-            Edit question
+            {t("editQuestion")}
           </Button>
         )}
         <Button
@@ -104,11 +109,11 @@ export function QuestionLifecycleActions({
 
           {lifecyclePending
             ? question.status === "published"
-              ? "Unpublishing..."
-              : "Publishing..."
+              ? t("unpublishing")
+              : t("publishing")
             : question.status === "published"
-              ? "Unpublish"
-              : "Publish"}
+              ? t("unpublish")
+              : t("publish")}
         </Button>
 
         {question.status === "draft" && (
@@ -121,7 +126,7 @@ export function QuestionLifecycleActions({
             disabled={lifecyclePending || deleteQuestion.isPending}
           >
             <Trash2 />
-            Delete question
+            {t("deleteQuestion")}
           </Button>
         )}
       </div>
@@ -136,12 +141,10 @@ export function QuestionLifecycleActions({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete question?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
 
             <AlertDialogDescription>
-              This will permanently delete this draft question and its
-              question-specific content. This action cannot be undone and may
-              fail if the question is referenced by dependent assessment data.
+              {t("dialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -150,14 +153,14 @@ export function QuestionLifecycleActions({
               <AlertDescription>
                 {deleteQuestion.error instanceof Error
                   ? deleteQuestion.error.message
-                  : "Unable to delete question."}
+                  : tErrors("deleteQuestion")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteQuestion.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -171,8 +174,8 @@ export function QuestionLifecycleActions({
               {deleteQuestion.isPending && <Loader2 className="animate-spin" />}
 
               {deleteQuestion.isPending
-                ? "Deleting..."
-                : "Delete question permanently"}
+                ? t("dialog.deleting")
+                : t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

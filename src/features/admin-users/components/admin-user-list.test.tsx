@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminUserList } from "@/features/admin-users/components/admin-user-list";

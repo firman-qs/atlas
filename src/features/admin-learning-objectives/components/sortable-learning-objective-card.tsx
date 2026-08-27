@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
@@ -22,6 +23,9 @@ export function SortableLearningObjectiveCard({
   onEdit,
   onDelete,
 }: SortableLearningObjectiveCardProps) {
+  const t = useTranslations("admin.learningObjectives");
+  const common = useTranslations("common");
+
   const {
     attributes,
     listeners,
@@ -54,7 +58,7 @@ export function SortableLearningObjectiveCard({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={`Reorder ${learningObjective.code}`}
+            aria-label={t("reorderAria", { code: learningObjective.code })}
             disabled={disabled}
             className="cursor-grab touch-none active:cursor-grabbing"
             {...attributes}
@@ -70,7 +74,7 @@ export function SortableLearningObjectiveCard({
               </Badge>
 
               <Badge variant="secondary">
-                Order {learningObjective.display_order}
+                {t("order", { order: learningObjective.display_order })}
               </Badge>
             </div>
 
@@ -88,7 +92,7 @@ export function SortableLearningObjectiveCard({
             disabled={disabled}
           >
             <Pencil />
-            Edit
+            {common("edit")}
           </Button>
 
           <Button
@@ -98,7 +102,7 @@ export function SortableLearningObjectiveCard({
             disabled={disabled}
           >
             <Trash2 />
-            Delete
+            {common("delete")}
           </Button>
         </div>
       </div>

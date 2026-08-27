@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -41,6 +42,10 @@ export function CreateConceptForm({
   onCancel,
   onCreated,
 }: CreateConceptFormProps) {
+  const t = useTranslations("admin.concepts");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const createConcept = useCreateConcept(courseId);
 
   const form = useForm<CreateConceptFormValues>({
@@ -77,14 +82,14 @@ export function CreateConceptForm({
           <AlertDescription>
             {createConcept.error instanceof Error
               ? createConcept.error.message
-              : "Unable to create concept."}
+              : tErrors("createConcept")}
           </AlertDescription>
         </Alert>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="concept-code">Code</Label>
+          <Label htmlFor="concept-code">{t("labels.code")}</Label>
 
           <Input
             id="concept-code"
@@ -101,7 +106,7 @@ export function CreateConceptForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="concept-name">Name</Label>
+          <Label htmlFor="concept-name">{t("labels.name")}</Label>
 
           <Input
             id="concept-name"
@@ -119,7 +124,7 @@ export function CreateConceptForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="concept-description">Description</Label>
+        <Label htmlFor="concept-description">{t("labels.description")}</Label>
 
         <Textarea
           id="concept-description"
@@ -143,13 +148,13 @@ export function CreateConceptForm({
           onClick={onCancel}
           disabled={createConcept.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={createConcept.isPending}>
           {createConcept.isPending && <Loader2 className="animate-spin" />}
 
-          {createConcept.isPending ? "Creating..." : "Create concept"}
+          {createConcept.isPending ? t("actions.creating") : t("actions.create")}
         </Button>
       </div>
     </form>

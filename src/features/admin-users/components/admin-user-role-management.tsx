@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2, Minus, Plus } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -27,28 +28,29 @@ const roles: AdminUserRole[] = [
   "admin",
 ];
 
-function formatRole(role: AdminUserRole) {
-  return role.charAt(0).toUpperCase() + role.slice(1);
-}
-
-function roleDescription(role: AdminUserRole) {
-  switch (role) {
-    case "admin":
-      return "Administrative access to ATLAS management features.";
-
-    case "instructor":
-      return "Instructor access to owned course offerings and student learning evidence.";
-
-    case "student":
-      return "Student access to enrolled courses and formative assessments.";
-  }
-}
-
 export function AdminUserRoleManagement({
   user,
 }: AdminUserRoleManagementProps) {
+  const tRoles = useTranslations("admin.users.roles");
+  const tRoleDesc = useTranslations("admin.users.roleDescriptions");
+  const tDetail = useTranslations("admin.users.detail");
+  const tRoleMgmt = useTranslations("admin.users.roleManagement");
+  const tErrors = useTranslations("admin.errors");
+
   const assignRole = useAssignAdminUserRole(user.id);
   const removeRole = useRemoveAdminUserRole(user.id);
+
+  function formatRole(role: AdminUserRole) {
+    if (role === "admin") return tRoles("admin");
+    if (role === "instructor") return tRoles("instructor");
+    return tRoles("student");
+  }
+
+  function roleDescription(role: AdminUserRole) {
+    if (role === "admin") return tRoleDesc("admin");
+    if (role === "instructor") return tRoleDesc("instructor");
+    return tRoleDesc("student");
+  }
 
   const mutationError =
     assignRole.isError
@@ -63,7 +65,7 @@ export function AdminUserRoleManagement({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Role Management</CardTitle>
+        <CardTitle>{tRoleMgmt("title")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -72,7 +74,7 @@ export function AdminUserRoleManagement({
             <AlertDescription>
               {mutationError instanceof Error
                 ? mutationError.message
-                : "Unable to update user role."}
+                : tErrors("updateUserRole")}
             </AlertDescription>
           </Alert>
         )}
@@ -108,8 +110,8 @@ export function AdminUserRoleManagement({
                       }
                     >
                       {assigned
-                        ? "Assigned"
-                        : "Not assigned"}
+                        ? tDetail("assigned")
+                        : tDetail("notAssigned")}
                     </Badge>
                   </div>
 
@@ -124,7 +126,7 @@ export function AdminUserRoleManagement({
                     variant="outline"
                     size="sm"
                     disabled={mutationPending}
-                    aria-label={`Remove ${role} role`}
+                    aria-label={tRoleMgmt("removeRoleAria", { role: formatRole(role) })}
                     onClick={() => {
                       assignRole.reset();
                       removeRole.reset();
@@ -137,7 +139,7 @@ export function AdminUserRoleManagement({
                       <Minus />
                     )}
 
-                    Remove
+                    {tRoleMgmt("remove")}
                   </Button>
                 ) : (
                   <Button
@@ -145,7 +147,7 @@ export function AdminUserRoleManagement({
                     variant="outline"
                     size="sm"
                     disabled={mutationPending}
-                    aria-label={`Assign ${role} role`}
+                    aria-label={tRoleMgmt("assignRoleAria", { role: formatRole(role) })}
                     onClick={() => {
                       assignRole.reset();
                       removeRole.reset();
@@ -158,7 +160,7 @@ export function AdminUserRoleManagement({
                       <Plus />
                     )}
 
-                    Assign
+                    {tRoleMgmt("assign")}
                   </Button>
                 )}
               </div>

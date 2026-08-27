@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,9 @@ function QuestionBankListSkeleton() {
 }
 
 export function QuestionBankList() {
+  const t = useTranslations("admin.questionBanks");
+  const tErrors = useTranslations("admin.errors");
+
   const questionBanksQuery = useQuestionBanks({
     page: 1,
     pageSize: 20,
@@ -46,7 +50,7 @@ export function QuestionBankList() {
         <AlertDescription>
           {questionBanksQuery.error instanceof Error
             ? questionBanksQuery.error.message
-            : "Unable to load question banks."}
+            : tErrors("loadQuestionBanks")}
         </AlertDescription>
       </Alert>
     );
@@ -61,11 +65,10 @@ export function QuestionBankList() {
           <Library className="size-5 text-muted-foreground" />
         </div>
 
-        <h2 className="mt-4 text-lg font-semibold">No question banks yet</h2>
+        <h2 className="mt-4 text-lg font-semibold">{t("noBanks")}</h2>
 
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
-          Create a question bank to organize assessment questions into
-          controlled question pools.
+          {t("noBanksDescription")}
         </p>
       </div>
     );
@@ -81,9 +84,9 @@ export function QuestionBankList() {
                 <Badge variant="outline">{bank.code}</Badge>
 
                 {bank.is_student_selectable ? (
-                  <Badge>Student selectable</Badge>
+                  <Badge>{t("studentSelectable")}</Badge>
                 ) : (
-                  <Badge variant="secondary">Admin only</Badge>
+                  <Badge variant="secondary">{t("adminOnly")}</Badge>
                 )}
               </div>
 
@@ -92,7 +95,7 @@ export function QuestionBankList() {
 
             <CardContent className="space-y-4">
               <p className="min-h-10 text-sm text-muted-foreground">
-                {bank.description ?? "No description provided."}
+                {bank.description ?? t("noDescription")}
               </p>
 
               <Button
@@ -101,7 +104,7 @@ export function QuestionBankList() {
                 nativeButton={false}
                 render={<Link href={`/admin/question-banks/${bank.id}`} />}
               >
-                Open bank
+                {t("openBank")}
               </Button>
             </CardContent>
           </Card>
@@ -109,8 +112,10 @@ export function QuestionBankList() {
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Showing {questionBanks.length} of {questionBanksQuery.data.total}{" "}
-        question bank{questionBanksQuery.data.total === 1 ? "" : "s"}.
+        {t("showingCount", {
+          count: questionBanks.length,
+          total: questionBanksQuery.data.total,
+        })}
       </p>
     </div>
   );

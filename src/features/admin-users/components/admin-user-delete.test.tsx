@@ -4,7 +4,7 @@ import {
   screen,
   waitFor,
   within,
-} from "@testing-library/react";
+} from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminUserDelete } from "@/features/admin-users/components/admin-user-delete";

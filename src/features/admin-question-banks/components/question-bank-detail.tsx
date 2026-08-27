@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, Library, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -42,6 +43,10 @@ function QuestionBankDetailSkeleton() {
 export function QuestionBankDetail({
   questionBankId,
 }: QuestionBankDetailProps) {
+  const t = useTranslations("admin.questionBanks");
+  const tDetail = useTranslations("admin.questionBanks.detail");
+  const tErrors = useTranslations("admin.errors");
+
   const questionBankQuery = useQuestionBank(questionBankId);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -55,7 +60,7 @@ export function QuestionBankDetail({
         <AlertDescription>
           {questionBankQuery.error instanceof Error
             ? questionBankQuery.error.message
-            : "Unable to load question bank."}
+            : tErrors("loadQuestionBanks")}
         </AlertDescription>
       </Alert>
     );
@@ -71,7 +76,7 @@ export function QuestionBankDetail({
         render={<Link href="/admin/question-banks" />}
       >
         <ArrowLeft />
-        Question banks
+        {tDetail("backToBanks")}
       </Button>
 
       <Card>
@@ -84,9 +89,9 @@ export function QuestionBankDetail({
                 <Badge variant="outline">{bank.code}</Badge>
 
                 {bank.is_student_selectable ? (
-                  <Badge>Student selectable</Badge>
+                  <Badge>{t("studentSelectable")}</Badge>
                 ) : (
-                  <Badge variant="secondary">Admin only</Badge>
+                  <Badge variant="secondary">{t("adminOnly")}</Badge>
                 )}
               </div>
 
@@ -99,7 +104,7 @@ export function QuestionBankDetail({
                 onClick={() => setIsEditing((current) => !current)}
               >
                 <Pencil />
-                {isEditing ? "Close editor" : "Edit bank"}
+                {isEditing ? tDetail("closeEditor") : tDetail("editBank")}
               </Button>
 
               <DeleteQuestionBankButton bank={bank} />
@@ -117,15 +122,15 @@ export function QuestionBankDetail({
           ) : (
             <>
               <div>
-                <p className="text-sm font-medium">Description</p>
+                <p className="text-sm font-medium">{tDetail("description")}</p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {bank.description ?? "No description provided."}
+                  {bank.description ?? t("noDescription")}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-medium">Course ID</p>
+                <p className="text-sm font-medium">{tDetail("courseId")}</p>
 
                 <p className="mt-1 break-all font-mono text-sm text-muted-foreground">
                   {bank.course_id}

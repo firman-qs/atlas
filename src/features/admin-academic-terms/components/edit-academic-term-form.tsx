@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -26,7 +27,10 @@ import {
   formatAcademicSemester,
   isAcademicSemester,
 } from "@/features/admin-academic-terms/semester";
-import type { AdminAcademicTerm } from "@/features/admin-academic-terms/types";
+import type {
+  AcademicSemester,
+  AdminAcademicTerm,
+} from "@/features/admin-academic-terms/types";
 
 const editAcademicTermSchema = z
   .object({
@@ -69,6 +73,15 @@ export function EditAcademicTermForm({
   onSaved,
   onCancel,
 }: EditAcademicTermFormProps) {
+  const t = useTranslations("admin.academicTerms");
+  const tSemesters = useTranslations("course.semesters");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
+  function getSemesterLabel(semester: AcademicSemester) {
+    return tSemesters.has(semester as any) ? tSemesters(semester as any) : formatAcademicSemester(semester);
+  }
+
   const updateAcademicTerm = useUpdateAdminAcademicTerm(academicTerm.id);
 
   const form = useForm<EditAcademicTermFormValues>({
@@ -108,14 +121,14 @@ export function EditAcademicTermForm({
           <AlertDescription>
             {updateAcademicTerm.error instanceof Error
               ? updateAcademicTerm.error.message
-              : "Unable to update academic term."}
+              : tErrors("updateAcademicTerm")}
           </AlertDescription>
         </Alert>
       )}
 
       <FieldGroup>
         <Field data-invalid={!!form.formState.errors.year}>
-          <FieldLabel htmlFor="edit-academic-term-year">Year</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-year">{t("labels.year")}</FieldLabel>
 
           <Input
             id="edit-academic-term-year"
@@ -133,7 +146,7 @@ export function EditAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.semester}>
-          <FieldLabel>Semester</FieldLabel>
+          <FieldLabel>{t("labels.semester")}</FieldLabel>
 
           <Select
             value={selectedSemester}
@@ -149,16 +162,16 @@ export function EditAcademicTermForm({
           >
             <SelectTrigger
               className="w-full"
-              aria-label="Academic term semester"
+              aria-label={t("semesterAria")}
               aria-invalid={!!form.formState.errors.semester}
             >
-              <span>{formatAcademicSemester(selectedSemester)}</span>
+              <span>{getSemesterLabel(selectedSemester)}</span>
             </SelectTrigger>
 
             <SelectContent>
               {academicSemesterOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+                  {getSemesterLabel(option.value)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -168,7 +181,7 @@ export function EditAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.starts_at}>
-          <FieldLabel htmlFor="edit-academic-term-start">Start date</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-start">{t("labels.startDate")}</FieldLabel>
 
           <Input
             id="edit-academic-term-start"
@@ -182,7 +195,7 @@ export function EditAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.ends_at}>
-          <FieldLabel htmlFor="edit-academic-term-end">End date</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-end">{t("labels.endDate")}</FieldLabel>
 
           <Input
             id="edit-academic-term-end"
@@ -203,13 +216,15 @@ export function EditAcademicTermForm({
           disabled={updateAcademicTerm.isPending}
           onClick={onCancel}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={updateAcademicTerm.isPending}>
           {updateAcademicTerm.isPending && <Loader2 className="animate-spin" />}
 
-          {updateAcademicTerm.isPending ? "Saving..." : "Save changes"}
+          {updateAcademicTerm.isPending
+            ? t("actions.saving")
+            : t("actions.save")}
         </Button>
       </div>
     </form>

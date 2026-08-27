@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -39,6 +40,10 @@ export function CreateLearningObjectiveForm({
   onCancel,
   onCreated,
 }: CreateLearningObjectiveFormProps) {
+  const t = useTranslations("admin.learningObjectives");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const createLearningObjective = useCreateLearningObjective(courseId);
 
   const form = useForm<CreateLearningObjectiveFormValues>({
@@ -73,13 +78,13 @@ export function CreateLearningObjectiveForm({
           <AlertDescription>
             {createLearningObjective.error instanceof Error
               ? createLearningObjective.error.message
-              : "Unable to create learning objective."}
+              : tErrors("createLearningObjective")}
           </AlertDescription>
         </Alert>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="learning-objective-code">Code</Label>
+        <Label htmlFor="learning-objective-code">{t("labels.code")}</Label>
 
         <Input
           id="learning-objective-code"
@@ -96,7 +101,7 @@ export function CreateLearningObjectiveForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="learning-objective-description">Description</Label>
+        <Label htmlFor="learning-objective-description">{t("labels.description")}</Label>
 
         <Textarea
           id="learning-objective-description"
@@ -120,7 +125,7 @@ export function CreateLearningObjectiveForm({
           onClick={onCancel}
           disabled={createLearningObjective.isPending}
         >
-          Cancel
+          {common("cancel")}
         </Button>
 
         <Button type="submit" disabled={createLearningObjective.isPending}>
@@ -129,8 +134,8 @@ export function CreateLearningObjectiveForm({
           )}
 
           {createLearningObjective.isPending
-            ? "Creating..."
-            : "Create learning objective"}
+            ? t("actions.creating")
+            : t("actions.create")}
         </Button>
       </div>
     </form>

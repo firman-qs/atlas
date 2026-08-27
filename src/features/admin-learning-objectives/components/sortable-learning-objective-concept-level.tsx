@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Loader2, Pencil, Trash2 } from "lucide-react";
@@ -27,6 +28,9 @@ export function SortableLearningObjectiveConceptLevel({
   onEdit,
   onRemove,
 }: SortableLearningObjectiveConceptLevelProps) {
+  const t = useTranslations("admin.learningObjectives.soloLevels");
+  const tLO = useTranslations("admin.learningObjectives");
+
   const sortableId = `loc-level:${item.id}`;
 
   const {
@@ -66,7 +70,7 @@ export function SortableLearningObjectiveConceptLevel({
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label={`Reorder ${item.solo_level.code}`}
+            aria-label={tLO("reorderAria", { code: item.solo_level.code })}
             disabled={disabled}
             className="cursor-grab touch-none active:cursor-grabbing"
             {...attributes}
@@ -77,13 +81,13 @@ export function SortableLearningObjectiveConceptLevel({
 
           <div className="min-w-0 flex-1 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">Order {item.display_order}</Badge>
+              <Badge variant="secondary">{tLO("order", { order: item.display_order })}</Badge>
 
               <Badge variant="outline">{item.solo_level.code}</Badge>
 
-              <Badge variant="secondary">SOLO {item.solo_level.level}</Badge>
+              <Badge variant="secondary">{t("soloBadge", { level: item.solo_level.level })}</Badge>
 
-              <Badge>Mastery {thresholdPercent}%</Badge>
+              <Badge>{t("masteryBadge", { percent: thresholdPercent })}</Badge>
             </div>
 
             <p className="text-xs text-muted-foreground">
@@ -104,7 +108,7 @@ export function SortableLearningObjectiveConceptLevel({
             ) : (
               <Pencil />
             )}
-            Edit threshold
+            {t("editThreshold")}
           </Button>
 
           <Button
@@ -114,7 +118,7 @@ export function SortableLearningObjectiveConceptLevel({
             onClick={onRemove}
           >
             <Trash2 />
-            Remove
+            {t("remove")}
           </Button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, type Control, type FieldErrors } from "react-hook-form";
 
 import { AtlasRichTextEditor } from "@/components/rich-text/atlas-rich-text-editor";
@@ -17,10 +18,12 @@ export function EssayQuestionFields({
   errors,
   disabled = false,
 }: EssayQuestionFieldsProps) {
+  const t = useTranslations("admin.questions.form");
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label>Rubric</Label>
+        <Label>{t("rubricLabel")}</Label>
 
         <Controller
           control={control}
@@ -31,7 +34,7 @@ export function EssayQuestionFields({
               onChange={field.onChange}
               mediaPurpose="authoring"
               disabled={disabled}
-              placeholder="Define the criteria the response must satisfy..."
+              placeholder={t("rubricPlaceholder")}
               className="min-h-40"
             />
           )}
@@ -42,12 +45,12 @@ export function EssayQuestionFields({
         )}
 
         <p className="text-xs text-muted-foreground">
-          The rubric guides AI evaluation of the student response.
+          {t("rubricHelp")}
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label>Ideal answer</Label>
+        <Label>{t("idealAnswerLabel")}</Label>
 
         <Controller
           control={control}
@@ -58,7 +61,7 @@ export function EssayQuestionFields({
               onChange={field.onChange}
               mediaPurpose="authoring"
               disabled={disabled}
-              placeholder="Write a representative high-quality answer..."
+              placeholder={t("idealAnswerPlaceholder")}
               className="min-h-48"
             />
           )}
@@ -71,7 +74,7 @@ export function EssayQuestionFields({
         )}
 
         <p className="text-xs text-muted-foreground">
-          This serves as a reference answer during essay evaluation.
+          {t("idealAnswerHelp")}
         </p>
       </div>
     </div>

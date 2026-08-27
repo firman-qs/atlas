@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, ShieldCheck, UserRound } from "lucide-react";
 import Link from "next/link";
 
@@ -18,10 +19,6 @@ interface AdminUserDetailProps {
   userId: string;
 }
 
-function formatRole(role: AdminUserRole) {
-  return role.charAt(0).toUpperCase() + role.slice(1);
-}
-
 function AdminUserDetailSkeleton() {
   return (
     <div className="space-y-6">
@@ -33,7 +30,26 @@ function AdminUserDetailSkeleton() {
 }
 
 export function AdminUserDetail({ userId }: AdminUserDetailProps) {
+  const t = useTranslations("admin.users");
+  const tDetail = useTranslations("admin.users.detail");
+  const tStatuses = useTranslations("admin.users.statuses");
+  const tRoles = useTranslations("admin.users.roles");
+  const tRoleDesc = useTranslations("admin.users.roleDescriptions");
+  const tErrors = useTranslations("admin.errors");
+
   const userQuery = useAdminUser(userId);
+
+  function formatRole(role: AdminUserRole) {
+    if (role === "admin") return tRoles("admin");
+    if (role === "instructor") return tRoles("instructor");
+    return tRoles("student");
+  }
+
+  function roleDescription(role: AdminUserRole) {
+    if (role === "admin") return tRoleDesc("admin");
+    if (role === "instructor") return tRoleDesc("instructor");
+    return tRoleDesc("student");
+  }
 
   if (userQuery.isPending) {
     return <AdminUserDetailSkeleton />;
@@ -45,7 +61,7 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
         <AlertDescription>
           {userQuery.error instanceof Error
             ? userQuery.error.message
-            : "Unable to load user."}
+            : tErrors("loadUser")}
         </AlertDescription>
       </Alert>
     );
@@ -63,17 +79,21 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
         render={<Link href="/admin/users" />}
       >
         <ArrowLeft />
-        Users
+        {tDetail("backToUsers")}
       </Button>
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant={user.is_active && !deleted ? "default" : "secondary"}>
-            {deleted ? "Deleted" : user.is_active ? "Active" : "Inactive"}
+            {deleted
+              ? tStatuses("deleted")
+              : user.is_active
+                ? tStatuses("active")
+                : tStatuses("inactive")}
           </Badge>
 
           {user.roles.length === 0 ? (
-            <Badge variant="outline">No roles</Badge>
+            <Badge variant="outline">{t("noRoles")}</Badge>
           ) : (
             user.roles.map((role) => (
               <Badge key={role} variant="outline">
@@ -94,33 +114,37 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Account</CardTitle>
+          <CardTitle>{tDetail("accountTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
           <dl className="grid gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm text-muted-foreground">Full name</dt>
+              <dt className="text-sm text-muted-foreground">{tDetail("fullName")}</dt>
 
               <dd className="mt-1 font-medium">{user.full_name}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Email</dt>
+              <dt className="text-sm text-muted-foreground">{tDetail("email")}</dt>
 
               <dd className="mt-1 font-medium">{user.email}</dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">Account status</dt>
+              <dt className="text-sm text-muted-foreground">{tDetail("accountStatus")}</dt>
 
               <dd className="mt-1 font-medium">
-                {deleted ? "Deleted" : user.is_active ? "Active" : "Inactive"}
+                {deleted
+                  ? tStatuses("deleted")
+                  : user.is_active
+                    ? tStatuses("active")
+                    : tStatuses("inactive")}
               </dd>
             </div>
 
             <div>
-              <dt className="text-sm text-muted-foreground">User ID</dt>
+              <dt className="text-sm text-muted-foreground">{tDetail("userId")}</dt>
 
               <dd className="mt-1 break-all font-mono text-sm">{user.id}</dd>
             </div>
@@ -130,7 +154,7 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Roles</CardTitle>
+          <CardTitle>{tDetail("rolesTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -138,10 +162,10 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
             <div className="flex min-h-40 flex-col items-center justify-center rounded-lg border border-dashed p-6 text-center">
               <UserRound className="size-6 text-muted-foreground" />
 
-              <p className="mt-3 font-medium">No roles assigned</p>
+              <p className="mt-3 font-medium">{tDetail("noRolesAssigned")}</p>
 
               <p className="mt-1 text-sm text-muted-foreground">
-                This account currently has no ATLAS application roles.
+                {tDetail("noRolesAssignedDesc")}
               </p>
             </div>
           ) : (
@@ -160,16 +184,12 @@ export function AdminUserDetail({ userId }: AdminUserDetailProps) {
                       <p className="font-medium">{formatRole(role)}</p>
 
                       <p className="text-sm text-muted-foreground">
-                        {role === "admin"
-                          ? "Administrative access to ATLAS management features."
-                          : role === "instructor"
-                            ? "Instructor access to owned course offerings and student learning evidence."
-                            : "Student access to enrolled courses and formative assessments."}
+                        {roleDescription(role)}
                       </p>
                     </div>
                   </div>
 
-                  <Badge variant="outline">Assigned</Badge>
+                  <Badge variant="outline">{tDetail("assigned")}</Badge>
                 </div>
               ))}
             </div>

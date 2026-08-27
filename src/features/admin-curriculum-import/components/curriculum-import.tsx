@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FileUp, Loader2 } from "lucide-react";
 import { useState } from "react";
 
@@ -23,41 +24,48 @@ function ImportStatRow({
   label: string;
   stats: ImportStats;
 }) {
+  const t = useTranslations("admin.curriculumImport");
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border p-3">
       <span className="font-medium">{label}</span>
 
       <Badge variant="outline">
-        {stats.inserted} inserted · {stats.skipped} skipped
+        {t("stats", {
+          inserted: stats.inserted,
+          skipped: stats.skipped,
+        })}
       </Badge>
     </div>
   );
 }
 
 function ImportResult({ result }: { result: ImportCurriculumResult }) {
+  const t = useTranslations("admin.curriculumImport");
+
   return (
     <div className="space-y-3">
       <Alert>
-        <AlertDescription>Import completed successfully.</AlertDescription>
+        <AlertDescription>{t("success")}</AlertDescription>
       </Alert>
 
       <div className="space-y-2">
-        <ImportStatRow label="Course" stats={result.course} />
+        <ImportStatRow label={t("rows.course")} stats={result.course} />
 
         <ImportStatRow
-          label="Learning objectives"
+          label={t("rows.learningObjectives")}
           stats={result.learning_objectives}
         />
 
-        <ImportStatRow label="Concepts" stats={result.concepts} />
+        <ImportStatRow label={t("rows.concepts")} stats={result.concepts} />
 
         <ImportStatRow
-          label="LO–concept mappings"
+          label={t("rows.mappings")}
           stats={result.learning_objective_concepts}
         />
 
         <ImportStatRow
-          label="Configured SOLO levels"
+          label={t("rows.soloLevels")}
           stats={result.learning_objective_concept_levels}
         />
       </div>
@@ -66,6 +74,9 @@ function ImportResult({ result }: { result: ImportCurriculumResult }) {
 }
 
 export function CurriculumImport() {
+  const t = useTranslations("admin.curriculumImport");
+  const tErrors = useTranslations("admin.errors");
+
   const importCurriculum = useImportCurriculum();
 
   const [file, setFile] = useState<File | null>(null);
@@ -92,21 +103,19 @@ export function CurriculumImport() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Import Curriculum Package</CardTitle>
+        <CardTitle>{t("cardTitle")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-5">
         <div>
           <p className="text-sm text-muted-foreground">
-            Upload an ATLAS TOML curriculum package containing a course,
-            learning objectives, concepts, concept mappings, and configured SOLO
-            levels.
+            {t("cardDescription")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="curriculum-package">Curriculum package</Label>
+            <Label htmlFor="curriculum-package">{t("packageLabel")}</Label>
 
             <Input
               id="curriculum-package"
@@ -121,7 +130,7 @@ export function CurriculumImport() {
             />
 
             <p className="text-xs text-muted-foreground">
-              Select exactly one UTF-8 .toml curriculum package.
+              {t("helpText")}
             </p>
           </div>
 
@@ -130,7 +139,7 @@ export function CurriculumImport() {
               <AlertDescription>
                 {importCurriculum.error instanceof Error
                   ? importCurriculum.error.message
-                  : "Unable to import curriculum package."}
+                  : tErrors("importCurriculum")}
               </AlertDescription>
             </Alert>
           )}
@@ -142,7 +151,7 @@ export function CurriculumImport() {
               <FileUp />
             )}
 
-            {importCurriculum.isPending ? "Importing..." : "Import curriculum"}
+            {importCurriculum.isPending ? t("importing") : t("importButton")}
           </Button>
         </form>
 

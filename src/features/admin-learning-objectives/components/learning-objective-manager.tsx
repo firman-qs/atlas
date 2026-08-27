@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FileText, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -70,6 +71,10 @@ function LearningObjectiveManagerSkeleton() {
 export function LearningObjectiveManager({
   courseId,
 }: LearningObjectiveManagerProps) {
+  const t = useTranslations("admin.learningObjectives");
+  const tErrors = useTranslations("admin.errors");
+  const common = useTranslations("common");
+
   const learningObjectivesQuery = useLearningObjectives({
     courseId,
     page: 1,
@@ -108,7 +113,7 @@ export function LearningObjectiveManager({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Learning Objectives</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -116,7 +121,7 @@ export function LearningObjectiveManager({
             <AlertDescription>
               {learningObjectivesQuery.error instanceof Error
                 ? learningObjectivesQuery.error.message
-                : "Unable to load learning objectives."}
+                : tErrors("loadLearningObjectives")}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -176,10 +181,10 @@ export function LearningObjectiveManager({
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <CardTitle>Learning Objectives</CardTitle>
+            <CardTitle>{t("title")}</CardTitle>
 
             <p className="text-sm text-muted-foreground">
-              Define the ordered learning objectives for this course.
+              {t("description")}
             </p>
           </div>
 
@@ -188,7 +193,7 @@ export function LearningObjectiveManager({
             variant={isCreating ? "outline" : "default"}
           >
             <Plus />
-            {isCreating ? "Close form" : "Add learning objective"}
+            {isCreating ? t("closeForm") : t("newObjective")}
           </Button>
         </div>
       </CardHeader>
@@ -208,10 +213,10 @@ export function LearningObjectiveManager({
               <FileText className="size-4 text-muted-foreground" />
             </div>
 
-            <p className="mt-3 font-medium">No learning objectives</p>
+            <p className="mt-3 font-medium">{t("noObjectives")}</p>
 
             <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              Create the first learning objective for this course.
+              {t("noObjectivesDescription")}
             </p>
           </div>
         ) : (
@@ -221,7 +226,7 @@ export function LearningObjectiveManager({
                 <AlertDescription>
                   {reorderLearningObjectives.error instanceof Error
                     ? reorderLearningObjectives.error.message
-                    : "Unable to reorder learning objectives."}
+                    : tErrors("reorder")}
                 </AlertDescription>
               </Alert>
             )}
@@ -271,8 +276,7 @@ export function LearningObjectiveManager({
             </DndContext>
 
             <p className="text-sm text-muted-foreground">
-              {learningObjectivesQuery.data.total} learning objective
-              {learningObjectivesQuery.data.total === 1 ? "" : "s"}.
+              {t("count", { count: learningObjectivesQuery.data.total })}
             </p>
           </div>
         )}
@@ -288,12 +292,14 @@ export function LearningObjectiveManager({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete learning objective?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.deleteTitle")}</AlertDialogTitle>
 
             <AlertDialogDescription>
               {deleteTarget
-                ? `This will permanently delete ${deleteTarget.code.toUpperCase()}. The operation can fail if existing curriculum or assessment data references it.`
-                : "This learning objective will be permanently deleted."}
+                ? t("dialog.deleteDescription", {
+                    code: deleteTarget.code.toUpperCase(),
+                  })
+                : t("dialog.deleteTitle")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -302,14 +308,14 @@ export function LearningObjectiveManager({
               <AlertDescription>
                 {deleteLearningObjective.error instanceof Error
                   ? deleteLearningObjective.error.message
-                  : "Unable to delete learning objective."}
+                  : tErrors("deleteLearningObjective")}
               </AlertDescription>
             </Alert>
           )}
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteLearningObjective.isPending}>
-              Cancel
+              {common("cancel")}
             </AlertDialogCancel>
 
             <AlertDialogAction
@@ -325,8 +331,8 @@ export function LearningObjectiveManager({
               )}
 
               {deleteLearningObjective.isPending
-                ? "Deleting..."
-                : "Delete learning objective"}
+                ? t("dialog.deleting")
+                : t("dialog.confirmDelete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

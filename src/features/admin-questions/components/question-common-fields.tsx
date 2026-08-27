@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
@@ -21,10 +22,12 @@ export function QuestionCommonFields({
   errors,
   disabled = false,
 }: QuestionCommonFieldsProps) {
+  const t = useTranslations("admin.questions.form");
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label>Question prompt</Label>
+        <Label>{t("promptLabel")}</Label>
 
         <Controller
           control={control}
@@ -35,7 +38,7 @@ export function QuestionCommonFields({
               onChange={field.onChange}
               disabled={disabled}
               mediaPurpose="authoring"
-              placeholder="Write the question prompt..."
+              placeholder={t("promptPlaceholder")}
               className="min-h-40"
             />
           )}
@@ -46,12 +49,12 @@ export function QuestionCommonFields({
         )}
 
         <p className="text-xs text-muted-foreground">
-          Markdown is stored as the canonical question content format.
+          {t("promptHelp")}
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label>Feedback</Label>
+        <Label>{t("feedbackLabel")}</Label>
 
         <Controller
           control={control}
@@ -62,7 +65,7 @@ export function QuestionCommonFields({
               mediaPurpose="authoring"
               onChange={field.onChange}
               disabled={disabled}
-              placeholder="Optional feedback shown or generated around this question..."
+              placeholder={t("feedbackPlaceholder")}
               className="min-h-32"
             />
           )}
@@ -74,13 +77,13 @@ export function QuestionCommonFields({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="question-ai-guidelines">AI guidelines</Label>
+        <Label htmlFor="question-ai-guidelines">{t("aiGuidelinesLabel")}</Label>
 
         <Textarea
           id="question-ai-guidelines"
           rows={5}
           disabled={disabled}
-          placeholder="Optional instructions for AI evaluation or pedagogical feedback..."
+          placeholder={t("aiGuidelinesPlaceholder")}
           {...register("aiGuidelines")}
         />
 
@@ -91,8 +94,7 @@ export function QuestionCommonFields({
         )}
 
         <p className="text-xs text-muted-foreground">
-          These instructions are machine-facing and are not part of the
-          student-visible question content.
+          {t("aiGuidelinesHelp")}
         </p>
       </div>
     </div>

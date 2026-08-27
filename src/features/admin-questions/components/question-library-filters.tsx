@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -60,6 +61,7 @@ function SoloLevelFilter({
   learningObjectiveId,
   conceptId,
 }: SoloLevelFilterProps) {
+  const tFilters = useTranslations("admin.questions.filters");
   const levelsQuery = useLearningObjectiveConceptLevels(
     learningObjectiveId,
     conceptId,
@@ -87,13 +89,13 @@ function SoloLevelFilter({
         <span>
           {value.soloLevelId
             ? (levels.find((level) => level.solo_level.id === value.soloLevelId)
-                ?.solo_level.code ?? "SOLO level")
-            : "All SOLO levels"}
+                ?.solo_level.code ?? tFilters("soloLevel"))
+            : tFilters("allSolo")}
         </span>
       </SelectTrigger>
 
       <SelectContent>
-        <SelectItem value="all">All SOLO levels</SelectItem>
+        <SelectItem value="all">{tFilters("allSolo")}</SelectItem>
 
         {levels.map((level) => (
           <SelectItem key={level.solo_level.id} value={level.solo_level.id}>
@@ -110,6 +112,7 @@ function LearningObjectiveConceptFilter({
   onChange,
   learningObjectiveId,
 }: LearningObjectiveConceptFilterProps) {
+  const tFilters = useTranslations("admin.questions.filters");
   const attachedConceptsQuery =
     useLearningObjectiveConcepts(learningObjectiveId);
 
@@ -142,13 +145,13 @@ function LearningObjectiveConceptFilter({
             {value.conceptId
               ? (attachedConcepts.find(
                   (item) => item.concept.id === value.conceptId,
-                )?.concept.name ?? "Concept")
-              : "All concepts"}
+                )?.concept.name ?? tFilters("concept"))
+              : tFilters("allConcepts")}
           </span>
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="all">All concepts</SelectItem>
+          <SelectItem value="all">{tFilters("allConcepts")}</SelectItem>
 
           {attachedConcepts.map((item) => (
             <SelectItem key={item.concept.id} value={item.concept.id}>
@@ -168,11 +171,11 @@ function LearningObjectiveConceptFilter({
       ) : (
         <Select disabled value="all">
           <SelectTrigger className="w-full">
-            <span>Select concept first</span>
+            <span>{tFilters("selectConceptFirst")}</span>
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="all">All SOLO levels</SelectItem>
+            <SelectItem value="all">{tFilters("allSolo")}</SelectItem>
           </SelectContent>
         </Select>
       )}
@@ -184,6 +187,7 @@ function CourseCurriculumFilters({
   value,
   onChange,
 }: CourseCurriculumFiltersProps) {
+  const tFilters = useTranslations("admin.questions.filters");
   const courseId = value.courseId!;
 
   const learningObjectivesQuery = useLearningObjectives({
@@ -234,13 +238,13 @@ function CourseCurriculumFilters({
             {value.learningObjectiveId
               ? (learningObjectives
                   .find((lo) => lo.id === value.learningObjectiveId)
-                  ?.code.toUpperCase() ?? "Learning objective")
-              : "All learning objectives"}
+                  ?.code.toUpperCase() ?? tFilters("learningObjective"))
+              : tFilters("allLOs")}
           </span>
         </SelectTrigger>
 
         <SelectContent>
-          <SelectItem value="all">All learning objectives</SelectItem>
+          <SelectItem value="all">{tFilters("allLOs")}</SelectItem>
 
           {learningObjectives.map((learningObjective) => (
             <SelectItem key={learningObjective.id} value={learningObjective.id}>
@@ -277,13 +281,13 @@ function CourseCurriculumFilters({
                 {value.conceptId
                   ? (courseConcepts.find(
                       (concept) => concept.id === value.conceptId,
-                    )?.name ?? "Concept")
-                  : "All concepts"}
+                    )?.name ?? tFilters("concept"))
+                  : tFilters("allConcepts")}
               </span>
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="all">All concepts</SelectItem>
+              <SelectItem value="all">{tFilters("allConcepts")}</SelectItem>
 
               {courseConcepts.map((concept) => (
                 <SelectItem key={concept.id} value={concept.id}>
@@ -295,11 +299,11 @@ function CourseCurriculumFilters({
 
           <Select disabled value="all">
             <SelectTrigger className="w-full">
-              <span>Select learning objective and concept</span>
+              <span>{tFilters("selectLOAndConceptFirst")}</span>
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="all">All SOLO levels</SelectItem>
+              <SelectItem value="all">{tFilters("allSolo")}</SelectItem>
             </SelectContent>
           </Select>
         </>
@@ -312,6 +316,8 @@ export function QuestionLibraryFilters({
   value,
   onChange,
 }: QuestionLibraryFiltersProps) {
+  const t = useTranslations("admin.questions");
+  const tFilters = useTranslations("admin.questions.filters");
   const [searchInput, setSearchInput] = useState(value.search);
 
   const coursesQuery = useAdminCourses({
@@ -345,7 +351,7 @@ export function QuestionLibraryFilters({
           <Input
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
-            placeholder="Search question prompts..."
+            placeholder={tFilters("searchPlaceholder")}
             className="pl-8"
           />
         </div>
@@ -367,13 +373,13 @@ export function QuestionLibraryFilters({
             <span>
               {value.courseId
                 ? (courses.find((course) => course.id === value.courseId)
-                    ?.code ?? "Course")
-                : "All courses"}
+                    ?.code ?? tFilters("course"))
+                : tFilters("allCourses")}
             </span>
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="all">All courses</SelectItem>
+            <SelectItem value="all">{tFilters("allCourses")}</SelectItem>
 
             {courses.map((course) => (
               <SelectItem key={course.id} value={course.id}>
@@ -398,17 +404,17 @@ export function QuestionLibraryFilters({
           <SelectTrigger className="w-full">
             <span>
               {value.questionType === "mcq"
-                ? "MCQ"
+                ? t("types.mcq")
                 : value.questionType === "essay"
-                  ? "Essay"
-                  : "All types"}
+                  ? t("types.essay")
+                  : tFilters("allTypes")}
             </span>
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="mcq">MCQ</SelectItem>
-            <SelectItem value="essay">Essay</SelectItem>
+            <SelectItem value="all">{tFilters("allTypes")}</SelectItem>
+            <SelectItem value="mcq">{t("types.mcq")}</SelectItem>
+            <SelectItem value="essay">{t("types.essay")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -427,17 +433,17 @@ export function QuestionLibraryFilters({
           <SelectTrigger className="w-full">
             <span>
               {value.status === "draft"
-                ? "Draft"
+                ? t("statuses.draft")
                 : value.status === "published"
-                  ? "Published"
-                  : "All statuses"}
+                  ? t("statuses.published")
+                  : tFilters("allStatuses")}
             </span>
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="all">{tFilters("allStatuses")}</SelectItem>
+            <SelectItem value="draft">{t("statuses.draft")}</SelectItem>
+            <SelectItem value="published">{t("statuses.published")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -449,31 +455,31 @@ export function QuestionLibraryFilters({
           <>
             <Select disabled value="all">
               <SelectTrigger className="w-full">
-                <span>Select course first</span>
+                <span>{tFilters("selectCourseFirst")}</span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All learning objectives</SelectItem>
+                <SelectItem value="all">{tFilters("allLOs")}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select disabled value="all">
               <SelectTrigger className="w-full">
-                <span>Select course first</span>
+                <span>{tFilters("selectCourseFirst")}</span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All concepts</SelectItem>
+                <SelectItem value="all">{tFilters("allConcepts")}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select disabled value="all">
               <SelectTrigger className="w-full">
-                <span>Select course first</span>
+                <span>{tFilters("selectCourseFirst")}</span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All SOLO levels</SelectItem>
+                <SelectItem value="all">{tFilters("allSolo")}</SelectItem>
               </SelectContent>
             </Select>
           </>

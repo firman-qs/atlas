@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -97,6 +98,10 @@ export function EditQuestionForm({
   question,
   courseId,
 }: EditQuestionFormProps) {
+  const t = useTranslations("admin.questions");
+  const tForm = useTranslations("admin.questions.form");
+  const tPlacement = useTranslations("admin.questions.placement");
+
   const form = useForm<QuestionAuthoringFormValues>({
     resolver: zodResolver(questionAuthoringSchema),
     defaultValues: createInitialValues(question, courseId),
@@ -162,19 +167,19 @@ export function EditQuestionForm({
   return (
     <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Edit Question</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{tForm("editTitle")}</h1>
 
         <p className="mt-1 text-muted-foreground">
-          Update this draft question and its assessment content.
+          {tForm("editDescription")}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Curriculum Placement</CardTitle>
+          <CardTitle>{tPlacement("title")}</CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            Curriculum placement cannot be changed while editing a question.
+            {tPlacement("editDescription")}
           </p>
         </CardHeader>
 
@@ -189,7 +194,7 @@ export function EditQuestionForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Question Type</CardTitle>
+          <CardTitle>{tForm("typeTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-3">
@@ -207,21 +212,20 @@ export function EditQuestionForm({
             >
               <SelectTrigger className="w-full">
                 <span>
-                  {questionType === "mcq" ? "Multiple choice" : "Essay"}
+                  {questionType === "mcq" ? t("types.mcq") : t("types.essay")}
                 </span>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="mcq">Multiple choice</SelectItem>
-                <SelectItem value="essay">Essay</SelectItem>
+                <SelectItem value="mcq">{t("types.mcq")}</SelectItem>
+                <SelectItem value="essay">{t("types.essay")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {questionTypeChanged && (
             <p className="text-sm text-destructive">
-              Changing the question type will replace its type-specific content
-              when the question is saved.
+              {tForm("typeChangedWarning")}
             </p>
           )}
         </CardContent>
@@ -229,7 +233,7 @@ export function EditQuestionForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Question Content</CardTitle>
+          <CardTitle>{tForm("contentTitle")}</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -245,7 +249,7 @@ export function EditQuestionForm({
       {questionType === "mcq" && (
         <Card>
           <CardHeader>
-            <CardTitle>Multiple Choice</CardTitle>
+            <CardTitle>{tForm("mcqTitle")}</CardTitle>
           </CardHeader>
 
           <CardContent>
@@ -262,7 +266,7 @@ export function EditQuestionForm({
       {questionType === "essay" && (
         <Card>
           <CardHeader>
-            <CardTitle>Essay Evaluation</CardTitle>
+            <CardTitle>{tForm("essayTitle")}</CardTitle>
           </CardHeader>
 
           <CardContent>
@@ -278,7 +282,7 @@ export function EditQuestionForm({
       <div className="flex justify-end">
         <Button type="submit" disabled={updateQuestion.isPending}>
           {updateQuestion.isPending && <Loader2 className="animate-spin" />}
-          {updateQuestion.isPending ? "Saving..." : "Save changes"}
+          {updateQuestion.isPending ? tForm("saving") : tForm("saveChanges")}
         </Button>
       </div>
     </form>
