@@ -82,7 +82,7 @@ export function GuidesFaqSection() {
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {/* Video Guides Card */}
           <ScrollReveal delayMs={100}>
-            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
+            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
               <CardHeader className="pb-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -127,7 +127,7 @@ export function GuidesFaqSection() {
 
           {/* Documentation Interactive List Card */}
           <ScrollReveal delayMs={200}>
-            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
+            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
               <CardHeader className="pb-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">

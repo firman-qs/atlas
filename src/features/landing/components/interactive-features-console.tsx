@@ -306,7 +306,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 1: AUTHENTIC LEARNING PROGRESS SLICE */}
           <TabsContent value="progress" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-5 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -515,7 +515,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 2: AUTHENTIC FORMATIVE ASSESSMENT RUNNER SLICE */}
           <TabsContent value="assessment" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-2.5">
@@ -715,7 +715,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 3: AUTHENTIC COURSE-GROUNDED AI TUTOR SLICE */}
           <TabsContent value="chat" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
@@ -828,7 +828,7 @@ export function InteractiveFeaturesConsole() {
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Card
                     onClick={() => setCohortFilter("all")}
-                    className={`cursor-pointer transition-all border ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
                       cohortFilter === "all" ? "border-primary bg-primary/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -844,7 +844,7 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("support")}
-                    className={`cursor-pointer transition-all border ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
                       cohortFilter === "support" ? "border-amber-500 bg-amber-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -860,7 +860,7 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("mastered")}
-                    className={`cursor-pointer transition-all border ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
                       cohortFilter === "mastered" ? "border-emerald-500 bg-emerald-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -878,7 +878,7 @@ export function InteractiveFeaturesConsole() {
                 </div>
 
                 {/* Question Bank Authoring Table */}
-                <Card>
+                <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs">
                   <CardHeader className="pb-4 border-b">
                     <div className="flex items-center justify-between">
                       <div>

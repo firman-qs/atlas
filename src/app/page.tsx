@@ -8,7 +8,7 @@ import { ProjectSection } from "@/features/landing/components/project-section";
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen scroll-smooth bg-slate-50/50 dark:bg-slate-950 text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden">
+    <div className="relative min-h-screen scroll-smooth bg-slate-50/50 dark:bg-slate-950 text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-clip">
       {/* Interactive Electromagnetic Vector Field Background */}
       <LandingFieldCanvas />
 

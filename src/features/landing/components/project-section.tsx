@@ -73,7 +73,7 @@ export function ProjectSection() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {team.map((member, idx) => (
               <ScrollReveal key={member.name} delayMs={idx * 100}>
-                <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
+                <Card className="flex h-full flex-col justify-between border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
                   <CardHeader className="pb-5">
                     {/* Photo / Avatar Placeholder (Ready for real image replacement) */}
                     <div className="relative mb-4 flex size-18 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/60 text-muted-foreground shadow-inner">
@@ -132,8 +132,8 @@ export function ProjectSection() {
                 </p>
               </div>
 
-              {/* Publication Item List (Solid Flat Soft Blue) */}
-              <div className="rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-blue-50/60 dark:bg-blue-950/20 p-6 sm:p-7">
+              {/* Publication Item List (Solid Flat Soft Blue with Frosted Backdrop Blur) */}
+              <div className="rounded-2xl border border-blue-200/80 dark:border-blue-900/40 bg-blue-50/60 dark:bg-blue-950/20 backdrop-blur-md p-6 sm:p-7 shadow-xs">
                 <div className="flex items-start gap-4 sm:gap-5">
                   <div className="mt-1 flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
                     <BookOpenText className="size-6" />
@@ -164,10 +164,10 @@ export function ProjectSection() {
           </ScrollReveal>
         </div>
 
-        {/* 3. Funding (Center-aligned with Solid Flat Soft Blue container) */}
+        {/* 3. Funding (Center-aligned with Solid Flat Soft Blue container and Frosted Backdrop Blur) */}
         <div className="border-t border-border/70 pt-14">
           <ScrollReveal delayMs={100}>
-            <div className="rounded-2xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/70 dark:bg-blue-950/30 p-8 sm:p-10 text-center">
+            <div className="rounded-2xl border border-blue-200/80 dark:border-blue-900/50 bg-blue-50/70 dark:bg-blue-950/30 backdrop-blur-md p-8 sm:p-10 text-center shadow-xs">
               <div className="flex flex-col items-center gap-3 text-center">
                 <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-blue-950 dark:text-blue-100">
                   {t("funding.title")}
