@@ -92,12 +92,8 @@ export function LandingHeader() {
 
   const navigation = [
     {
-      label: tNav("capabilities"),
-      href: "#capabilities",
-    },
-    {
-      label: tNav("progression"),
-      href: "#progression",
+      label: tNav("features"),
+      href: "#features",
     },
     {
       label: tNav("guidesFaq"),
@@ -108,6 +104,24 @@ export function LandingHeader() {
       href: "#project",
     },
   ];
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    isMobile = false,
+  ) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      if (isMobile) {
+        setMobileOpen(false);
+      }
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", href);
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -143,6 +157,7 @@ export function LandingHeader() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={(e) => handleNavClick(e, item.href)}
               className="rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
             >
               {item.label}
@@ -208,7 +223,7 @@ export function LandingHeader() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(e) => handleNavClick(e, item.href, true)}
                       className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     >
                       {item.label}

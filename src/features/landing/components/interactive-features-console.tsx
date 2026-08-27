@@ -254,7 +254,7 @@ export function InteractiveFeaturesConsole() {
   };
 
   return (
-    <section id="capabilities" className="relative scroll-mt-16 px-4 py-16 sm:px-6 sm:py-20">
+    <section id="features" className="relative scroll-mt-16 px-4 py-16 sm:px-6 sm:py-20">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <ScrollReveal className="mx-auto max-w-2xl text-center">
@@ -304,7 +304,7 @@ export function InteractiveFeaturesConsole() {
           </ScrollReveal>
 
           {/* TAB 1: AUTHENTIC LEARNING PROGRESS SLICE */}
-          <TabsContent value="progress" id="progression" className="mt-6">
+          <TabsContent value="progress" className="mt-6">
             <ScrollReveal delayMs={150}>
               <Card className="transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-4">

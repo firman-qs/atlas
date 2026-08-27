@@ -1185,8 +1185,7 @@
   },
   "landing": {
     "nav": {
-      "capabilities": "Capabilities",
-      "progression": "Progression",
+      "features": "Features",
       "guidesFaq": "Guides & FAQ",
       "project": "Project"
     },
@@ -1438,8 +1437,7 @@
       "getStarted": "Get Started",
       "exploreTitle": "Explore",
       "links": {
-        "capabilities": "Capabilities",
-        "progression": "Progression",
+        "features": "Features",
         "guidesFaq": "Guides & FAQ",
         "project": "Project Team",
         "publication": "Publication"

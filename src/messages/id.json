@@ -1185,8 +1185,7 @@
   },
   "landing": {
     "nav": {
-      "capabilities": "Kapabilitas",
-      "progression": "Progresi",
+      "features": "Fitur",
       "guidesFaq": "Panduan & FAQ",
       "project": "Proyek"
     },
@@ -1438,8 +1437,7 @@
       "getStarted": "Mulai Sekarang",
       "exploreTitle": "Jelajahi",
       "links": {
-        "capabilities": "Kapabilitas",
-        "progression": "Progresi",
+        "features": "Fitur",
         "guidesFaq": "Panduan & FAQ",
         "project": "Tim Proyek",
         "publication": "Publikasi"

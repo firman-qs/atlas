@@ -45,13 +45,9 @@ describe("LandingHeader", () => {
       "/register",
     );
 
-    expect(screen.getByRole("link", { name: "Capabilities" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
       "href",
-      "#capabilities",
-    );
-    expect(screen.getByRole("link", { name: "Progression" })).toHaveAttribute(
-      "href",
-      "#progression",
+      "#features",
     );
     expect(screen.getByRole("link", { name: "Guides & FAQ" })).toHaveAttribute(
       "href",
@@ -83,13 +79,9 @@ describe("LandingHeader", () => {
       "/register",
     );
 
-    expect(screen.getByRole("link", { name: "Kapabilitas" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Fitur" })).toHaveAttribute(
       "href",
-      "#capabilities",
-    );
-    expect(screen.getByRole("link", { name: "Progresi" })).toHaveAttribute(
-      "href",
-      "#progression",
+      "#features",
     );
     expect(screen.getByRole("link", { name: "Panduan & FAQ" })).toHaveAttribute(
       "href",
