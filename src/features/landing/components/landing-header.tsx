@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import {
   Sheet,
   SheetContent,
@@ -147,12 +148,14 @@ export function LandingHeader() {
         {/* Desktop Actions */}
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
+          <LanguageSwitcher />
           <AuthActions />
         </div>
 
         {/* Mobile menu and toggle */}
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
+          <LanguageSwitcher compact />
 
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger

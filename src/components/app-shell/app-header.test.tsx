@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockedUseAuth, mockedUseActiveRole, mockedSetActiveRole, mockedPush } =
@@ -62,6 +62,9 @@ describe("AppHeader", () => {
     );
 
     expect(screen.getByText("Courses")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Change language" }),
+    ).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", {

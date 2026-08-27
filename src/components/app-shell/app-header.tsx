@@ -28,6 +28,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { useActiveRole } from "@/features/auth/active-role-provider";
 import { useAuth } from "@/features/auth/auth-provider";
 import type { UserRole } from "@/features/auth/types";
@@ -192,6 +193,7 @@ export function AppHeader() {
       </div>
 
       <div className="flex shrink-0 items-center gap-1">
+        <LanguageSwitcher compact />
         <ThemeToggle />
 
         {activeRole && (
