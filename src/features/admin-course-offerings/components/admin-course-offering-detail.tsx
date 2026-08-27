@@ -34,10 +34,7 @@ import {
   useAdminCourseOffering,
   useDeleteAdminCourseOffering,
 } from "@/features/admin-course-offerings/queries";
-import {
-  formatAcademicSemester,
-  isAcademicSemester,
-} from "@/features/admin-academic-terms/semester";
+import { isAcademicSemester } from "@/features/admin-academic-terms/semester";
 
 interface AdminCourseOfferingDetailProps {
   courseOfferingId: string;

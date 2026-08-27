@@ -14,10 +14,7 @@ import { useAdminAcademicTerms } from "@/features/admin-academic-terms/queries";
 import { useCreateAdminCourseOffering } from "@/features/admin-course-offerings/queries";
 import { useAdminCourses } from "@/features/admin-courses/queries";
 import { useAdminUsers } from "@/features/admin-users/queries";
-import {
-  formatAcademicSemester,
-  isAcademicSemester,
-} from "@/features/admin-academic-terms/semester";
+import { isAcademicSemester } from "@/features/admin-academic-terms/semester";
 
 export function CreateCourseOfferingForm() {
   const t = useTranslations("admin.courseOfferings.form");
