@@ -73,10 +73,10 @@ export function ProjectSection() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {team.map((member, idx) => (
               <ScrollReveal key={member.name} delayMs={idx * 100}>
-                <Card className="group flex h-full flex-col justify-between border border-blue-500/20 bg-card/85 shadow-sm shadow-blue-500/5 backdrop-blur-md transition-all duration-300 hover:border-blue-500/40 hover:shadow-md hover:shadow-blue-500/10 hover:-translate-y-1">
+                <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
                   <CardHeader className="pb-5">
                     {/* Photo / Avatar Placeholder (Ready for real image replacement) */}
-                    <div className="relative mb-4 flex size-18 items-center justify-center overflow-hidden rounded-full border-2 border-blue-500/30 bg-blue-500/10 text-muted-foreground shadow-inner">
+                    <div className="relative mb-4 flex size-18 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/60 text-muted-foreground shadow-inner">
                       {member.image ? (
                         <Image
                           src={member.image}
@@ -86,18 +86,18 @@ export function ProjectSection() {
                           className="size-full object-cover"
                         />
                       ) : (
-                        <div className="flex size-full items-center justify-center bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                          <User className="size-9" />
+                        <div className="flex size-full items-center justify-center bg-primary/10 text-primary">
+                          <User className="size-9 text-primary/80" />
                         </div>
                       )}
                     </div>
 
-                    <CardTitle className="text-lg font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                    <CardTitle className="text-lg font-semibold leading-snug">
                       {member.name}
                     </CardTitle>
 
                     <div className="mt-2">
-                      <Badge className="text-xs sm:text-sm font-medium bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/25 hover:bg-blue-500/20">
+                      <Badge variant="secondary" className="text-xs sm:text-sm font-medium">
                         {t(`roles.${member.roleKey}`)}
                       </Badge>
                     </div>
@@ -105,7 +105,7 @@ export function ProjectSection() {
 
                   <CardContent className="pt-0 text-sm text-muted-foreground border-t border-border/60 p-4 sm:p-5">
                     <div className="flex items-center gap-2">
-                      <Building2 className="size-4 text-blue-600/70 dark:text-blue-400/70" />
+                      <Building2 className="size-4 text-muted-foreground/70" />
                       <span>{member.affiliation}</span>
                     </div>
                   </CardContent>
@@ -122,7 +122,7 @@ export function ProjectSection() {
               {/* Publication Header */}
               <div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs sm:text-sm border-blue-500/30 text-blue-700 dark:text-blue-300 bg-blue-500/5">{t("publication.badge")}</Badge>
+                  <Badge variant="outline" className="text-xs sm:text-sm">{t("publication.badge")}</Badge>
                 </div>
                 <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                   {t("publication.title")}
@@ -132,10 +132,10 @@ export function ProjectSection() {
                 </p>
               </div>
 
-              {/* Publication Item List */}
-              <div className="rounded-2xl border border-blue-500/25 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent p-6 sm:p-7 backdrop-blur-md shadow-xs">
+              {/* Publication Item List (Solid Flat Soft Blue) */}
+              <div className="rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-blue-50/60 dark:bg-blue-950/20 p-6 sm:p-7">
                 <div className="flex items-start gap-4 sm:gap-5">
-                  <div className="mt-1 flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+                  <div className="mt-1 flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
                     <BookOpenText className="size-6" />
                   </div>
 
@@ -149,9 +149,9 @@ export function ProjectSection() {
                     </p>
 
                     <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <span className="inline-flex items-center rounded-md bg-blue-500/15 border border-blue-500/25 px-2.5 py-1 text-xs sm:text-sm font-medium text-blue-700 dark:text-blue-300">
+                      <Badge variant="secondary" className="bg-blue-100/90 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 border-0 text-xs sm:text-sm font-medium">
                         {t("publication.itemStatus")}
-                      </span>
+                      </Badge>
                     </div>
 
                     <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
@@ -164,17 +164,11 @@ export function ProjectSection() {
           </ScrollReveal>
         </div>
 
-        {/* 3. Funding (Center-aligned with special Blue highlighting) */}
+        {/* 3. Funding (Center-aligned with Solid Flat Soft Blue container) */}
         <div className="border-t border-border/70 pt-14">
           <ScrollReveal delayMs={100}>
-            <div className="relative overflow-hidden rounded-2xl border border-blue-500/30 bg-gradient-to-b from-blue-500/10 via-blue-500/5 to-transparent p-8 sm:p-10 text-center shadow-xs backdrop-blur-md dark:border-blue-500/25 dark:from-blue-950/40 dark:via-blue-950/20 dark:to-transparent">
-              {/* Soft ambient background glow */}
-              <div
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-80 rounded-full bg-blue-500/15 blur-3xl"
-                aria-hidden="true"
-              />
-
-              <div className="relative flex flex-col items-center gap-3 text-center">
+            <div className="rounded-2xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/70 dark:bg-blue-950/30 p-8 sm:p-10 text-center">
+              <div className="flex flex-col items-center gap-3 text-center">
                 <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-blue-950 dark:text-blue-100">
                   {t("funding.title")}
                 </h3>
@@ -187,7 +181,7 @@ export function ProjectSection() {
                   </span>
                 </div>
 
-                <p className="text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400">
+                <p className="text-sm sm:text-base font-semibold text-blue-700 dark:text-blue-300">
                   {t("funding.type")}
                 </p>
 

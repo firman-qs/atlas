@@ -274,18 +274,18 @@ export function InteractiveFeaturesConsole() {
         {/* Shadcn Tabs Navigation */}
         <Tabs defaultValue="progress" className="mt-10">
           <ScrollReveal delayMs={100} className="flex justify-center">
-            <TabsList className="h-11 p-1 bg-muted/85 backdrop-blur-md border border-blue-500/20 shadow-sm shadow-blue-500/5">
-              <TabsTrigger value="progress" className="gap-2 text-xs sm:text-sm font-medium px-3.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs">
+            <TabsList className="h-11 p-1 bg-muted/80 backdrop-blur-sm">
+              <TabsTrigger value="progress" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
                 <ListTree className="size-4" />
                 <span>{t("tabs.progress")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="assessment" className="gap-2 text-xs sm:text-sm font-medium px-3.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs">
+              <TabsTrigger value="assessment" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
                 <ClipboardCheck className="size-4" />
                 <span>{t("tabs.assessment")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="chat" className="gap-2 text-xs sm:text-sm font-medium px-3.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs">
+              <TabsTrigger value="chat" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
                 <Image
                   src="/mascot.png"
                   alt="ATLAS AI Companion Mascot"
@@ -296,7 +296,7 @@ export function InteractiveFeaturesConsole() {
                 <span>{t("tabs.chat")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="instructor" className="gap-2 text-xs sm:text-sm font-medium px-3.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs">
+              <TabsTrigger value="instructor" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
                 <BrainCircuit className="size-4" />
                 <span>{t("tabs.instructor")}</span>
               </TabsTrigger>
@@ -306,15 +306,15 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 1: AUTHENTIC LEARNING PROGRESS SLICE */}
           <TabsContent value="progress" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-blue-500/20 bg-card/90 shadow-md shadow-blue-500/5 backdrop-blur-md transition-all duration-300 hover:border-blue-500/35">
-                <CardHeader className="pb-5 border-b border-border/60 bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-transparent">
+              <Card className="transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-5 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="font-mono text-xs border-blue-500/30 text-blue-700 dark:text-blue-300 bg-blue-500/5">
+                        <Badge variant="outline" className="font-mono text-xs">
                           PHYS102
                         </Badge>
-                        <Badge className="text-xs bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/20">{t("progress.inProgress")}</Badge>
+                        <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800">{t("progress.inProgress")}</Badge>
                       </div>
                       <CardTitle className="mt-2 text-xl font-semibold">
                         {t("progress.courseTitle")}
@@ -344,7 +344,6 @@ export function InteractiveFeaturesConsole() {
                           ? 50
                           : 15
                       }
-                      className="bg-blue-500/15"
                     />
                   </div>
                 </CardHeader>
@@ -370,8 +369,8 @@ export function InteractiveFeaturesConsole() {
                             }}
                             className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                               isSelected
-                                ? "border-blue-500 bg-blue-500/10 shadow-xs ring-1 ring-blue-500/30"
-                                : "bg-card hover:bg-muted/40 border-border/80"
+                                ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 shadow-xs ring-1 ring-blue-500/30"
+                                : "bg-card hover:bg-muted/40"
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -516,19 +515,19 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 2: AUTHENTIC FORMATIVE ASSESSMENT RUNNER SLICE */}
           <TabsContent value="assessment" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-blue-500/20 bg-card/90 shadow-md shadow-blue-500/5 backdrop-blur-md transition-all duration-300 hover:border-blue-500/35">
-                <CardHeader className="pb-4 border-b border-border/60 bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-transparent">
+              <Card className="transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-2.5">
                       <h3 className="font-semibold text-lg">{t("assessment.questionTitle")}</h3>
-                      <Badge className="text-xs bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/20">
+                      <Badge variant="secondary" className="text-xs">
                         {assessmentType === "mcq" ? t("assessment.multipleChoice") : t("assessment.essay")}
                       </Badge>
-                      <Badge variant="outline" className="text-xs border-blue-500/30 text-blue-700 dark:text-blue-300 bg-blue-500/5">{t("assessment.cycle1")}</Badge>
+                      <Badge variant="outline" className="text-xs">{t("assessment.cycle1")}</Badge>
                     </div>
 
                     {/* Mode Toggle */}
-                    <div className="flex items-center gap-1 rounded-lg border border-border/70 p-1 bg-muted/60">
+                    <div className="flex items-center gap-1 rounded-lg border p-1 bg-muted/40">
                       <Button
                         variant={assessmentType === "essay" ? "secondary" : "ghost"}
                         size="sm"
@@ -551,8 +550,8 @@ export function InteractiveFeaturesConsole() {
 
                 <CardContent className="space-y-6 p-5 sm:p-6">
                   {/* Question Workspace with AtlasRichTextViewer */}
-                  <section className="rounded-xl border border-blue-500/25 border-l-4 border-l-blue-500 bg-blue-500/5 p-4 sm:p-5">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                  <section className="rounded-xl border bg-muted/20 p-4 sm:p-5">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       {t("assessment.questionLabel")}
                     </p>
                     <AtlasRichTextViewer
@@ -573,7 +572,7 @@ export function InteractiveFeaturesConsole() {
                           <Button
                             variant={activeEssayKey === "sample1" ? "secondary" : "outline"}
                             size="sm"
-                            className={`h-8 text-xs sm:text-sm px-3 font-medium ${activeEssayKey === "sample1" ? "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30" : ""}`}
+                            className="h-8 text-xs sm:text-sm px-3 font-medium"
                             onClick={() => {
                               setActiveEssayKey("sample1");
                               setShowFeedback(true);
@@ -584,7 +583,7 @@ export function InteractiveFeaturesConsole() {
                           <Button
                             variant={activeEssayKey === "sample2" ? "secondary" : "outline"}
                             size="sm"
-                            className={`h-8 text-xs sm:text-sm px-3 font-medium ${activeEssayKey === "sample2" ? "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30" : ""}`}
+                            className="h-8 text-xs sm:text-sm px-3 font-medium"
                             onClick={() => {
                               setActiveEssayKey("sample2");
                               setShowFeedback(true);
@@ -596,7 +595,7 @@ export function InteractiveFeaturesConsole() {
                       </div>
 
                       {/* Submitted Essay with Math Viewer */}
-                      <div className="rounded-xl border bg-card p-4 sm:p-5 shadow-2xs">
+                      <div className="rounded-xl border bg-card p-4 sm:p-5">
                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">
                           {t("assessment.studentWrittenResponse")}
                         </p>
@@ -612,7 +611,7 @@ export function InteractiveFeaturesConsole() {
                           size="default"
                           onClick={handleRunEvaluation}
                           disabled={isEvaluating}
-                          className="gap-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20 border-0"
+                          className="gap-2 text-sm font-medium"
                         >
                           {isEvaluating ? (
                             <>
@@ -631,8 +630,8 @@ export function InteractiveFeaturesConsole() {
                           variant="outline"
                           className={`text-xs sm:text-sm font-medium ${
                             essaySamples[activeEssayKey].status === "Criteria Met"
-                              ? "text-emerald-600 bg-emerald-500/10 border-emerald-500/40"
-                              : "text-amber-600 bg-amber-500/10 border-amber-500/40"
+                              ? "text-emerald-600 border-emerald-500/40"
+                              : "text-amber-600 border-amber-500/40"
                           }`}
                         >
                           {essaySamples[activeEssayKey].status === "Criteria Met"
@@ -643,7 +642,7 @@ export function InteractiveFeaturesConsole() {
 
                       {/* Formative Feedback Card rendered with AtlasRichTextViewer */}
                       {showFeedback && (
-                        <div className="rounded-xl border border-blue-500/25 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent p-4 sm:p-5 space-y-2.5 animate-in fade-in duration-300">
+                        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/30 p-4 sm:p-5 space-y-2.5 animate-in fade-in duration-300">
                           <p className="text-sm font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
                             <Sparkles className="size-4 text-blue-600 dark:text-blue-400" />
                             {t("assessment.formativeEvaluationFeedback")}
@@ -675,7 +674,7 @@ export function InteractiveFeaturesConsole() {
                                   ? opt.isCorrect
                                     ? "border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500/30"
                                     : "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30"
-                                  : "bg-card hover:bg-muted/40 border-border/80"
+                                  : "bg-card hover:bg-muted/40"
                               }`}
                             >
                               <div className="flex items-start justify-between gap-3">
@@ -716,11 +715,11 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 3: AUTHENTIC COURSE-GROUNDED AI TUTOR SLICE */}
           <TabsContent value="chat" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-sky-500/20 bg-card/90 shadow-md shadow-sky-500/5 backdrop-blur-md transition-all duration-300 hover:border-sky-500/35">
-                <CardHeader className="pb-4 border-b border-border/60 bg-gradient-to-r from-sky-500/10 via-blue-500/5 to-transparent">
+              <Card className="transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="relative size-9 overflow-hidden rounded-lg bg-sky-500/10 p-1">
+                      <div className="relative size-9 overflow-hidden rounded-lg">
                         <Image
                           src="/mascot.png"
                           alt="ATLAS AI Companion Mascot"
@@ -739,7 +738,7 @@ export function InteractiveFeaturesConsole() {
                       </div>
                     </div>
 
-                    <Badge className="text-xs bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/25">
+                    <Badge variant="outline" className="text-xs">
                       {t("chat.verifiedCurriculum")}
                     </Badge>
                   </div>
@@ -757,7 +756,7 @@ export function InteractiveFeaturesConsole() {
                           key={sc.id}
                           variant={activeChatIndex === idx ? "secondary" : "outline"}
                           size="sm"
-                          className={`h-8 text-xs sm:text-sm font-medium px-3 ${activeChatIndex === idx ? "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30" : ""}`}
+                          className="h-8 text-xs sm:text-sm font-medium px-3"
                           onClick={() => setActiveChatIndex(idx)}
                         >
                           {sc.title}
@@ -767,14 +766,14 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Dialogue Conversation */}
-                  <div className="space-y-4 rounded-xl border border-border/80 bg-blue-500/5 p-4 sm:p-5">
+                  <div className="space-y-4 rounded-xl border bg-muted/10 p-4 sm:p-5">
                     {/* Student Question */}
                     <div className="flex items-start justify-end gap-3">
-                      <div className="max-w-lg rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2.5 text-sm sm:text-base text-white leading-relaxed shadow-sm shadow-blue-500/20">
+                      <div className="max-w-lg rounded-2xl bg-primary px-4 py-2.5 text-sm sm:text-base text-primary-foreground leading-relaxed">
                         {chatScenarios[activeChatIndex].question}
                       </div>
-                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400">
-                        <User className="size-4" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
+                        <User className="size-4 text-muted-foreground" />
                       </div>
                     </div>
 
@@ -789,13 +788,13 @@ export function InteractiveFeaturesConsole() {
                           className="size-full object-contain drop-shadow-xs"
                         />
                       </div>
-                      <div className="max-w-xl space-y-3 rounded-2xl border border-sky-500/20 bg-card/95 p-4 sm:p-5 text-sm sm:text-base leading-relaxed shadow-xs">
+                      <div className="max-w-xl space-y-3 rounded-2xl border bg-card p-4 sm:p-5 text-sm sm:text-base leading-relaxed">
                         <AtlasRichTextViewer
                           value={chatScenarios[activeChatIndex].response}
                           className="text-sm sm:text-base leading-relaxed"
                         />
                         <div className="border-t border-border/60 pt-2.5 text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5">
-                          <span className="font-semibold text-blue-600 dark:text-blue-400">{t("chat.groundingSource")}</span>
+                          <span className="font-semibold text-foreground">{t("chat.groundingSource")}</span>
                           <span>{chatScenarios[activeChatIndex].citation}</span>
                         </div>
                       </div>
@@ -809,9 +808,9 @@ export function InteractiveFeaturesConsole() {
                       placeholder={t("chat.inputPlaceholder")}
                       value={userCustomFollowUp}
                       onChange={(e) => setUserCustomFollowUp(e.target.value)}
-                      className="flex-1 rounded-lg border border-border/80 bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-hidden focus:border-primary"
+                      className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-hidden focus:border-primary"
                     />
-                    <Button size="default" className="gap-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-sm shadow-blue-500/20 border-0">
+                    <Button size="default" className="gap-2 text-sm font-medium">
                       <Send className="size-3.5" />
                       {t("chat.askButton")}
                     </Button>
@@ -829,14 +828,14 @@ export function InteractiveFeaturesConsole() {
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Card
                     onClick={() => setCohortFilter("all")}
-                    className={`cursor-pointer transition-all border border-blue-500/30 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent ${
-                      cohortFilter === "all" ? "ring-2 ring-blue-500/40 shadow-sm" : "hover:bg-blue-500/15"
+                    className={`cursor-pointer transition-all border ${
+                      cohortFilter === "all" ? "border-primary bg-primary/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.enrolledStudents")}</span>
-                        <Badge className="text-xs bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/25">{t("instructor.active")}</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.active")}</Badge>
                       </div>
                       <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">42</p>
                       <p className="mt-1 text-xs text-muted-foreground">{t("instructor.sectionTerm")}</p>
@@ -845,14 +844,14 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("support")}
-                    className={`cursor-pointer transition-all border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent ${
-                      cohortFilter === "support" ? "ring-2 ring-amber-500/40 shadow-sm" : "hover:bg-amber-500/15"
+                    className={`cursor-pointer transition-all border ${
+                      cohortFilter === "support" ? "border-amber-500 bg-amber-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.formativeCyclesActive")}</span>
-                        <Badge className="text-xs bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/40">{t("instructor.pending")}</Badge>
+                        <Badge variant="outline" className="text-xs text-amber-600 border-amber-500/40">{t("instructor.pending")}</Badge>
                       </div>
                       <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">18</p>
                       <p className="mt-1 text-xs text-muted-foreground">{t("instructor.interventionInProgress")}</p>
@@ -861,14 +860,14 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("mastered")}
-                    className={`cursor-pointer transition-all border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent ${
-                      cohortFilter === "mastered" ? "ring-2 ring-emerald-500/40 shadow-sm" : "hover:bg-emerald-500/15"
+                    className={`cursor-pointer transition-all border ${
+                      cohortFilter === "mastered" ? "border-emerald-500 bg-emerald-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.conceptMasteryRate")}</span>
-                        <Badge className="text-xs bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/40">{t("instructor.progressing")}</Badge>
+                        <Badge variant="outline" className="text-xs text-emerald-600 border-emerald-500/40">{t("instructor.progressing")}</Badge>
                       </div>
                       <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">76%</p>
                       <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
@@ -879,8 +878,8 @@ export function InteractiveFeaturesConsole() {
                 </div>
 
                 {/* Question Bank Authoring Table */}
-                <Card className="border border-indigo-500/20 bg-card/90 shadow-sm shadow-indigo-500/5 backdrop-blur-md">
-                  <CardHeader className="pb-4 border-b border-border/60 bg-gradient-to-r from-indigo-500/10 via-blue-500/5 to-transparent">
+                <Card>
+                  <CardHeader className="pb-4 border-b">
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle className="text-base font-semibold">
@@ -890,44 +889,44 @@ export function InteractiveFeaturesConsole() {
                           {t("instructor.repoDescription")}
                         </CardDescription>
                       </div>
-                      <Badge className="text-xs bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/25">{t("instructor.repositoriesActive")}</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("instructor.repositoriesActive")}</Badge>
                     </div>
                   </CardHeader>
 
                   <CardContent className="p-5 text-sm space-y-3">
-                    <div className="flex items-center justify-between rounded-xl border border-border/80 p-4 bg-card hover:bg-blue-500/5 transition-colors">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-01: Coulomb&apos;s Law</p>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.coulombStats")}</p>
                       </div>
                       <div className="flex items-center gap-2.5">
-                        <Badge variant="outline" className="text-xs border-blue-500/30 text-blue-700 dark:text-blue-300 bg-blue-500/5">{t("instructor.published")}</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
                         <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between rounded-xl border border-border/80 p-4 bg-card hover:bg-blue-500/5 transition-colors">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-02: Field Superposition</p>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.superpositionStats")}</p>
                       </div>
                       <div className="flex items-center gap-2.5">
-                        <Badge variant="outline" className="text-xs border-blue-500/30 text-blue-700 dark:text-blue-300 bg-blue-500/5">{t("instructor.published")}</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
                         <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between rounded-xl border border-border/80 p-4 bg-card hover:bg-blue-500/5 transition-colors">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
                         <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-03: Gauss&apos;s Flux Law</p>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.gaussStats")}</p>
                       </div>
                       <div className="flex items-center gap-2.5">
-                        <Badge className="text-xs bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30">{t("instructor.drafting")}</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("instructor.drafting")}</Badge>
                         <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>

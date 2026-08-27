@@ -82,25 +82,23 @@ export function GuidesFaqSection() {
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {/* Video Guides Card */}
           <ScrollReveal delayMs={100}>
-            <Card className="flex h-full flex-col justify-between border border-blue-500/20 bg-card/85 shadow-sm shadow-blue-500/5 backdrop-blur-md transition-all duration-300 hover:border-blue-500/40 hover:shadow-md hover:shadow-blue-500/10">
-              <CardHeader className="pb-4 border-b border-border/60 bg-gradient-to-r from-blue-500/10 via-sky-500/5 to-transparent">
+            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
+              <CardHeader className="pb-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-md bg-blue-500/15 text-blue-600 dark:text-blue-400">
-                      <Video className="size-4" />
-                    </div>
+                    <Video className="size-4.5 text-primary" />
                     <CardTitle className="text-base font-semibold">{t("video.title")}</CardTitle>
                   </div>
-                  <Badge className="text-xs bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/20">{t("video.badge")}</Badge>
+                  <Badge variant="secondary" className="text-xs">{t("video.badge")}</Badge>
                 </div>
               </CardHeader>
 
               <CardContent className="p-6">
                 <div
                   onClick={() => setVideoModalOpen(!videoModalOpen)}
-                  className="group cursor-pointer flex flex-col items-center justify-center rounded-xl border border-dashed border-blue-500/30 p-8 text-center bg-blue-500/5 backdrop-blur-xs hover:bg-blue-500/10 transition-colors"
+                  className="group cursor-pointer flex flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center bg-muted/40 hover:bg-muted/60 transition-colors"
                 >
-                  <div className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/25 transition-transform group-hover:scale-110">
+                  <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform group-hover:scale-110">
                     <PlayCircle className="size-7" />
                   </div>
 
@@ -113,12 +111,12 @@ export function GuidesFaqSection() {
                   </p>
 
                   <div className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground">
-                    <Clock className="size-4 text-blue-600/70 dark:text-blue-400/70" />
+                    <Clock className="size-4" />
                     <span>{t("video.plannedRelease")}</span>
                   </div>
 
                   {videoModalOpen && (
-                    <div className="mt-4 rounded-lg bg-background/90 backdrop-blur-xs p-3 text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium border border-blue-500/30 shadow-xs animate-in fade-in">
+                    <div className="mt-4 rounded-lg bg-background p-3 text-xs sm:text-sm text-primary font-medium border border-primary/20 animate-in fade-in">
                       {t("video.modalText")}
                     </div>
                   )}
@@ -129,16 +127,14 @@ export function GuidesFaqSection() {
 
           {/* Documentation Interactive List Card */}
           <ScrollReveal delayMs={200}>
-            <Card className="flex h-full flex-col justify-between border border-indigo-500/20 bg-card/85 shadow-sm shadow-indigo-500/5 backdrop-blur-md transition-all duration-300 hover:border-indigo-500/40 hover:shadow-md hover:shadow-indigo-500/10">
-              <CardHeader className="pb-4 border-b border-border/60 bg-gradient-to-r from-indigo-500/10 via-purple-500/5 to-transparent">
+            <Card className="flex h-full flex-col justify-between border border-border/80 bg-card shadow-xs transition-all duration-300 hover:shadow-md">
+              <CardHeader className="pb-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-md bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
-                      <FileText className="size-4" />
-                    </div>
+                    <FileText className="size-4.5 text-primary" />
                     <CardTitle className="text-base font-semibold">{t("docs.title")}</CardTitle>
                   </div>
-                  <Badge className="text-xs bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/20">{t("docs.badge")}</Badge>
+                  <Badge variant="secondary" className="text-xs">{t("docs.badge")}</Badge>
                 </div>
               </CardHeader>
 
@@ -154,19 +150,19 @@ export function GuidesFaqSection() {
                       key={guide.id}
                       onClick={() => setSelectedGuideId(guide.id)}
                       className={`cursor-pointer p-4 text-sm transition-colors ${
-                        isSelected ? "bg-blue-500/10 border-l-3 border-l-blue-500" : "hover:bg-muted/40"
+                        isSelected ? "bg-primary/5 border-l-2 border-l-primary" : "hover:bg-muted/40"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                          <p className={`text-sm sm:text-base font-semibold leading-snug ${isSelected ? "text-blue-600 dark:text-blue-400" : "text-foreground"}`}>
+                          <p className={`text-sm sm:text-base font-semibold leading-snug ${isSelected ? "text-primary" : "text-foreground"}`}>
                             {guideTitle}
                           </p>
                           <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mt-0.5">
                             {guideDesc}
                           </p>
                         </div>
-                        <Badge variant={isSelected ? "default" : "outline"} className={`shrink-0 text-xs ${isSelected ? "bg-blue-600 hover:bg-blue-600 text-white" : ""}`}>
+                        <Badge variant={isSelected ? "default" : "outline"} className="shrink-0 text-xs">
                           {guideCategory}
                         </Badge>
                       </div>
