@@ -53,9 +53,13 @@ describe("LandingHeader", () => {
       "href",
       "#guides-faq",
     );
-    expect(screen.getByRole("link", { name: "Project" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Team" })).toHaveAttribute(
       "href",
-      "#project",
+      "#team",
+    );
+    expect(screen.getByRole("link", { name: "Publication" })).toHaveAttribute(
+      "href",
+      "#publication",
     );
   });
 
@@ -87,9 +91,13 @@ describe("LandingHeader", () => {
       "href",
       "#guides-faq",
     );
-    expect(screen.getByRole("link", { name: "Proyek" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Tim" })).toHaveAttribute(
       "href",
-      "#project",
+      "#team",
+    );
+    expect(screen.getByRole("link", { name: "Publikasi" })).toHaveAttribute(
+      "href",
+      "#publication",
     );
   });
 });

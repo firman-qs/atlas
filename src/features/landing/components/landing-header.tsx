@@ -100,8 +100,12 @@ export function LandingHeader() {
       href: "#guides-faq",
     },
     {
-      label: tNav("project"),
-      href: "#project",
+      label: tNav("team"),
+      href: "#team",
+    },
+    {
+      label: tNav("publication"),
+      href: "#publication",
     },
   ];
 
@@ -126,44 +130,46 @@ export function LandingHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        {/* Brand Logo with Real Logo Image */}
-        <Link
-          href="/"
-          aria-label={tHeader("homeAria")}
-          className="flex items-center gap-2.5 outline-hidden group"
-        >
-          <div className="relative size-7 overflow-hidden transition-transform group-hover:scale-105">
-            <Image
-              src="/logo.png"
-              alt="ATLAS Logo"
-              width={28}
-              height={28}
-              priority
-              className="size-full object-contain"
-            />
-          </div>
+        {/* Left Side: Brand Logo & Left-Aligned Navigation */}
+        <div className="flex items-center gap-6">
+          <Link
+            href="/"
+            aria-label={tHeader("homeAria")}
+            className="flex items-center gap-2.5 outline-hidden group"
+          >
+            <div className="relative size-7 overflow-hidden transition-transform group-hover:scale-105">
+              <Image
+                src="/logo.png"
+                alt="ATLAS Logo"
+                width={28}
+                height={28}
+                priority
+                className="size-full object-contain"
+              />
+            </div>
 
-          <span className="font-semibold tracking-tight text-foreground text-sm">
-            ATLAS
-          </span>
-        </Link>
+            <span className="font-semibold tracking-tight text-foreground text-sm">
+              ATLAS
+            </span>
+          </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav
-          aria-label="Primary navigation"
-          className="hidden items-center gap-1 md:flex"
-        >
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          {/* Desktop Navigation Links */}
+          <nav
+            aria-label="Primary navigation"
+            className="hidden items-center gap-1 md:flex"
+          >
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-2 md:flex">

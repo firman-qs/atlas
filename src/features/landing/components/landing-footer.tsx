@@ -63,8 +63,8 @@ export function LandingFooter() {
       href: "#guides-faq",
     },
     {
-      label: t("links.project"),
-      href: "#project",
+      label: t("links.team"),
+      href: "#team",
     },
     {
       label: t("links.publication"),

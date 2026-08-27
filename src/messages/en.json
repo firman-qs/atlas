@@ -1187,7 +1187,8 @@
     "nav": {
       "features": "Features",
       "guidesFaq": "Guides & FAQ",
-      "project": "Project"
+      "team": "Team",
+      "publication": "Publication"
     },
     "header": {
       "themeToggleAria": "Toggle visual theme",
@@ -1399,33 +1400,30 @@
       }
     },
     "project": {
-      "badge": "Project & Academic Team",
-      "title": "The people and institutional support behind ATLAS",
-      "description": "ATLAS brings together educational assessment, conceptual learning, and software engineering in a research-oriented academic project.",
-      "clickToCollapse": "Click to collapse",
-      "clickForBio": "Click for bio",
+      "badge": "Academic & Research Team",
+      "title": "The people behind ATLAS",
+      "description": "ATLAS is developed through academic research at Universitas Negeri Malang, bridging physics education and intelligent formative assessment systems.",
       "roles": {
-        "creator": "Creator & Developer",
-        "supervisor": "Academic Supervisor"
-      },
-      "bios": {
-        "firman": "Lead software architecture, AI formative assessment pipelines, and system implementation.",
-        "khusaini": "Physics education specialist supervising pedagogical design, assessment taxonomy, and learning models.",
-        "cahyo": "Physics content expert advising on electromagnetism conceptual structures and curriculum alignment."
-      },
-      "funding": {
-        "badge": "Internal Grant",
-        "title": "Funding Acknowledgement",
-        "institution": "Universitas Negeri Malang",
-        "type": "Internal Non-PNBP Funding",
-        "description": "Support provided for educational technology research and pilot assessment deployment."
+        "student": "Student / Developer",
+        "supervisor1": "Supervisor 1",
+        "supervisor2": "Supervisor 2"
       },
       "publication": {
         "badge": "In Preparation",
         "title": "Publication Status",
-        "subtitle": "Empirical Evaluation",
-        "type": "Research publication",
-        "description": "Coming soon."
+        "subtitle": "Empirical Evaluation & Educational Research",
+        "itemTitle": "Formative Assessment and SOLO Taxonomy Progression in Introductory Electromagnetism: The ATLAS Framework",
+        "itemAuthors": "Firman Qashdus Sabil, Khusaini, Cahyo Aji Hapsoro",
+        "itemStatus": "Manuscript in preparation for physics education research journal submission",
+        "description": "Research findings and evaluation data from the electromagnetics pilot implementation will be published."
+      },
+      "funding": {
+        "badge": "Institutional Grant",
+        "title": "Funding Acknowledgement",
+        "institution": "Universitas Negeri Malang",
+        "type": "Internal Non-PNBP Research Funding",
+        "department": "Department of Physics, Faculty of Mathematics and Natural Sciences",
+        "description": "Financial and institutional support provided for learning technology research and pilot assessment deployment."
       }
     },
     "footer": {
@@ -1439,7 +1437,7 @@
       "links": {
         "features": "Features",
         "guidesFaq": "Guides & FAQ",
-        "project": "Project Team",
+        "team": "Team",
         "publication": "Publication"
       },
       "supportTitle": "Institutional Support",
