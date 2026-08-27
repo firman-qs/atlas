@@ -9,7 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { learningObjectiveNumber } from "@/features/student-course/labels";
+import {
+  formatDomainCode,
+  learningObjectiveNumber,
+  soloLevelMessageKey,
+} from "@/features/student-course/labels";
 import { useAssessmentResult } from "@/features/student-course/queries";
 import type {
   AssessmentResultAnswer,
@@ -88,6 +92,14 @@ export function AssessmentResultView({
     result.learning_objective.code,
   );
 
+  function soloLevelLabel(value: string) {
+    const messageKey = soloLevelMessageKey(value);
+
+    return messageKey
+      ? course(`soloLevels.${messageKey}`)
+      : formatDomainCode(value);
+  }
+
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <Button
@@ -146,7 +158,7 @@ export function AssessmentResultView({
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-medium capitalize">
-                        {level.solo_code}
+                        {soloLevelLabel(level.solo_code)}
                       </p>
 
                       <p className="text-xs text-muted-foreground">

@@ -4,10 +4,31 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AssessmentResultView } from "@/features/student-course/components/assessment-result-view";
 
 const mockedUseAssessmentResult = vi.hoisted(() => vi.fn());
+const mockedRichTextValue = vi.hoisted(() => vi.fn());
 
 vi.mock("@/features/student-course/queries", () => ({
   useAssessmentResult: mockedUseAssessmentResult,
 }));
+
+vi.mock(
+  "@/components/rich-text/atlas-rich-text-viewer",
+  async (importOriginal) => {
+    const actual = await importOriginal<
+      typeof import("@/components/rich-text/atlas-rich-text-viewer")
+    >();
+
+    return {
+      ...actual,
+      AtlasRichTextViewer: (props: {
+        value: string;
+        className?: string;
+      }) => {
+        mockedRichTextValue(props.value);
+        return <actual.AtlasRichTextViewer {...props} />;
+      },
+    };
+  },
+);
 
 describe("AssessmentResultView", () => {
   beforeEach(() => {
@@ -199,11 +220,16 @@ describe("AssessmentResultView", () => {
       screen.getByRole("heading", { name: "Tujuan Pembelajaran 1" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Progres")).toBeInTheDocument();
+    expect(screen.getByText("Relasional")).toBeInTheDocument();
+    expect(screen.queryByText("relational")).not.toBeInTheDocument();
     expect(
       screen.getByText("Explain electric flux."),
     ).toBeInTheDocument();
     expect(
       screen.getByTestId("assessment-attempt-attempt-essay"),
     ).toHaveTextContent("Good physical reasoning.");
+    expect(mockedRichTextValue).toHaveBeenCalledWith(
+      "Because **$E \\propto 1/r^2$** while area is $4\\pi r^2$.",
+    );
   });
 });

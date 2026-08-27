@@ -188,7 +188,7 @@
     "continueAssessment": "Continue assessment",
     "openCourse": "Open course",
     "section": "Section {section}",
-    "courseSummary": "Section {section} · {semester} {year} · {credits} · {instructor}",
+    "courseSummary": "Section {section} · {semester} {year} · {credits}",
     "credits": "{count, plural, one {# credit} other {# credits}}",
     "labels": {
       "credits": "Credits",

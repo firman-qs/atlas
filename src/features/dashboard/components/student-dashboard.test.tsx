@@ -2,6 +2,7 @@ import { render, screen, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { StudentDashboard } from "@/features/dashboard/components/student-dashboard";
+import idMessages from "@/messages/id.json";
 
 const useStudentCourses = vi.hoisted(() => vi.fn());
 const useLearningRecordProgress = vi.hoisted(() => vi.fn());
@@ -323,7 +324,16 @@ describe("StudentDashboard", () => {
   });
 
   it("localizes dashboard presentation without translating course data", () => {
-    render(<StudentDashboard />, { locale: "id" });
+    render(<StudentDashboard />, {
+      locale: "id",
+      messages: {
+        ...idMessages,
+        course: {
+          ...idMessages.course,
+          courseSummary: "Kelas {section} · {semester} {year} · {credits}",
+        },
+      },
+    });
 
     expect(screen.getByText("Mata Kuliah Saya")).toBeInTheDocument();
     expect(

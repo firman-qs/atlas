@@ -72,7 +72,7 @@ describe("AppHeader", () => {
   });
 
   it("renders route context and switches workspace role", () => {
-    const { container } = render(
+    render(
       <SidebarProvider>
         <AppHeader />
       </SidebarProvider>,

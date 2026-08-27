@@ -158,8 +158,9 @@ function ContinueLearningCard({
                   semester,
                   year: offering.academic_term.year,
                   credits: courseMessages("credits", { count: course.credits }),
-                  instructor: offering.instructor.full_name,
                 })}
+                {" · "}
+                {offering.instructor.full_name}
               </p>
 
               {activeAssessment && (

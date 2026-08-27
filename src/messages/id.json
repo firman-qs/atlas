@@ -188,7 +188,7 @@
     "continueAssessment": "Lanjutkan asesmen",
     "openCourse": "Buka mata kuliah",
     "section": "Kelas {section}",
-    "courseSummary": "Kelas {section} · {semester} {year} · {credits} · {instructor}",
+    "courseSummary": "Kelas {section} · {semester} {year} · {credits}",
     "credits": "{count, plural, other {# SKS}}",
     "labels": {
       "credits": "SKS",
