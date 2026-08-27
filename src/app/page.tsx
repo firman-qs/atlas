@@ -1,51 +1,30 @@
-"use client";
-
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/features/auth/auth-provider";
+import { GuidesFaqSection } from "@/features/landing/components/guides-faq-section";
+import { InteractiveFeaturesConsole } from "@/features/landing/components/interactive-features-console";
+import { LandingFieldCanvas } from "@/features/landing/components/landing-field-canvas";
+import { LandingFooter } from "@/features/landing/components/landing-footer";
+import { LandingHeader } from "@/features/landing/components/landing-header";
+import { LandingHero } from "@/features/landing/components/landing-hero";
+import { ProjectSection } from "@/features/landing/components/project-section";
 
 export default function LandingPage() {
-  const { isAuthenticated, isLoading } = useAuth();
-
   return (
-    <main className="flex min-h-svh items-center justify-center p-6">
-      <div className="max-w-xl text-center">
-        <p className="text-sm font-medium text-primary">ATLAS</p>
+    <div className="relative min-h-screen scroll-smooth bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+      {/* Interactive Electromagnetic Vector Field Background (Vibrant & Cursor-Reactive) */}
+      <LandingFieldCanvas />
 
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-          AI-Driven Adaptive Formative Assessment
-        </h1>
+      {/* Navigation Header with Windows 11 Acrylic / Frosted Glass */}
+      <LandingHeader />
 
-        <p className="mt-4 text-muted-foreground">
-          Learn concepts progressively with formative assessment,
-          curriculum-grounded feedback, and AI-supported learning.
-        </p>
+      {/* Main Streamlined Narrative Flow */}
+      <main className="relative z-10">
+        <LandingHero />
+        <InteractiveFeaturesConsole />
+        <GuidesFaqSection />
+        <ProjectSection />
+      </main>
 
-        {!isLoading && (
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {isAuthenticated ? (
-              <Button nativeButton={false} render={<Link href="/dashboard" />}>
-                Open Dashboard
-              </Button>
-            ) : (
-              <>
-                <Button nativeButton={false} render={<Link href="/register" />}>
-                  Get Started
-                </Button>
-
-                <Button
-                  variant="outline"
-                  nativeButton={false}
-                  render={<Link href="/login" />}
-                >
-                  Sign In
-                </Button>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </main>
+      {/* Academic Frosted Footer */}
+      <LandingFooter />
+    </div>
   );
 }
