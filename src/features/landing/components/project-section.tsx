@@ -73,7 +73,7 @@ export function ProjectSection() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {team.map((member, idx) => (
               <ScrollReveal key={member.name} delayMs={idx * 100}>
-                <Card className="flex h-full flex-col justify-between border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
+                <Card className="flex h-full flex-col justify-between border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
                   <CardHeader className="pb-5">
                     {/* Photo / Avatar Placeholder (Ready for real image replacement) */}
                     <div className="relative mb-4 flex size-18 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/60 text-muted-foreground shadow-inner">

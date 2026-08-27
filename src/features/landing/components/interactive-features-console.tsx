@@ -306,7 +306,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 1: AUTHENTIC LEARNING PROGRESS SLICE */}
           <TabsContent value="progress" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-5 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -370,7 +370,7 @@ export function InteractiveFeaturesConsole() {
                             className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                               isSelected
                                 ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 shadow-xs ring-1 ring-blue-500/30"
-                                : "bg-card hover:bg-muted/40"
+                                : "bg-card/50 hover:bg-muted/40 backdrop-blur-xs"
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -406,7 +406,7 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Configured SOLO Stepper & Math Problem Preview */}
-                  <div className="rounded-xl border bg-muted/20 p-5 space-y-4">
+                  <div className="rounded-xl border bg-muted/20 backdrop-blur-xs p-5 space-y-4">
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-sm font-semibold text-foreground">
@@ -439,8 +439,8 @@ export function InteractiveFeaturesConsole() {
                             onClick={() => setSelectedSoloStage(idx)}
                             className={`flex items-start gap-3 rounded-lg border p-3.5 text-left transition-all ${
                               isStageActive
-                                ? "border-primary bg-background shadow-xs ring-1 ring-primary/30"
-                                : "bg-background/80 hover:bg-background"
+                                ? "border-primary bg-background/80 shadow-xs ring-1 ring-primary/30"
+                                : "bg-background/60 hover:bg-background/80"
                             }`}
                           >
                             <div className="mt-0.5">
@@ -481,7 +481,7 @@ export function InteractiveFeaturesConsole() {
                     </div>
 
                     {/* Rich Text KaTeX Math Viewer */}
-                    <div className="rounded-lg border bg-background p-4 sm:p-5 text-sm space-y-3">
+                    <div className="rounded-lg border bg-background/70 backdrop-blur-xs p-4 sm:p-5 text-sm space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground text-sm sm:text-base">
                           {t("progress.levelAssessmentFocus", {
@@ -515,7 +515,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 2: AUTHENTIC FORMATIVE ASSESSMENT RUNNER SLICE */}
           <TabsContent value="assessment" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-wrap items-center gap-2.5">
@@ -527,7 +527,7 @@ export function InteractiveFeaturesConsole() {
                     </div>
 
                     {/* Mode Toggle */}
-                    <div className="flex items-center gap-1 rounded-lg border p-1 bg-muted/40">
+                    <div className="flex items-center gap-1 rounded-lg border p-1 bg-muted/40 backdrop-blur-xs">
                       <Button
                         variant={assessmentType === "essay" ? "secondary" : "ghost"}
                         size="sm"
@@ -550,7 +550,7 @@ export function InteractiveFeaturesConsole() {
 
                 <CardContent className="space-y-6 p-5 sm:p-6">
                   {/* Question Workspace with AtlasRichTextViewer */}
-                  <section className="rounded-xl border bg-muted/20 p-4 sm:p-5">
+                  <section className="rounded-xl border bg-muted/20 backdrop-blur-xs p-4 sm:p-5">
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       {t("assessment.questionLabel")}
                     </p>
@@ -595,7 +595,7 @@ export function InteractiveFeaturesConsole() {
                       </div>
 
                       {/* Submitted Essay with Math Viewer */}
-                      <div className="rounded-xl border bg-card p-4 sm:p-5">
+                      <div className="rounded-xl border bg-card/60 backdrop-blur-xs p-4 sm:p-5">
                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">
                           {t("assessment.studentWrittenResponse")}
                         </p>
@@ -642,7 +642,7 @@ export function InteractiveFeaturesConsole() {
 
                       {/* Formative Feedback Card rendered with AtlasRichTextViewer */}
                       {showFeedback && (
-                        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/30 p-4 sm:p-5 space-y-2.5 animate-in fade-in duration-300">
+                        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/30 backdrop-blur-xs p-4 sm:p-5 space-y-2.5 animate-in fade-in duration-300">
                           <p className="text-sm font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
                             <Sparkles className="size-4 text-blue-600 dark:text-blue-400" />
                             {t("assessment.formativeEvaluationFeedback")}
@@ -674,7 +674,7 @@ export function InteractiveFeaturesConsole() {
                                   ? opt.isCorrect
                                     ? "border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500/30"
                                     : "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30"
-                                  : "bg-card hover:bg-muted/40"
+                                  : "bg-card/50 hover:bg-muted/40 backdrop-blur-xs"
                               }`}
                             >
                               <div className="flex items-start justify-between gap-3">
@@ -715,7 +715,7 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 3: AUTHENTIC COURSE-GROUNDED AI TUTOR SLICE */}
           <TabsContent value="chat" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow-md">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
                 <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
@@ -766,7 +766,7 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Dialogue Conversation */}
-                  <div className="space-y-4 rounded-xl border bg-muted/10 p-4 sm:p-5">
+                  <div className="space-y-4 rounded-xl border bg-muted/10 backdrop-blur-xs p-4 sm:p-5">
                     {/* Student Question */}
                     <div className="flex items-start justify-end gap-3">
                       <div className="max-w-lg rounded-2xl bg-primary px-4 py-2.5 text-sm sm:text-base text-primary-foreground leading-relaxed">
@@ -788,7 +788,7 @@ export function InteractiveFeaturesConsole() {
                           className="size-full object-contain drop-shadow-xs"
                         />
                       </div>
-                      <div className="max-w-xl space-y-3 rounded-2xl border bg-card p-4 sm:p-5 text-sm sm:text-base leading-relaxed">
+                      <div className="max-w-xl space-y-3 rounded-2xl border bg-card/60 backdrop-blur-xs p-4 sm:p-5 text-sm sm:text-base leading-relaxed">
                         <AtlasRichTextViewer
                           value={chatScenarios[activeChatIndex].response}
                           className="text-sm sm:text-base leading-relaxed"
@@ -828,7 +828,7 @@ export function InteractiveFeaturesConsole() {
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Card
                     onClick={() => setCohortFilter("all")}
-                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "all" ? "border-primary bg-primary/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -844,7 +844,7 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("support")}
-                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "support" ? "border-amber-500 bg-amber-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -860,7 +860,7 @@ export function InteractiveFeaturesConsole() {
 
                   <Card
                     onClick={() => setCohortFilter("mastered")}
-                    className={`cursor-pointer transition-all border border-border/80 bg-card/75 backdrop-blur-md ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "mastered" ? "border-emerald-500 bg-emerald-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
@@ -878,7 +878,7 @@ export function InteractiveFeaturesConsole() {
                 </div>
 
                 {/* Question Bank Authoring Table */}
-                <Card className="border border-border/80 bg-card/75 backdrop-blur-md shadow-xs">
+                <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs">
                   <CardHeader className="pb-4 border-b">
                     <div className="flex items-center justify-between">
                       <div>

@@ -16,7 +16,7 @@ export default function LandingPage() {
       <LandingHeader />
 
       {/* Main Streamlined Narrative Flow */}
-      <main className="relative z-10">
+      <main className="relative z-10 pt-14">
         <LandingHero />
         <InteractiveFeaturesConsole />
         <GuidesFaqSection />
