@@ -102,7 +102,7 @@
       "email": "Email",
       "submitting": "Sedang mengirim...",
       "submit": "Kirim petunjuk pengaturan ulang",
-      "backToSignIn": "Kembali ke masuk",
+      "backToSignIn": "Kembali ke halaman masuk",
       "fallbackError": "Tidak dapat meminta pengaturan ulang kata sandi."
     },
     "resetPassword": {
@@ -112,7 +112,7 @@
       "confirmNewPassword": "Konfirmasi kata sandi baru",
       "submitting": "Sedang mengatur ulang kata sandi...",
       "submit": "Atur ulang kata sandi",
-      "backToSignIn": "Kembali ke masuk",
+      "backToSignIn": "Kembali ke halaman masuk",
       "fallbackError": "Tidak dapat mengatur ulang kata sandi Anda.",
       "invalidLinkTitle": "Tautan pengaturan ulang tidak valid",
       "invalidLinkDescription": "Tautan pengaturan ulang kata sandi ini tidak valid atau tidak lengkap.",
@@ -133,7 +133,7 @@
     "title": "Akun",
     "description": "Tinjau identitas ATLAS Anda dan kelola keamanan akun.",
     "profile": "Profil",
-    "profileDescription": "Informasi akun ATLAS Anda yang telah diautentikasi.",
+    "profileDescription": "Informasi akun ATLAS Anda yang terautentikasi.",
     "fullName": "Nama lengkap",
     "email": "Email",
     "roles": "Peran"
@@ -142,8 +142,8 @@
     "close": "Tutup",
     "more": "Lainnya",
     "sidebar": "Bilah samping",
-    "mobileSidebarDescription": "Menampilkan bilah samping seluler.",
-    "toggleSidebar": "Alihkan Bilah Samping"
+    "mobileSidebarDescription": "Menampilkan bilah samping pada perangkat seluler.",
+    "toggleSidebar": "Buka/tutup bilah samping"
   },
   "language": {
     "label": "Bahasa",

@@ -100,7 +100,7 @@ describe("AppHeader", () => {
   });
 
   it("renders Indonesian shell labels without changing navigation targets", () => {
-    render(
+    const { container } = render(
       <SidebarProvider>
         <AppHeader />
         <AppSidebar />

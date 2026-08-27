@@ -3,7 +3,7 @@ import {
   render as testingLibraryRender,
   type RenderOptions,
 } from "@testing-library/react";
-import type {ReactNode} from "react";
+import type {ComponentType, ReactNode} from "react";
 import {type Locale} from "@/i18n/config";
 import {loadMessages} from "@/i18n/messages";
 
@@ -16,6 +16,7 @@ type Props = {
 type Options = Omit<RenderOptions, "wrapper"> & {
   locale?: Locale;
   messages?: AbstractIntlMessages;
+  wrapper?: ComponentType<{children: ReactNode}>;
 };
 
 function TestIntlProvider({children, locale = "en", messages}: Props) {
@@ -30,12 +31,15 @@ function TestIntlProvider({children, locale = "en", messages}: Props) {
   );
 }
 
-function render(ui: React.ReactElement, {locale, messages, ...options}: Options = {}) {
+function render(
+  ui: React.ReactElement,
+  {locale, messages, wrapper: Wrapper, ...options}: Options = {},
+) {
   return testingLibraryRender(ui, {
     ...options,
     wrapper: ({children}) => (
       <TestIntlProvider locale={locale} messages={messages}>
-        {children}
+        {Wrapper ? <Wrapper>{children}</Wrapper> : children}
       </TestIntlProvider>
     ),
   });

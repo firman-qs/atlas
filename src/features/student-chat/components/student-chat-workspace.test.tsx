@@ -1,10 +1,10 @@
 import {
   fireEvent,
+  render as renderWithIntl,
   screen,
-  render as testingLibraryRender,
   waitFor,
   within,
-} from "@testing-library/react";
+} from "@/test/render";
 import type { ReactElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -90,9 +90,7 @@ const enrollment = {
 };
 
 function render(ui: ReactElement) {
-  return testingLibraryRender(ui, {
-    wrapper: ChatFullscreenProvider,
-  });
+  return renderWithIntl(ui, { wrapper: ChatFullscreenProvider });
 }
 
 describe("StudentChatWorkspace", () => {
