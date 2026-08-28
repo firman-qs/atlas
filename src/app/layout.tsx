@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
-import "katex/dist/katex.min.css";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { AppProvider } from "@/components/providers/app-provider";

@@ -1,3 +1,6 @@
 allowBuilds:
   sharp: false
   unrs-resolver: false
+
+overrides:
+  rehype-katex>katex: 0.18.4
