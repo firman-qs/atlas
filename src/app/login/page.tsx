@@ -107,8 +107,8 @@ export default function LoginPage() {
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16">
           {/* Left Column: 3D ATLAS Interactive Mascot with Speech Balloon (Desktop) */}
           <div className="hidden lg:col-span-6 lg:flex lg:flex-col lg:items-center lg:justify-center text-center">
-            {/* Mascot Speech Balloon */}
-            <div className="relative mb-4 max-w-xs rounded-2xl border border-border bg-card px-5 py-3 shadow-md dark:bg-card">
+            {/* Mascot Speech Balloon with subtle floating animation & close proximity */}
+            <div className="relative mb-1 z-20 max-w-xs rounded-2xl border border-border bg-card px-5 py-3 shadow-md animate-float-balloon select-none dark:bg-card">
               <p className="text-base font-semibold text-foreground">
                 👋 {t("welcomeBack")}
               </p>
@@ -127,8 +127,8 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Interactive Reactive Mascot */}
-            <div className="w-full flex justify-center">
+            {/* Interactive Reactive Mascot directly below balloon */}
+            <div className="w-full flex justify-center -mt-2">
               <AuthMascot
                 size="lg"
                 expression={mascotExpression}
@@ -140,7 +140,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center justify-center lg:col-span-6">
             {/* Mobile Mascot Header with Speech Balloon (visible only on screens < lg) */}
             <div className="mb-4 w-full flex flex-col items-center text-center lg:hidden">
-              <div className="relative mb-2 rounded-xl border border-border bg-card px-4 py-2 shadow-sm">
+              <div className="relative mb-1 z-20 rounded-xl border border-border bg-card px-4 py-2 shadow-sm animate-float-balloon select-none">
                 <p className="text-sm font-semibold text-foreground">
                   👋 {t("welcomeBack")}
                 </p>
@@ -154,10 +154,12 @@ export default function LoginPage() {
                 />
               </div>
 
-              <AuthMascot
-                size="sm"
-                expression={mascotExpression}
-              />
+              <div className="-mt-1">
+                <AuthMascot
+                  size="sm"
+                  expression={mascotExpression}
+                />
+              </div>
             </div>
 
             {/* Standard shadcn Login Form Card */}

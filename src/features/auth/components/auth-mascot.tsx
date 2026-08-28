@@ -228,15 +228,15 @@ export function AuthMascot({
   }, []);
 
   const sizeClasses = {
-    sm: "h-[160px] max-w-[160px]",
-    md: "h-[240px] max-w-[240px]",
-    lg: "h-[340px] max-w-[340px] sm:h-[400px] sm:max-w-[400px]",
+    sm: "h-[130px] max-w-[130px]",
+    md: "h-[200px] max-w-[200px]",
+    lg: "h-[260px] max-w-[260px] sm:h-[300px] sm:max-w-[300px]",
   };
 
   const bodyDimensions = {
-    sm: { size: "size-36", width: 144, height: 144 },
-    md: { size: "size-56", width: 224, height: 224 },
-    lg: { size: "size-68 sm:size-80", width: 320, height: 320 },
+    sm: { size: "size-32", width: 128, height: 128 },
+    md: { size: "size-48", width: 192, height: 192 },
+    lg: { size: "size-64 sm:size-72", width: 288, height: 288 },
   };
 
   return (

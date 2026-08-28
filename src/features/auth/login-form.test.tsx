@@ -50,22 +50,6 @@ describe("LoginForm", () => {
     );
   });
 
-  it("toggles password visibility between password and text types", () => {
-    render(<LoginForm />);
-
-    const passwordInput = screen.getByLabelText(/password/i, { selector: "input" });
-    expect(passwordInput).toHaveAttribute("type", "password");
-
-    const toggleButton = screen.getByRole("button", { name: /show password/i });
-    fireEvent.click(toggleButton);
-
-    expect(passwordInput).toHaveAttribute("type", "text");
-    expect(screen.getByRole("button", { name: /hide password/i })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
-    expect(passwordInput).toHaveAttribute("type", "password");
-  });
-
   it("notifies expression changes on field focus and blur", () => {
     const onExpressionChange = vi.fn();
     render(<LoginForm onExpressionChange={onExpressionChange} />);

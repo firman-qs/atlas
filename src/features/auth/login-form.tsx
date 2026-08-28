@@ -1,11 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,7 +22,6 @@ import { Label } from "@/components/ui/label";
 import type { AuthMascotExpression } from "@/features/auth/components/auth-mascot";
 import { useLogin } from "@/features/auth/queries";
 import { ApiError } from "@/lib/api/api-error";
-import { cn } from "@/lib/utils";
 
 function createLoginSchema(t: ReturnType<typeof useTranslations<"auth.validation">>) {
   return z.object({
@@ -37,18 +36,14 @@ function createLoginSchema(t: ReturnType<typeof useTranslations<"auth.validation
 type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;
 
 export interface LoginFormProps {
-  className?: string;
   onExpressionChange?: (expression: AuthMascotExpression) => void;
 }
 
-export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
+export function LoginForm({ onExpressionChange }: LoginFormProps = {}) {
   const router = useRouter();
   const loginMutation = useLogin();
   const t = useTranslations("auth.login");
   const tValidation = useTranslations("auth.validation");
-  const [showPassword, setShowPassword] = useState(false);
-  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
-
   const loginSchema = useMemo(
     () => createLoginSchema(tValidation),
     [tValidation],
@@ -62,7 +57,6 @@ export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
     },
   });
 
-  // Calculate current mascot expression based on interaction state
   useEffect(() => {
     if (!onExpressionChange) return;
 
@@ -70,14 +64,8 @@ export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
       onExpressionChange("submitting");
     } else if (loginMutation.isError) {
       onExpressionChange("error");
-    } else if (focusedField === "email") {
-      onExpressionChange("looking_email");
-    } else if (focusedField === "password") {
-      onExpressionChange(showPassword ? "peeking_password" : "shy_password");
-    } else {
-      onExpressionChange("idle");
     }
-  }, [focusedField, showPassword, loginMutation.isPending, loginMutation.isError, onExpressionChange]);
+  }, [loginMutation.isPending, loginMutation.isError, onExpressionChange]);
 
   async function onSubmit(values: LoginFormValues) {
     try {
@@ -96,7 +84,7 @@ export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
         : null;
 
   return (
-    <Card className={cn("w-full max-w-md", className)}>
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl">{t("title")}</CardTitle>
         <CardDescription>{t("description")}</CardDescription>
@@ -104,118 +92,77 @@ export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
 
       <CardContent>
         <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Email Field with Leading Icon */}
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
-              {t("email")}
-            </Label>
+            <Label htmlFor="email">{t("email")}</Label>
 
-            <div className="relative flex items-center">
-              <Mail
-                className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground transition-colors"
-                aria-hidden="true"
-              />
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="name@example.com"
-                disabled={loginMutation.isPending}
-                className="pl-10 h-11 bg-background/60 transition-colors focus-visible:bg-background"
-                {...form.register("email")}
-                onFocus={() => setFocusedField("email")}
-                onBlur={() => setFocusedField(null)}
-              />
-            </div>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              disabled={loginMutation.isPending}
+              {...form.register("email")}
+              onFocus={() => onExpressionChange?.("looking_email")}
+              onBlur={() => onExpressionChange?.("idle")}
+            />
 
             {form.formState.errors.email && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-sm text-destructive">
                 {form.formState.errors.email.message}
               </p>
             )}
           </div>
 
-          {/* Password Field with Leading Icon & Show/Hide Toggle */}
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="password" className="text-sm font-medium">
-                {t("password")}
-              </Label>
+              <Label htmlFor="password">{t("password")}</Label>
 
               <Link
                 href="/forgot-password"
-                className="text-xs font-medium text-primary underline-offset-4 hover:underline sm:text-sm"
+                className="text-sm text-primary underline-offset-4 hover:underline"
               >
                 {t("forgotPassword")}
               </Link>
             </div>
 
-            <div className="relative flex items-center">
-              <Lock
-                className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground transition-colors"
-                aria-hidden="true"
-              />
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                placeholder="••••••••"
-                disabled={loginMutation.isPending}
-                className="pl-10 pr-10 h-11 bg-background/60 transition-colors focus-visible:bg-background"
-                {...form.register("password")}
-                onFocus={() => setFocusedField("password")}
-                onBlur={() => setFocusedField(null)}
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                disabled={loginMutation.isPending}
-                aria-label={showPassword ? t("hidePassword") : t("showPassword")}
-                className="absolute right-3.5 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-              >
-                {showPassword ? (
-                  <EyeOff className="size-4" aria-hidden="true" />
-                ) : (
-                  <Eye className="size-4" aria-hidden="true" />
-                )}
-              </button>
-            </div>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              disabled={loginMutation.isPending}
+              {...form.register("password")}
+              onFocus={() => onExpressionChange?.("shy_password")}
+              onBlur={() => onExpressionChange?.("idle")}
+            />
 
             {form.formState.errors.password && (
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-sm text-destructive">
                 {form.formState.errors.password.message}
               </p>
             )}
           </div>
 
-          {/* Error Message Banner */}
           {errorMessage && (
-            <div
-              role="alert"
-              className="rounded-lg border border-destructive/30 bg-destructive/10 px-3.5 py-2.5 text-sm font-medium text-destructive animate-in fade-in-50"
-            >
+            <p role="alert" className="text-sm text-destructive">
               {errorMessage}
-            </div>
+            </p>
           )}
 
-          {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full h-11 font-medium shadow-md transition-all hover:shadow-lg"
+            className="w-full"
             disabled={loginMutation.isPending}
           >
-            {loginMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
+            {loginMutation.isPending && <Loader2 className="animate-spin" />}
+
             {loginMutation.isPending ? t("submitting") : t("submit")}
           </Button>
         </form>
 
-        {/* Footer Navigation */}
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-          {t("noAccount")}{" "}
+        <div className="mt-5 text-center text-sm text-muted-foreground">
+          {t("noAccount")} {" "}
           <Link
             href="/register"
-            className="font-semibold text-primary underline-offset-4 hover:underline"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
           >
             {t("createAccount")}
           </Link>
