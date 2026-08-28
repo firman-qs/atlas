@@ -78,12 +78,18 @@
       "description": "Use your ATLAS account to continue.",
       "email": "Email",
       "password": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "forgotPassword": "Forgot password?",
       "submitting": "Signing in...",
       "submit": "Sign in",
       "noAccount": "Don't have an account?",
       "createAccount": "Create account",
-      "fallbackError": "Unable to sign in. Please try again."
+      "fallbackError": "Unable to sign in. Please try again.",
+      "backToHome": "Back to home",
+      "showcaseBadge": "Intelligent Learning Companion",
+      "showcaseTitle": "Master concepts with your AI companion",
+      "showcaseSubtitle": "Interactive formative learning, real-time Socratic feedback, and adaptive conceptual mastery."
     },
     "register": {
       "title": "Create your ATLAS account",

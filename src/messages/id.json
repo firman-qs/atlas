@@ -78,12 +78,18 @@
       "description": "Gunakan akun ATLAS Anda untuk melanjutkan.",
       "email": "Email",
       "password": "Kata sandi",
+      "showPassword": "Tampilkan kata sandi",
+      "hidePassword": "Sembunyikan kata sandi",
       "forgotPassword": "Lupa kata sandi?",
       "submitting": "Sedang masuk...",
       "submit": "Masuk",
       "noAccount": "Belum punya akun?",
       "createAccount": "Buat akun",
-      "fallbackError": "Tidak dapat masuk. Silakan coba lagi."
+      "fallbackError": "Tidak dapat masuk. Silakan coba lagi.",
+      "backToHome": "Kembali ke beranda",
+      "showcaseBadge": "Pendamping Belajar Cerdas",
+      "showcaseTitle": "Kuasai konsep bersama pendamping AI Anda",
+      "showcaseSubtitle": "Pembelajaran formatif interaktif, umpan balik dialogis real-time, dan penguasaan konsep adaptif."
     },
     "register": {
       "title": "Buat akun ATLAS Anda",
