@@ -596,12 +596,13 @@
 
 /* KaTeX Layout and Metric Isolation */
 .katex {
-  font: normal 1.15em KaTeX_Main, Times New Roman, serif !important;
+  font: normal 1.21em KaTeX_Main, Times New Roman, serif !important;
   line-height: 1.2 !important;
   text-indent: 0 !important;
   text-rendering: auto !important;
   border-color: currentColor !important;
   direction: ltr !important;
+  white-space: normal !important;
 }
 
 .katex * {
@@ -609,9 +610,32 @@
   border-color: currentColor;
 }
 
+.katex .katex-html {
+  display: inline-block !important;
+  position: relative !important;
+}
+
+.katex .katex-html > .katex-newline {
+  display: block !important;
+}
+
+.katex .katex-base {
+  position: relative !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  width: -webkit-min-content !important;
+  width: -moz-min-content !important;
+  width: min-content !important;
+}
+
+.katex .katex-strut {
+  display: inline-block !important;
+}
+
 .katex .vlist-t {
   display: inline-table !important;
   table-layout: fixed !important;
+  border-collapse: collapse !important;
 }
 
 .katex .vlist-r {
@@ -626,6 +650,7 @@
 
 .katex .vlist > span {
   display: block !important;
+  height: 0 !important;
   position: relative !important;
 }
 
@@ -633,19 +658,49 @@
   display: inline-block !important;
 }
 
-.katex .frac-line {
-  display: block !important;
-  border-bottom-style: solid !important;
+.katex .vlist > span > .pstrut {
+  display: inline-block !important;
+  overflow: hidden !important;
+  width: 0 !important;
 }
 
-.katex .frac-line::after {
-  content: "" !important;
-  display: block !important;
-  border-bottom-style: solid !important;
+.katex .vlist-t2 {
+  margin-right: -2px !important;
+}
+
+.katex .vlist-s {
+  display: table-cell !important;
+  vertical-align: bottom !important;
+  font-size: 1px !important;
+  width: 2px !important;
+  min-width: 2px !important;
 }
 
 .katex .msupsub {
   text-align: left !important;
+}
+
+.katex .mfrac > span > span {
+  text-align: center !important;
+}
+
+.katex .mfrac .frac-line {
+  display: inline-block !important;
+  width: 100% !important;
+  min-height: 1px !important;
+  border-bottom-style: solid !important;
+}
+
+.katex .katex-accent > .vlist-t {
+  text-align: center !important;
+}
+
+.katex .katex-accent .accent-body {
+  position: relative !important;
+}
+
+.katex .katex-accent .accent-body:not(.accent-full) {
+  width: 0 !important;
 }
 
 .katex .mord,
@@ -657,6 +712,19 @@
 .katex .minner,
 .katex .mop {
   display: inline-block !important;
+}
+
+.katex svg {
+  display: block !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+.katex svg path {
+  stroke: none !important;
 }
 
 .atlas-rich-text-viewer .katex {
