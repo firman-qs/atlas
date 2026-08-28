@@ -285,8 +285,8 @@ export function ChatConversation({
     .flatMap((page) => page.items);
 
   return (
-    <section className="flex min-h-0 min-w-0 flex-1 flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
+    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 sm:px-5">
         <div className="flex min-w-0 items-center gap-2">
           <Button
             type="button"
