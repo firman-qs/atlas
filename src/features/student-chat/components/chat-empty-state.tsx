@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
-  Bot,
   Maximize2,
   MessageSquarePlus,
   Minimize2,
@@ -65,8 +65,15 @@ export function ChatEmptyState({
 
       <div className="flex min-h-0 flex-1 items-center justify-center p-6">
         <div className="max-w-md text-center">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-full border bg-muted">
-            <Bot className="size-6" />
+          <div className="mx-auto relative size-14 overflow-hidden">
+            <Image
+              src="/mascot.png"
+              alt=""
+              aria-hidden="true"
+              width={56}
+              height={56}
+              className="size-full object-contain drop-shadow-xs"
+            />
           </div>
 
           <h3 className="mt-4 text-xl font-semibold">

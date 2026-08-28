@@ -37,7 +37,6 @@ import {
 } from "@/features/student-chat/queries";
 import {
   Archive,
-  Bot,
   LoaderCircle,
   Maximize2,
   Minimize2,
@@ -46,6 +45,7 @@ import {
   Pencil,
   User,
 } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -385,7 +385,16 @@ export function ChatConversation({
         {messages.length === 0 ? (
           <div className="flex min-h-72 items-center justify-center text-center">
             <div className="max-w-md">
-              <Bot className="mx-auto size-8 text-muted-foreground" />
+              <div className="mx-auto relative size-12 overflow-hidden">
+                <Image
+                  src="/mascot.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={48}
+                  height={48}
+                  className="size-full object-contain drop-shadow-xs"
+                />
+              </div>
 
               <p className="mt-3 font-medium">{t("startConversation")}</p>
 
@@ -411,8 +420,15 @@ export function ChatConversation({
                   }
                 >
                   {!isUser && (
-                    <div className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full border bg-muted">
-                      <Bot className="size-4" />
+                    <div className="mt-0.5 relative size-8 shrink-0 overflow-hidden">
+                      <Image
+                        src="/mascot.png"
+                        alt=""
+                        aria-hidden="true"
+                        width={32}
+                        height={32}
+                        className="size-full object-contain drop-shadow-xs"
+                      />
                     </div>
                   )}
 

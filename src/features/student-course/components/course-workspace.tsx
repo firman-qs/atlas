@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, BookOpen, Bot, LoaderCircle } from "lucide-react";
+import { ArrowLeft, BookOpen, LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -304,7 +305,16 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Bot className="size-5" />
+                  <div className="relative size-5 overflow-hidden">
+                    <Image
+                      src="/mascot.png"
+                      alt=""
+                      aria-hidden="true"
+                      width={20}
+                      height={20}
+                      className="size-full object-contain"
+                    />
+                  </div>
                   {student("aiTutor")}
                 </CardTitle>
               </CardHeader>
@@ -316,9 +326,18 @@ export function CourseWorkspace({ enrollmentId }: CourseWorkspaceProps) {
 
                 <Link
                   href={`/student/courses/${enrollmentId}/chat`}
-                  className={cn(buttonVariants(), "w-full")}
+                  className={cn(buttonVariants(), "w-full gap-2")}
                 >
-                  <Bot />
+                  <div className="relative size-4 overflow-hidden">
+                    <Image
+                      src="/mascot.png"
+                      alt=""
+                      aria-hidden="true"
+                      width={16}
+                      height={16}
+                      className="size-full object-contain"
+                    />
+                  </div>
                   {student("openAiTutor")}
                 </Link>
               </CardContent>

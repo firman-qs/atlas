@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import {
   ArrowRight,
   BookOpen,
-  Bot,
   ClipboardCheck,
   GraduationCap,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -201,9 +201,19 @@ function ContinueLearningCard({
                   buttonVariants({
                     variant: "outline",
                   }),
+                  "gap-2",
                 )}
               >
-                <Bot />
+                <div className="relative size-4 overflow-hidden">
+                  <Image
+                    src="/mascot.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={16}
+                    height={16}
+                    className="size-full object-contain"
+                  />
+                </div>
                 {student("aiTutor")}
               </Link>
             </div>
