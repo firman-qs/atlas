@@ -35,6 +35,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html
       lang={locale}
+      data-scroll-behavior="smooth"
       className={cn(
         "h-full",
         "scroll-smooth",
