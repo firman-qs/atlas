@@ -12,10 +12,10 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -245,7 +245,7 @@ export function AppSidebar() {
                       <SidebarMenuButton
                         isActive={isActive}
                         tooltip={item.label}
-                        className="data-active:bg-sidebar-accent/70"
+                        className="data-active:bg-sidebar-accent/70 my-0.5"
                         render={<Link href={item.href} />}
                       >
                         <Icon />

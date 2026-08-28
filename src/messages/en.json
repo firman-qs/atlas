@@ -428,7 +428,20 @@
     "hidePreview": "Hide preview",
     "renderedPreview": "Rendered preview",
     "nothingToPreview": "Nothing to preview yet.",
-    "uploadError": "Unable to upload image."
+    "uploadError": "Unable to upload image.",
+    "toolbar": {
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bold": "Bold",
+      "italic": "Italic",
+      "bulletList": "Bullet list",
+      "orderedList": "Numbered list",
+      "quote": "Quote",
+      "codeBlock": "Code block",
+      "mathBlock": "Math block ($$)",
+      "inlineMath": "Inline math ($)"
+    }
   },
   "instructor": {
     "courseOfferings": {

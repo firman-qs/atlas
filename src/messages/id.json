@@ -428,7 +428,20 @@
     "hidePreview": "Sembunyikan pratinjau",
     "renderedPreview": "Pratinjau tampilan",
     "nothingToPreview": "Belum ada konten untuk dipratinjau.",
-    "uploadError": "Gagal mengunggah gambar."
+    "uploadError": "Gagal mengunggah gambar.",
+    "toolbar": {
+      "heading1": "Judul 1",
+      "heading2": "Judul 2",
+      "heading3": "Judul 3",
+      "bold": "Tebal",
+      "italic": "Miring",
+      "bulletList": "Daftar butir",
+      "orderedList": "Daftar bernomor",
+      "quote": "Kutipan",
+      "codeBlock": "Blok kode",
+      "mathBlock": "Rumus matematika ($$)",
+      "inlineMath": "Rumus sebaris ($)"
+    }
   },
   "instructor": {
     "courseOfferings": {
