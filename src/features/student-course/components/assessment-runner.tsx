@@ -100,20 +100,20 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
     if (
       !assessment ||
       assessment.status !== "running" ||
-      requestedInitialQuestion.current ||
-      cachedQuestion
+      attemptResult ||
+      cachedQuestion ||
+      issueQuestion.isPending ||
+      issueQuestion.isError
     ) {
       return;
     }
 
-    requestedInitialQuestion.current = true;
-
     issueQuestion.mutate(undefined, {
       onError: () => {
-        requestedInitialQuestion.current = false;
+        // Error state handled in UI
       },
     });
-  }, [assessment, cachedQuestion, issueQuestion]);
+  }, [assessment, attemptResult, cachedQuestion, issueQuestion]);
 
   useEffect(() => {
     if (
@@ -124,8 +124,6 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         queryKey: studentAssessmentKeys.question(assessmentId),
         exact: true,
       });
-
-      requestedInitialQuestion.current = false;
     }
   }, [assessment?.status, assessmentId, queryClient]);
 
@@ -375,47 +373,6 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             {messages("notStartedDescription")}
           </AlertDescription>
         </Alert>
-      ) : issueQuestion.isPending && !question ? (
-        <Card>
-          <CardContent className="flex min-h-64 items-center justify-center">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <LoaderCircle className="size-5 animate-spin" />
-              {messages("preparingQuestion")}
-            </div>
-          </CardContent>
-        </Card>
-      ) : issueQuestion.isError && !question ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{messages("unableToPrepareQuestion")}</CardTitle>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            <Alert variant="destructive">
-              <AlertDescription>
-                {issueQuestion.error instanceof Error
-                  ? issueQuestion.error.message
-                  : errors("assessmentQuestion")}
-              </AlertDescription>
-            </Alert>
-
-            <Button
-              variant="outline"
-              onClick={handleRetryQuestion}
-              disabled={issueQuestion.isPending}
-            >
-              {issueQuestion.isPending ? (
-                <LoaderCircle className="animate-spin" />
-              ) : (
-                <RefreshCw />
-              )}
-
-              {issueQuestion.isPending
-                ? messages("retrying")
-                : messages("retryQuestion")}
-            </Button>
-          </CardContent>
-        </Card>
       ) : question ? (
         <Card className="overflow-visible">
           <CardHeader className="border-b">
@@ -448,7 +405,6 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             <section data-testid="answer-section" className="space-y-4">
               <div>
                 <p className="font-medium">{messages("yourAnswer")}</p>
-
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">
                   {question.content.type === "mcq"
                     ? messages("mcqHint")
@@ -679,7 +635,48 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             )}
           </CardContent>
         </Card>
-      ) : null}
+      ) : issueQuestion.isError ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>{messages("unableToPrepareQuestion")}</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertDescription>
+                {issueQuestion.error instanceof Error
+                  ? issueQuestion.error.message
+                  : errors("assessmentQuestion")}
+              </AlertDescription>
+            </Alert>
+
+            <Button
+              variant="outline"
+              onClick={handleRetryQuestion}
+              disabled={issueQuestion.isPending}
+            >
+              {issueQuestion.isPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <RefreshCw />
+              )}
+
+              {issueQuestion.isPending
+                ? messages("retrying")
+                : messages("retryQuestion")}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="flex min-h-64 items-center justify-center">
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <LoaderCircle className="size-5 animate-spin" />
+              {messages("preparingQuestion")}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

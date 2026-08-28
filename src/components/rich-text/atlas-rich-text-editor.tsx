@@ -24,6 +24,7 @@ import {
   toggleStrongCommand,
   wrapInBlockTypeCommand,
 } from "@milkdown/kit/preset/commonmark";
+import { NodeSelection } from "@milkdown/kit/prose/state";
 import { replaceAll } from "@milkdown/kit/utils";
 import {
   Bold,
@@ -245,12 +246,15 @@ export function AtlasRichTextEditor({
       const { state, dispatch } = view;
       const mathInlineType = state.schema.nodes.math_inline;
       if (!mathInlineType) return;
-      const { from, to } = state.selection;
-      const selectedText = state.doc.textBetween(from, to, " ").trim();
-      const latex = selectedText || "\\Psi";
+      const { selection, doc, tr } = state;
+      const selectedText = doc.textBetween(selection.from, selection.to, " ").trim();
+      const latex = selectedText || "x";
       const node = mathInlineType.create({ value: latex });
-      const tr = state.tr.replaceSelectionWith(node);
-      dispatch(tr);
+      const pos = selection.from;
+      const newTr = tr.replaceSelectionWith(node);
+      newTr.setSelection(NodeSelection.create(newTr.doc, pos));
+      dispatch(newTr);
+      view.focus();
     });
   }
 

@@ -472,6 +472,106 @@
     font-family: var(--font-sans) !important;
   }
 
+  /* High contrast caret/cursor in both light and dark mode */
+  .milkdown .ProseMirror,
+  .milkdown .cm-content,
+  .milkdown input,
+  .milkdown textarea {
+    caret-color: #0f172a !important;
+  }
+
+  .dark .milkdown .ProseMirror,
+  .dark .milkdown .cm-content,
+  .dark .milkdown input,
+  .dark .milkdown textarea {
+    caret-color: #38bdf8 !important;
+  }
+
+  .milkdown .cm-cursor,
+  .milkdown .cm-dropCursor {
+    border-left: 2px solid #0f172a !important;
+  }
+
+  .dark .milkdown .cm-cursor,
+  .dark .milkdown .cm-dropCursor {
+    border-left: 2px solid #38bdf8 !important;
+  }
+
+  /* Inline math element styling & prevent [OBJ] rendering */
+  .milkdown span[data-type="math_inline"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 0.125rem 0.375rem !important;
+    margin-inline: 0.125rem !important;
+    border-radius: 0.25rem !important;
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    vertical-align: middle !important;
+    font-size: 0.95em !important;
+  }
+
+  .milkdown span[data-type="math_inline"]:hover,
+  .milkdown .ProseMirror-selectednode[data-type="math_inline"] {
+    background: var(--accent) !important;
+    outline: 1.5px solid var(--primary) !important;
+  }
+
+  /* Inline LaTeX Edit Tooltip popup */
+  .milkdown .milkdown-latex-inline-edit {
+    position: absolute !important;
+    z-index: 60 !important;
+    background: var(--card) !important;
+    color: var(--card-foreground) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.375rem !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3) !important;
+  }
+
+  .milkdown .milkdown-latex-inline-edit .container {
+    display: flex !important;
+    gap: 0.375rem !important;
+    align-items: center !important;
+  }
+
+  .milkdown .milkdown-latex-inline-edit .ProseMirror {
+    padding: 0.25rem 0.5rem !important;
+    min-width: 140px !important;
+    max-width: 280px !important;
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 0.375rem !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.8125rem !important;
+    outline: none !important;
+  }
+
+  .milkdown .milkdown-latex-inline-edit button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+    border-radius: 0.375rem !important;
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    cursor: pointer !important;
+    border: none !important;
+  }
+
+  .milkdown .milkdown-latex-inline-edit button:hover {
+    opacity: 0.9 !important;
+  }
+
+  .milkdown .milkdown-latex-inline-edit button svg {
+    width: 0.875rem !important;
+    height: 0.875rem !important;
+    fill: currentColor !important;
+  }
+
   .atlas-rich-text-editor .milkdown .ProseMirror {
     min-height: 120px;
     padding: 0.875rem 1.25rem 1.25rem 3.25rem !important;
