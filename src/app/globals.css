@@ -275,6 +275,34 @@
     margin-block: 0.25rem;
   }
 
+  .atlas-rich-text-editor .milkdown li::marker,
+  .atlas-rich-text-viewer li::marker,
+  .atlas-rich-text-editor li::marker,
+  .milkdown li::marker {
+    color: var(--foreground) !important;
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper {
+    color: var(--foreground) !important;
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper svg {
+    fill: var(--foreground) !important;
+    color: var(--foreground) !important;
+  }
+
+  .milkdown .milkdown-list-item-block li .label-wrapper .label {
+    color: var(--foreground) !important;
+  }
+
+  .milkdown .milkdown-block-handle .operation-item svg {
+    fill: var(--muted-foreground) !important;
+  }
+
+  .milkdown .milkdown-block-handle .operation-item:hover svg {
+    fill: var(--foreground) !important;
+  }
+
   .atlas-rich-text-editor .milkdown .atlas-prosemirror blockquote {
     margin-block: 1rem;
     border-left: 3px solid var(--border);
@@ -649,6 +677,21 @@
     background: transparent !important;
     color: var(--foreground) !important;
     font-family: var(--font-sans) !important;
+  }
+
+  .atlas-rich-text-editor .milkdown .milkdown-list-item-block li,
+  .atlas-rich-text-editor .milkdown .milkdown-list-item-block .label-wrapper,
+  .atlas-rich-text-editor .milkdown .milkdown-list-item-block .label,
+  .milkdown .milkdown-list-item-block li,
+  .milkdown .milkdown-list-item-block .label-wrapper,
+  .milkdown .milkdown-list-item-block .label {
+    color: var(--foreground) !important;
+  }
+
+  .atlas-rich-text-editor .milkdown .milkdown-list-item-block .label-wrapper svg,
+  .milkdown .milkdown-list-item-block .label-wrapper svg {
+    fill: var(--foreground) !important;
+    color: var(--foreground) !important;
   }
 
   /* High contrast caret/cursor in both light and dark mode */
