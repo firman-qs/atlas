@@ -12,6 +12,7 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -202,8 +203,14 @@ export function AppSidebar() {
               className="hover:bg-transparent active:bg-transparent"
               render={<Link href="/dashboard" />}
             >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-xs">
-                A
+              <div className="relative size-7 shrink-0 overflow-hidden">
+                <Image
+                  src="/logo.png"
+                  alt="ATLAS Logo"
+                  width={28}
+                  height={28}
+                  className="size-full object-contain"
+                />
               </div>
 
               <div className="min-w-0 flex-1 leading-tight">

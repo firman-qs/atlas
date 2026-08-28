@@ -169,11 +169,13 @@ export function LandingFieldCanvas() {
       ctx.clearRect(0, 0, width, height);
 
       const isDark = document.documentElement.classList.contains("dark");
-      const vectorColor = isDark ? "147, 197, 253" : "37, 99, 235";
-      const particleColor = isDark ? "191, 219, 254" : "59, 130, 246";
+      const vectorColorPrimary = isDark ? "147, 197, 253" : "37, 99, 235";
+      const vectorColorSecondary = isDark ? "165, 180, 252" : "79, 70, 229";
+      const particleColorCyan = isDark ? "103, 232, 249" : "2, 132, 199";
+      const particleColorIndigo = isDark ? "196, 181, 253" : "99, 102, 241";
 
-      // 1. Draw very soft, restrained field lines / vector needles
-      const gridStep = 76;
+      // 1. Draw soft dual-tone field lines / vector needles
+      const gridStep = 72;
       const numCols = Math.ceil(width / gridStep);
       const numRows = Math.ceil(height / gridStep);
 
@@ -183,14 +185,16 @@ export function LandingFieldCanvas() {
           const gy = j * gridStep;
           const { nx, ny, mag } = getField(gx, gy);
 
-          const needleLen = 10;
-          // Soft and non-distracting
+          const needleLen = 11;
           const alpha = isDark
-            ? Math.min(0.04 + mag * 0.05, 0.18)
-            : Math.min(0.04 + mag * 0.06, 0.16);
+            ? Math.min(0.06 + mag * 0.08, 0.24)
+            : Math.min(0.07 + mag * 0.09, 0.22);
 
-          ctx.strokeStyle = `rgba(${vectorColor}, ${alpha.toFixed(3)})`;
-          ctx.lineWidth = 1;
+          // Subtly interpolate between blue and indigo based on field orientation
+          const color = nx > 0 ? vectorColorPrimary : vectorColorSecondary;
+
+          ctx.strokeStyle = `rgba(${color}, ${alpha.toFixed(3)})`;
+          ctx.lineWidth = 1.1;
           ctx.beginPath();
           ctx.moveTo(gx - nx * needleLen * 0.5, gy - ny * needleLen * 0.5);
           ctx.lineTo(gx + nx * needleLen * 0.5, gy + ny * needleLen * 0.5);
@@ -198,7 +202,7 @@ export function LandingFieldCanvas() {
         }
       }
 
-      // 2. Animate gentle, soft flowing particles
+      // 2. Animate glowing multi-tone flowing particles
       if (!prefersReducedMotion) {
         for (let k = 0; k < particles.length; k++) {
           const p = particles[k];
@@ -216,17 +220,18 @@ export function LandingFieldCanvas() {
           p.y += ny * currentSpeed;
 
           p.history.push({ x: p.x, y: p.y });
-          if (p.history.length > 10) {
+          if (p.history.length > 12) {
             p.history.shift();
           }
 
           if (p.history.length > 1) {
             const lifeProgress = p.age / p.maxAge;
             const fade = Math.sin(lifeProgress * Math.PI);
-            const particleAlpha = isDark ? fade * 0.28 : fade * 0.22;
+            const particleAlpha = isDark ? fade * 0.42 : fade * 0.35;
+            const chosenColor = k % 2 === 0 ? particleColorCyan : particleColorIndigo;
 
-            ctx.strokeStyle = `rgba(${particleColor}, ${particleAlpha.toFixed(3)})`;
-            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = `rgba(${chosenColor}, ${particleAlpha.toFixed(3)})`;
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(p.history[0].x, p.history[0].y);
             for (let h = 1; h < p.history.length; h++) {
@@ -234,16 +239,16 @@ export function LandingFieldCanvas() {
             }
             ctx.stroke();
 
-            // Soft glowing dot
-            ctx.fillStyle = `rgba(${vectorColor}, ${(particleAlpha * 1.3).toFixed(3)})`;
+            // Luminous glowing particle head
+            ctx.fillStyle = `rgba(${chosenColor}, ${(particleAlpha * 1.5).toFixed(3)})`;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
             ctx.fill();
           }
         }
       }
 
-      // 3. Very subtle soft cursor glow
+      // 3. Subtle colored cursor field glow
       if (mouse.active && mouse.x > 0 && mouse.y > 0) {
         const rad = ctx.createRadialGradient(
           mouse.x,
@@ -251,15 +256,15 @@ export function LandingFieldCanvas() {
           0,
           mouse.x,
           mouse.y,
-          260
+          280
         );
-        rad.addColorStop(0, `rgba(${vectorColor}, ${isDark ? 0.08 : 0.04})`);
-        rad.addColorStop(0.6, `rgba(${particleColor}, ${isDark ? 0.02 : 0.01})`);
+        rad.addColorStop(0, `rgba(${vectorColorPrimary}, ${isDark ? 0.12 : 0.08})`);
+        rad.addColorStop(0.5, `rgba(${particleColorCyan}, ${isDark ? 0.04 : 0.02})`);
         rad.addColorStop(1, "transparent");
 
         ctx.fillStyle = rad;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 260, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, 280, 0, Math.PI * 2);
         ctx.fill();
       }
 

@@ -20,8 +20,8 @@ export function LandingHero() {
           {/* Left Column: Clear, High-Contrast Typography & CTA */}
           <div className="text-left lg:col-span-7">
             <ScrollReveal delayMs={50}>
-              <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur-xs">
-                <span className="flex size-2 rounded-full bg-primary animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50/80 dark:bg-blue-950/40 px-4 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300">
+                <span className="flex size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
                 <span>{t("badge")}</span>
               </div>
             </ScrollReveal>
@@ -29,7 +29,7 @@ export function LandingHero() {
             <ScrollReveal delayMs={150}>
               <h1 className="mt-5 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                 {t("titlePrefix")}{" "}
-                <span className="text-primary">
+                <span className="text-blue-600 dark:text-blue-400">
                   {t("titleHighlight")}
                 </span>
               </h1>

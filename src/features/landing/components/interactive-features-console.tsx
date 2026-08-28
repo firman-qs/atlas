@@ -254,7 +254,7 @@ export function InteractiveFeaturesConsole() {
   };
 
   return (
-    <section id="capabilities" className="relative scroll-mt-16 px-4 py-16 sm:px-6 sm:py-20">
+    <section id="features" className="relative scroll-mt-16 px-4 py-16 sm:px-6 sm:py-20">
       <div className="mx-auto max-w-5xl">
         {/* Section Header */}
         <ScrollReveal className="mx-auto max-w-2xl text-center">
@@ -274,59 +274,59 @@ export function InteractiveFeaturesConsole() {
         {/* Shadcn Tabs Navigation */}
         <Tabs defaultValue="progress" className="mt-10">
           <ScrollReveal delayMs={100} className="flex justify-center">
-            <TabsList className="h-10 p-1 bg-muted/80 backdrop-blur-sm">
-              <TabsTrigger value="progress" className="gap-2 text-xs font-medium">
-                <ListTree className="size-3.5" />
+            <TabsList className="h-11 p-1 bg-muted/80 backdrop-blur-sm">
+              <TabsTrigger value="progress" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
+                <ListTree className="size-4" />
                 <span>{t("tabs.progress")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="assessment" className="gap-2 text-xs font-medium">
-                <ClipboardCheck className="size-3.5" />
+              <TabsTrigger value="assessment" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
+                <ClipboardCheck className="size-4" />
                 <span>{t("tabs.assessment")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="chat" className="gap-2 text-xs font-medium">
+              <TabsTrigger value="chat" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
                 <Image
                   src="/mascot.png"
                   alt="ATLAS AI Companion Mascot"
-                  width={16}
-                  height={16}
-                  className="size-4 object-contain"
+                  width={18}
+                  height={18}
+                  className="size-4.5 object-contain"
                 />
                 <span>{t("tabs.chat")}</span>
               </TabsTrigger>
 
-              <TabsTrigger value="instructor" className="gap-2 text-xs font-medium">
-                <BrainCircuit className="size-3.5" />
+              <TabsTrigger value="instructor" className="gap-2 text-xs sm:text-sm font-medium px-3.5">
+                <BrainCircuit className="size-4" />
                 <span>{t("tabs.instructor")}</span>
               </TabsTrigger>
             </TabsList>
           </ScrollReveal>
 
           {/* TAB 1: AUTHENTIC LEARNING PROGRESS SLICE */}
-          <TabsContent value="progress" id="progression" className="mt-6">
+          <TabsContent value="progress" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
-                <CardHeader className="pb-4">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-5 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="font-mono">
+                        <Badge variant="outline" className="font-mono text-xs">
                           PHYS102
                         </Badge>
-                        <Badge variant="secondary">{t("progress.inProgress")}</Badge>
+                        <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800">{t("progress.inProgress")}</Badge>
                       </div>
-                      <CardTitle className="mt-1.5 text-lg font-semibold">
+                      <CardTitle className="mt-2 text-xl font-semibold">
                         {t("progress.courseTitle")}
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-sm">
                         {t("progress.objectiveTitle")}
                       </CardDescription>
                     </div>
 
                     <div className="text-left sm:text-right">
-                      <p className="text-xs text-muted-foreground">{t("progress.objectiveMastery")}</p>
-                      <p className="text-base font-semibold tabular-nums">
+                      <p className="text-sm text-muted-foreground">{t("progress.objectiveMastery")}</p>
+                      <p className="text-lg font-semibold tabular-nums text-foreground">
                         {t("progress.conceptsMastered", {
                           mastered: currentConcept.isMastered ? 2 : 1,
                           total: 3,
@@ -348,14 +348,14 @@ export function InteractiveFeaturesConsole() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 pt-0">
+                <CardContent className="space-y-5 p-5 sm:p-6">
                   {/* Selectable Concept Rows */}
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <div className="space-y-2.5">
+                    <p className="text-sm font-semibold text-foreground">
                       {t("progress.orderedConcepts")}
                     </p>
 
-                    <div className="grid gap-2 sm:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-3">
                       {conceptsData.map((concept) => {
                         const isSelected = selectedConceptId === concept.id;
 
@@ -367,33 +367,33 @@ export function InteractiveFeaturesConsole() {
                               setSelectedConceptId(concept.id);
                               setSelectedSoloStage(concept.isMastered ? 2 : 1);
                             }}
-                            className={`flex flex-col justify-between rounded-lg border p-3 text-left transition-all ${
+                            className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                               isSelected
-                                ? "border-primary bg-primary/5 shadow-xs ring-1 ring-primary/20"
-                                : "bg-card hover:bg-muted/40"
+                                ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 shadow-xs ring-1 ring-blue-500/30"
+                                : "bg-card/50 hover:bg-muted/40 backdrop-blur-xs"
                             }`}
                           >
                             <div className="flex items-center justify-between">
-                              <Badge variant="secondary" className="font-mono text-[10px]">
+                              <Badge variant="secondary" className="font-mono text-xs">
                                 {concept.code}
                               </Badge>
                               {concept.isMastered ? (
-                                <Badge className="gap-1 text-[10px] bg-emerald-600 hover:bg-emerald-600 text-white">
-                                  <Check className="size-2.5" />
+                                <Badge className="gap-1 text-xs bg-emerald-600 hover:bg-emerald-600 text-white">
+                                  <Check className="size-3" />
                                   {t("progress.mastered")}
                                 </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-[10px]">
+                                <Badge variant="outline" className="text-xs">
                                   {t("progress.inProgress")}
                                 </Badge>
                               )}
                             </div>
 
-                            <p className="mt-2 text-xs font-semibold text-foreground line-clamp-1">
+                            <p className="mt-3 text-sm font-semibold text-foreground line-clamp-1">
                               {concept.name}
                             </p>
 
-                            <p className="mt-1 text-[11px] text-muted-foreground">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {t("progress.levelsMastered", {
                                 mastered: concept.masteredLevels,
                                 total: concept.totalLevels,
@@ -406,22 +406,22 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Configured SOLO Stepper & Math Problem Preview */}
-                  <div className="rounded-lg border bg-muted/20 p-4 space-y-4">
+                  <div className="rounded-xl border bg-muted/20 backdrop-blur-xs p-5 space-y-4">
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-xs font-semibold text-foreground">
+                        <p className="text-sm font-semibold text-foreground">
                           {t("progress.configuredSoloLevels", { name: currentConcept.name })}
                         </p>
-                        <p className="text-xs text-muted-foreground">{currentConcept.description}</p>
+                        <p className="text-sm text-muted-foreground">{currentConcept.description}</p>
                       </div>
 
-                      <span className="text-[11px] font-mono text-muted-foreground">
+                      <span className="text-xs font-mono text-muted-foreground">
                         {t("progress.clickLevelHint")}
                       </span>
                     </div>
 
                     {/* Stepper Buttons */}
-                    <div className="grid gap-2.5 sm:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-3">
                       {currentConcept.levels.map((lvl, idx) => {
                         const isStageActive = selectedSoloStage === idx;
 
@@ -437,10 +437,10 @@ export function InteractiveFeaturesConsole() {
                             key={lvl.name}
                             type="button"
                             onClick={() => setSelectedSoloStage(idx)}
-                            className={`flex items-start gap-2.5 rounded-md border p-2.5 text-left transition-all ${
+                            className={`flex items-start gap-3 rounded-lg border p-3.5 text-left transition-all ${
                               isStageActive
-                                ? "border-primary bg-background shadow-xs ring-1 ring-primary/30"
-                                : "bg-background/80 hover:bg-background"
+                                ? "border-primary bg-background/80 shadow-xs ring-1 ring-primary/30"
+                                : "bg-background/60 hover:bg-background/80"
                             }`}
                           >
                             <div className="mt-0.5">
@@ -460,11 +460,11 @@ export function InteractiveFeaturesConsole() {
                             </div>
 
                             <div className="min-w-0">
-                              <p className="text-xs font-semibold text-foreground">
+                              <p className="text-sm font-semibold text-foreground">
                                 {idx + 1}. {lvl.name}
                               </p>
                               <p
-                                className={`text-[10px] font-medium ${
+                                className={`text-xs font-medium ${
                                   lvl.status === "mastered"
                                     ? "text-emerald-600 dark:text-emerald-400"
                                     : lvl.status === "active"
@@ -481,28 +481,28 @@ export function InteractiveFeaturesConsole() {
                     </div>
 
                     {/* Rich Text KaTeX Math Viewer */}
-                    <div className="rounded-md border bg-background p-4 text-xs space-y-2.5">
+                    <div className="rounded-lg border bg-background/70 backdrop-blur-xs p-4 sm:p-5 text-sm space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-foreground">
+                        <span className="font-semibold text-foreground text-sm sm:text-base">
                           {t("progress.levelAssessmentFocus", {
                             level: currentConcept.levels[selectedSoloStage]?.name ?? "",
                           })}
                         </span>
-                        <Badge variant="outline" className="text-[10px]">
+                        <Badge variant="outline" className="text-xs">
                           {t("progress.katexMathRender")}
                         </Badge>
                       </div>
 
-                      <p className="text-muted-foreground">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         <span className="font-medium text-foreground">{t("progress.rubricCriteria")} </span>
                         {currentConcept.levels[selectedSoloStage]?.criteria}
                       </p>
 
-                      <div className="border-t pt-2.5">
-                        <p className="font-medium text-foreground mb-1 text-[11px]">{t("progress.representativePrompt")}</p>
+                      <div className="border-t border-border/60 pt-3">
+                        <p className="font-medium text-foreground mb-1.5 text-xs sm:text-sm">{t("progress.representativePrompt")}</p>
                         <AtlasRichTextViewer
                           value={currentConcept.levels[selectedSoloStage]?.promptMath ?? ""}
-                          className="text-xs leading-relaxed text-foreground bg-muted/30 p-2.5 rounded border"
+                          className="text-sm leading-relaxed text-foreground bg-muted/30 p-3.5 rounded-lg border"
                         />
                       </div>
                     </div>
@@ -515,23 +515,23 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 2: AUTHENTIC FORMATIVE ASSESSMENT RUNNER SLICE */}
           <TabsContent value="assessment" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
-                <CardHeader className="pb-3 border-b">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold text-base">{t("assessment.questionTitle")}</h3>
-                      <Badge variant="secondary">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <h3 className="font-semibold text-lg">{t("assessment.questionTitle")}</h3>
+                      <Badge variant="secondary" className="text-xs">
                         {assessmentType === "mcq" ? t("assessment.multipleChoice") : t("assessment.essay")}
                       </Badge>
-                      <Badge variant="outline">{t("assessment.cycle1")}</Badge>
+                      <Badge variant="outline" className="text-xs">{t("assessment.cycle1")}</Badge>
                     </div>
 
                     {/* Mode Toggle */}
-                    <div className="flex items-center gap-1 rounded-md border p-0.5 bg-muted/40">
+                    <div className="flex items-center gap-1 rounded-lg border p-1 bg-muted/40 backdrop-blur-xs">
                       <Button
                         variant={assessmentType === "essay" ? "secondary" : "ghost"}
                         size="sm"
-                        className="h-7 text-xs px-2.5"
+                        className="h-8 text-xs sm:text-sm px-3 font-medium"
                         onClick={() => setAssessmentType("essay")}
                       >
                         {t("assessment.essayQuestion")}
@@ -539,7 +539,7 @@ export function InteractiveFeaturesConsole() {
                       <Button
                         variant={assessmentType === "mcq" ? "secondary" : "ghost"}
                         size="sm"
-                        className="h-7 text-xs px-2.5"
+                        className="h-8 text-xs sm:text-sm px-3 font-medium"
                         onClick={() => setAssessmentType("mcq")}
                       >
                         {t("assessment.mcqOption")}
@@ -548,31 +548,31 @@ export function InteractiveFeaturesConsole() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-5 p-5">
+                <CardContent className="space-y-6 p-5 sm:p-6">
                   {/* Question Workspace with AtlasRichTextViewer */}
-                  <section className="rounded-xl border bg-muted/20 p-4 sm:p-5">
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <section className="rounded-xl border bg-muted/20 backdrop-blur-xs p-4 sm:p-5">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       {t("assessment.questionLabel")}
                     </p>
                     <AtlasRichTextViewer
                       value={assessmentType === "essay" ? realEssayPrompt : realMcqQuestion.prompt}
-                      className="text-sm leading-relaxed"
+                      className="text-sm sm:text-base leading-relaxed"
                     />
                   </section>
 
                   {/* Answer Section */}
                   {assessmentType === "essay" ? (
                     <div className="space-y-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="text-xs font-medium text-foreground">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="text-sm font-medium text-foreground">
                           {t("assessment.sampleSubmissions")}
                         </p>
 
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <Button
                             variant={activeEssayKey === "sample1" ? "secondary" : "outline"}
                             size="sm"
-                            className="h-7 text-xs"
+                            className="h-8 text-xs sm:text-sm px-3 font-medium"
                             onClick={() => {
                               setActiveEssayKey("sample1");
                               setShowFeedback(true);
@@ -583,7 +583,7 @@ export function InteractiveFeaturesConsole() {
                           <Button
                             variant={activeEssayKey === "sample2" ? "secondary" : "outline"}
                             size="sm"
-                            className="h-7 text-xs"
+                            className="h-8 text-xs sm:text-sm px-3 font-medium"
                             onClick={() => {
                               setActiveEssayKey("sample2");
                               setShowFeedback(true);
@@ -595,32 +595,32 @@ export function InteractiveFeaturesConsole() {
                       </div>
 
                       {/* Submitted Essay with Math Viewer */}
-                      <div className="rounded-lg border bg-card p-4">
-                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">
+                      <div className="rounded-xl border bg-card/60 backdrop-blur-xs p-4 sm:p-5">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">
                           {t("assessment.studentWrittenResponse")}
                         </p>
                         <AtlasRichTextViewer
                           value={essaySamples[activeEssayKey].text}
-                          className="text-xs leading-relaxed"
+                          className="text-sm sm:text-base leading-relaxed text-foreground"
                         />
                       </div>
 
                       {/* Submit / Re-evaluate Button */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between pt-1">
                         <Button
-                          size="sm"
+                          size="default"
                           onClick={handleRunEvaluation}
                           disabled={isEvaluating}
-                          className="gap-1.5 text-xs"
+                          className="gap-2 text-sm font-medium"
                         >
                           {isEvaluating ? (
                             <>
-                              <Loader2 className="size-3.5 animate-spin" />
+                              <Loader2 className="size-4 animate-spin" />
                               {t("assessment.evaluating")}
                             </>
                           ) : (
                             <>
-                              <Sparkles className="size-3.5" />
+                              <Sparkles className="size-4" />
                               {t("assessment.submitResponse")}
                             </>
                           )}
@@ -628,11 +628,11 @@ export function InteractiveFeaturesConsole() {
 
                         <Badge
                           variant="outline"
-                          className={
+                          className={`text-xs sm:text-sm font-medium ${
                             essaySamples[activeEssayKey].status === "Criteria Met"
                               ? "text-emerald-600 border-emerald-500/40"
                               : "text-amber-600 border-amber-500/40"
-                          }
+                          }`}
                         >
                           {essaySamples[activeEssayKey].status === "Criteria Met"
                             ? t("assessment.criteriaMet")
@@ -642,26 +642,26 @@ export function InteractiveFeaturesConsole() {
 
                       {/* Formative Feedback Card rendered with AtlasRichTextViewer */}
                       {showFeedback && (
-                        <div className="rounded-xl border bg-muted/30 p-4 space-y-2 animate-in fade-in duration-300">
-                          <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                            <Sparkles className="size-3.5 text-primary" />
+                        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/30 backdrop-blur-xs p-4 sm:p-5 space-y-2.5 animate-in fade-in duration-300">
+                          <p className="text-sm font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                            <Sparkles className="size-4 text-blue-600 dark:text-blue-400" />
                             {t("assessment.formativeEvaluationFeedback")}
                           </p>
                           <AtlasRichTextViewer
                             value={essaySamples[activeEssayKey].feedback}
-                            className="text-xs text-muted-foreground leading-relaxed"
+                            className="text-sm sm:text-base text-muted-foreground leading-relaxed"
                           />
                         </div>
                       )}
                     </div>
                   ) : (
                     /* Authentic MCQ Runner */
-                    <div className="space-y-3">
-                      <p className="text-xs font-medium text-muted-foreground">
+                    <div className="space-y-3.5">
+                      <p className="text-sm font-medium text-muted-foreground">
                         {t("assessment.mcqChooseInstruction")}
                       </p>
 
-                      <div className="space-y-2.5">
+                      <div className="space-y-3">
                         {realMcqQuestion.options.map((opt) => {
                           const isSelected = selectedMcqId === opt.id;
 
@@ -669,22 +669,22 @@ export function InteractiveFeaturesConsole() {
                             <div
                               key={opt.id}
                               onClick={() => setSelectedMcqId(opt.id)}
-                              className={`cursor-pointer rounded-lg border p-3 text-xs transition-all ${
+                              className={`cursor-pointer rounded-xl border p-4 text-sm transition-all ${
                                 isSelected
                                   ? opt.isCorrect
-                                    ? "border-emerald-500 bg-emerald-500/5 ring-1 ring-emerald-500/30"
-                                    : "border-amber-500 bg-amber-500/5 ring-1 ring-amber-500/30"
-                                  : "bg-card hover:bg-muted/40"
+                                    ? "border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500/30"
+                                    : "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30"
+                                  : "bg-card/50 hover:bg-muted/40 backdrop-blur-xs"
                               }`}
                             >
-                              <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-start justify-between gap-3">
                                 <div className="flex-1">
-                                  <AtlasRichTextViewer value={opt.text} className="text-xs" />
+                                  <AtlasRichTextViewer value={opt.text} className="text-sm sm:text-base" />
                                 </div>
 
                                 {isSelected && (
                                   <Badge
-                                    className={`shrink-0 text-[10px] ${
+                                    className={`shrink-0 text-xs ${
                                       opt.isCorrect
                                         ? "bg-emerald-600 hover:bg-emerald-600 text-white"
                                         : "bg-amber-600 hover:bg-amber-600 text-white"
@@ -696,7 +696,7 @@ export function InteractiveFeaturesConsole() {
                               </div>
 
                               {isSelected && (
-                                <div className="mt-2.5 border-t pt-2 text-[11px] text-muted-foreground leading-relaxed">
+                                <div className="mt-3 border-t border-border/60 pt-3 text-sm text-muted-foreground leading-relaxed">
                                   <span className="font-semibold text-foreground">{t("assessment.diagnosticFeedbackLabel")} </span>
                                   {opt.feedback}
                                 </div>
@@ -715,24 +715,24 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 3: AUTHENTIC COURSE-GROUNDED AI TUTOR SLICE */}
           <TabsContent value="chat" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <Card className="transition-all duration-300 hover:shadow-md">
-                <CardHeader className="pb-3 border-b">
+              <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs transition-all duration-300 hover:shadow-md">
+                <CardHeader className="pb-4 border-b">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="relative size-8 overflow-hidden rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="relative size-9 overflow-hidden rounded-lg">
                         <Image
                           src="/mascot.png"
                           alt="ATLAS AI Companion Mascot"
-                          width={32}
-                          height={32}
+                          width={36}
+                          height={36}
                           className="size-full object-contain drop-shadow-xs"
                         />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-semibold">
+                        <CardTitle className="text-base font-semibold">
                           {t("chat.title")}
                         </CardTitle>
-                        <CardDescription className="text-xs">
+                        <CardDescription className="text-sm">
                           {t("chat.groundedIn")}
                         </CardDescription>
                       </div>
@@ -744,19 +744,19 @@ export function InteractiveFeaturesConsole() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 p-5">
+                <CardContent className="space-y-5 p-5 sm:p-6">
                   {/* Interactive Prompt Chips */}
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-semibold text-muted-foreground">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-muted-foreground">
                       {t("chat.sampleInquiries")}
                     </p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {chatScenarios.map((sc, idx) => (
                         <Button
                           key={sc.id}
                           variant={activeChatIndex === idx ? "secondary" : "outline"}
                           size="sm"
-                          className="h-7 text-xs font-medium"
+                          className="h-8 text-xs sm:text-sm font-medium px-3"
                           onClick={() => setActiveChatIndex(idx)}
                         >
                           {sc.title}
@@ -766,34 +766,34 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Dialogue Conversation */}
-                  <div className="space-y-3 rounded-lg border bg-muted/10 p-4">
+                  <div className="space-y-4 rounded-xl border bg-muted/10 backdrop-blur-xs p-4 sm:p-5">
                     {/* Student Question */}
-                    <div className="flex items-start justify-end gap-2.5">
-                      <div className="max-w-md rounded-lg bg-primary px-3.5 py-2 text-xs text-primary-foreground">
+                    <div className="flex items-start justify-end gap-3">
+                      <div className="max-w-lg rounded-2xl bg-primary px-4 py-2.5 text-sm sm:text-base text-primary-foreground leading-relaxed">
                         {chatScenarios[activeChatIndex].question}
                       </div>
-                      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted">
-                        <User className="size-3.5 text-muted-foreground" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
+                        <User className="size-4 text-muted-foreground" />
                       </div>
                     </div>
 
                     {/* AI Tutor Response with Math Rendering */}
-                    <div className="flex items-start gap-2.5">
-                      <div className="relative size-7 shrink-0 overflow-hidden">
+                    <div className="flex items-start gap-3">
+                      <div className="relative size-8 shrink-0 overflow-hidden">
                         <Image
                           src="/mascot.png"
                           alt="ATLAS AI Mascot Avatar"
-                          width={28}
-                          height={28}
+                          width={32}
+                          height={32}
                           className="size-full object-contain drop-shadow-xs"
                         />
                       </div>
-                      <div className="max-w-lg space-y-2 rounded-lg border bg-card p-3.5 text-xs leading-relaxed">
+                      <div className="max-w-xl space-y-3 rounded-2xl border bg-card/60 backdrop-blur-xs p-4 sm:p-5 text-sm sm:text-base leading-relaxed">
                         <AtlasRichTextViewer
                           value={chatScenarios[activeChatIndex].response}
-                          className="text-xs leading-relaxed"
+                          className="text-sm sm:text-base leading-relaxed"
                         />
-                        <div className="border-t pt-2 text-[11px] text-muted-foreground flex items-center gap-1.5">
+                        <div className="border-t border-border/60 pt-2.5 text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5">
                           <span className="font-semibold text-foreground">{t("chat.groundingSource")}</span>
                           <span>{chatScenarios[activeChatIndex].citation}</span>
                         </div>
@@ -802,16 +802,16 @@ export function InteractiveFeaturesConsole() {
                   </div>
 
                   {/* Interactive Input Mockup */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <input
                       type="text"
                       placeholder={t("chat.inputPlaceholder")}
                       value={userCustomFollowUp}
                       onChange={(e) => setUserCustomFollowUp(e.target.value)}
-                      className="flex-1 rounded-md border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground outline-hidden focus:border-primary"
+                      className="flex-1 rounded-lg border bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-hidden focus:border-primary"
                     />
-                    <Button size="sm" className="h-8 gap-1.5 text-xs">
-                      <Send className="size-3" />
+                    <Button size="default" className="gap-2 text-sm font-medium">
+                      <Send className="size-3.5" />
                       {t("chat.askButton")}
                     </Button>
                   </div>
@@ -823,54 +823,54 @@ export function InteractiveFeaturesConsole() {
           {/* TAB 4: AUTHENTIC INSTRUCTOR GOVERNANCE SLICE */}
           <TabsContent value="instructor" className="mt-6">
             <ScrollReveal delayMs={150}>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {/* Interactive Metric Cards */}
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-3">
                   <Card
                     onClick={() => setCohortFilter("all")}
-                    className={`cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "all" ? "border-primary bg-primary/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <CardContent className="p-5">
+                      <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.enrolledStudents")}</span>
-                        <Badge variant="outline" className="text-[10px]">{t("instructor.active")}</Badge>
+                        <Badge variant="outline" className="text-xs">{t("instructor.active")}</Badge>
                       </div>
-                      <p className="mt-1 text-2xl font-semibold">42</p>
-                      <p className="mt-1 text-[11px] text-muted-foreground">{t("instructor.sectionTerm")}</p>
+                      <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">42</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{t("instructor.sectionTerm")}</p>
                     </CardContent>
                   </Card>
 
                   <Card
                     onClick={() => setCohortFilter("support")}
-                    className={`cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "support" ? "border-amber-500 bg-amber-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <CardContent className="p-5">
+                      <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.formativeCyclesActive")}</span>
-                        <Badge variant="outline" className="text-[10px] text-amber-600">{t("instructor.pending")}</Badge>
+                        <Badge variant="outline" className="text-xs text-amber-600 border-amber-500/40">{t("instructor.pending")}</Badge>
                       </div>
-                      <p className="mt-1 text-2xl font-semibold">18</p>
-                      <p className="mt-1 text-[11px] text-muted-foreground">{t("instructor.interventionInProgress")}</p>
+                      <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">18</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{t("instructor.interventionInProgress")}</p>
                     </CardContent>
                   </Card>
 
                   <Card
                     onClick={() => setCohortFilter("mastered")}
-                    className={`cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md ${
                       cohortFilter === "mastered" ? "border-emerald-500 bg-emerald-500/5 shadow-xs" : "hover:bg-muted/30"
                     }`}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <CardContent className="p-5">
+                      <div className="flex items-center justify-between text-sm font-medium text-muted-foreground">
                         <span>{t("instructor.conceptMasteryRate")}</span>
-                        <Badge variant="outline" className="text-[10px] text-emerald-600">{t("instructor.progressing")}</Badge>
+                        <Badge variant="outline" className="text-xs text-emerald-600 border-emerald-500/40">{t("instructor.progressing")}</Badge>
                       </div>
-                      <p className="mt-1 text-2xl font-semibold">76%</p>
-                      <p className="mt-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                      <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">76%</p>
+                      <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                         {t("instructor.aboveTargetMilestone")}
                       </p>
                     </CardContent>
@@ -878,56 +878,56 @@ export function InteractiveFeaturesConsole() {
                 </div>
 
                 {/* Question Bank Authoring Table */}
-                <Card>
-                  <CardHeader className="pb-3 border-b">
+                <Card className="border border-border/80 bg-background/60 dark:bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/40 shadow-xs">
+                  <CardHeader className="pb-4 border-b">
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-sm font-semibold">
+                        <CardTitle className="text-base font-semibold">
                           {t("instructor.repoTitle")}
                         </CardTitle>
-                        <CardDescription className="text-xs">
+                        <CardDescription className="text-sm">
                           {t("instructor.repoDescription")}
                         </CardDescription>
                       </div>
-                      <Badge variant="secondary">{t("instructor.repositoriesActive")}</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("instructor.repositoriesActive")}</Badge>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="p-4 text-xs space-y-2.5">
-                    <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
+                  <CardContent className="p-5 text-sm space-y-3">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="font-semibold text-foreground">PHY-EM-01: Coulomb&apos;s Law</p>
-                        <p className="text-[11px] text-muted-foreground">{t("instructor.coulombStats")}</p>
+                        <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-01: Coulomb&apos;s Law</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.coulombStats")}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="font-semibold text-foreground">PHY-EM-02: Field Superposition</p>
-                        <p className="text-[11px] text-muted-foreground">{t("instructor.superpositionStats")}</p>
+                        <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-02: Field Superposition</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.superpositionStats")}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <Badge variant="outline" className="text-xs">{t("instructor.published")}</Badge>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between rounded-md border p-3 bg-card hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center justify-between rounded-xl border p-4 bg-card hover:bg-muted/30 transition-colors">
                       <div>
-                        <p className="font-semibold text-foreground">PHY-EM-03: Gauss&apos;s Flux Law</p>
-                        <p className="text-[11px] text-muted-foreground">{t("instructor.gaussStats")}</p>
+                        <p className="font-semibold text-foreground text-sm sm:text-base">PHY-EM-03: Gauss&apos;s Flux Law</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("instructor.gaussStats")}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
                         <Badge variant="secondary" className="text-xs">{t("instructor.drafting")}</Badge>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs sm:text-sm">
                           {t("instructor.editBank")}
                         </Button>
                       </div>
