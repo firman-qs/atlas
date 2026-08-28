@@ -87,9 +87,8 @@
       "createAccount": "Buat akun",
       "fallbackError": "Tidak dapat masuk. Silakan coba lagi.",
       "backToHome": "Kembali ke beranda",
-      "showcaseBadge": "Pendamping Belajar Cerdas",
-      "showcaseTitle": "Kuasai konsep bersama pendamping AI Anda",
-      "showcaseSubtitle": "Pembelajaran formatif interaktif, umpan balik dialogis real-time, dan penguasaan konsep adaptif."
+      "welcomeBack": "Selamat datang kembali!",
+      "welcomeBackSub": "Siap untuk melanjutkan pembelajaran hari ini?"
     },
     "register": {
       "title": "Buat akun ATLAS Anda",

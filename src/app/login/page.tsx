@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { ArrowLeft, Moon, Sparkles, Sun } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -83,7 +83,7 @@ export default function LoginPage() {
               </span>
             </Link>
 
-            <div className="hidden h-4 w-px bg-border/80 sm:block" />
+            <div className="hidden h-4 w-px bg-border sm:block" />
 
             <Link
               href="/"
@@ -105,59 +105,62 @@ export default function LoginPage() {
       {/* Main Content Showcase & Form */}
       <main className="relative z-10 mx-auto my-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16">
-          {/* Left Column: 3D ATLAS Interactive Mascot & Conceptual AI Showcase (Desktop) */}
-          <div className="hidden lg:col-span-6 lg:flex lg:flex-col lg:items-start lg:text-left">
-            {/* Feature Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1.5 text-xs font-semibold text-cyan-700 dark:border-cyan-400/30 dark:bg-cyan-950/40 dark:text-cyan-300">
-              <Sparkles className="size-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>{t("showcaseBadge")}</span>
-            </div>
+          {/* Left Column: 3D ATLAS Interactive Mascot with Speech Balloon (Desktop) */}
+          <div className="hidden lg:col-span-6 lg:flex lg:flex-col lg:items-center lg:justify-center text-center">
+            {/* Mascot Speech Balloon */}
+            <div className="relative mb-4 max-w-xs rounded-2xl border border-border bg-card px-5 py-3 shadow-md dark:bg-card">
+              <p className="text-base font-semibold text-foreground">
+                👋 {t("welcomeBack")}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {t("welcomeBackSub")}
+              </p>
 
-            {/* Headline */}
-            <h1 className="mt-4 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl xl:text-5xl">
-              {t("showcaseTitle")}
-            </h1>
-
-            {/* Subtitle */}
-            <p className="mt-3 max-w-lg text-pretty text-base leading-relaxed text-muted-foreground">
-              {t("showcaseSubtitle")}
-            </p>
-
-            {/* Interactive Reactive Mascot */}
-            <div className="my-6 w-full flex justify-center lg:justify-start">
-              <AuthMascot
-                size="lg"
-                expression={mascotExpression}
-                className="lg:mx-0"
+              {/* Speech Balloon Tail */}
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-0 border-x-8 border-x-transparent border-t-8 border-t-border"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 size-0 border-x-[7px] border-x-transparent border-t-[7px] border-t-card"
               />
             </div>
 
-            {/* Subtle Feature Highlight Chips */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
-              <span className="inline-flex items-center rounded-md border border-border/80 bg-muted/40 px-2.5 py-1">
-                🧠 Socratic AI Guidance
-              </span>
-              <span className="inline-flex items-center rounded-md border border-border/80 bg-muted/40 px-2.5 py-1">
-                ⚡ Real-Time Conceptual Feedback
-              </span>
-              <span className="inline-flex items-center rounded-md border border-border/80 bg-muted/40 px-2.5 py-1">
-                📈 Adaptive SOLO Mastery
-              </span>
+            {/* Interactive Reactive Mascot */}
+            <div className="w-full flex justify-center">
+              <AuthMascot
+                size="lg"
+                expression={mascotExpression}
+              />
             </div>
           </div>
 
           {/* Right Column: Mobile Mascot + LoginForm Card */}
           <div className="flex flex-col items-center justify-center lg:col-span-6">
-            {/* Mobile Mascot Header (visible only on screens < lg) */}
-            <div className="mb-2 w-full flex flex-col items-center text-center lg:hidden">
+            {/* Mobile Mascot Header with Speech Balloon (visible only on screens < lg) */}
+            <div className="mb-4 w-full flex flex-col items-center text-center lg:hidden">
+              <div className="relative mb-2 rounded-xl border border-border bg-card px-4 py-2 shadow-sm">
+                <p className="text-sm font-semibold text-foreground">
+                  👋 {t("welcomeBack")}
+                </p>
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 size-0 border-x-6 border-x-transparent border-t-6 border-t-border"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-card"
+                />
+              </div>
+
               <AuthMascot
                 size="sm"
                 expression={mascotExpression}
-                className="mb-1"
               />
             </div>
 
-            {/* Glassmorphic Login Form Card */}
+            {/* Standard shadcn Login Form Card */}
             <LoginForm onExpressionChange={setMascotExpression} />
           </div>
         </div>

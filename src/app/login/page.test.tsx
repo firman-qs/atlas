@@ -37,11 +37,11 @@ describe("LoginPage", () => {
     });
   });
 
-  it("renders the login showcase, mascot, and form", () => {
+  it("renders the login showcase, mascot with speech bubble, and form", () => {
     render(<LoginPage />);
 
     expect(screen.getByText("ATLAS")).toBeInTheDocument();
-    expect(screen.getByText(/Master concepts with your AI companion/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Welcome back!/i).length).toBeGreaterThan(0);
     expect(screen.getByLabelText(/email/i, { selector: "input" })).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i, { selector: "input" })).toBeInTheDocument();
   });

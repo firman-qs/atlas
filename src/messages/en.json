@@ -87,9 +87,8 @@
       "createAccount": "Create account",
       "fallbackError": "Unable to sign in. Please try again.",
       "backToHome": "Back to home",
-      "showcaseBadge": "Intelligent Learning Companion",
-      "showcaseTitle": "Master concepts with your AI companion",
-      "showcaseSubtitle": "Interactive formative learning, real-time Socratic feedback, and adaptive conceptual mastery."
+      "welcomeBack": "Welcome back!",
+      "welcomeBackSub": "Ready to continue your learning journey?"
     },
     "register": {
       "title": "Create your ATLAS account",

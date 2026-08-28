@@ -96,19 +96,10 @@ export function LoginForm({ className, onExpressionChange }: LoginFormProps) {
         : null;
 
   return (
-    <Card
-      className={cn(
-        "w-full max-w-md border-border/80 bg-card/85 shadow-2xl backdrop-blur-xl transition-all duration-300 dark:bg-card/75",
-        className,
-      )}
-    >
-      <CardHeader className="space-y-1.5 pb-6">
-        <CardTitle className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          {t("title")}
-        </CardTitle>
-        <CardDescription className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-          {t("description")}
-        </CardDescription>
+    <Card className={cn("w-full max-w-md", className)}>
+      <CardHeader>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
 
       <CardContent>
