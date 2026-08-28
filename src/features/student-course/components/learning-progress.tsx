@@ -1,5 +1,6 @@
 import { Check, Circle, Trophy } from "lucide-react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -102,9 +103,10 @@ function ConceptProgress({
             )}
           </div>
 
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            {concept.concept.description}
-          </p>
+          <AtlasRichTextViewer
+            value={concept.concept.description}
+            className="mt-1 text-sm leading-6 text-muted-foreground"
+          />
         </div>
 
         <p className="shrink-0 text-sm font-medium tabular-nums">
@@ -166,9 +168,10 @@ function ConceptProgress({
                           : formatDomainCode(level.solo_level.code)}
                       </p>
 
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                        {level.solo_level.description}
-                      </p>
+                      <AtlasRichTextViewer
+                        value={level.solo_level.description}
+                        className="mt-1 text-xs leading-5 text-muted-foreground"
+                      />
                     </div>
                   </div>
                 );
@@ -265,9 +268,10 @@ export function LearningProgress({ progress }: LearningProgressProps) {
                   )}
                 </div>
 
-                <p className="text-sm leading-6 text-muted-foreground">
-                  {lo.description}
-                </p>
+                <AtlasRichTextViewer
+                  value={lo.description}
+                  className="text-sm leading-6 text-muted-foreground"
+                />
               </div>
 
               <div className="mt-4 space-y-3">

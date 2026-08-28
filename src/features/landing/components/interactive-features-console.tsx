@@ -463,9 +463,10 @@ export function InteractiveFeaturesConsole() {
                             name: currentConcept.name,
                           })}
                         </p>
-                        <p className="text-sm text-muted-foreground">
-                          {currentConcept.description}
-                        </p>
+                        <AtlasRichTextViewer
+                          value={currentConcept.description}
+                          className="text-sm text-muted-foreground"
+                        />
                       </div>
 
                       <span className="text-xs font-mono text-muted-foreground">

@@ -5,6 +5,7 @@ import { ArrowLeft, BookOpen, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -121,11 +122,10 @@ export function AdminCourseDetail({ courseId }: AdminCourseDetailProps) {
           ) : (
             <>
               <div>
-                <p className="text-sm font-medium">{tDetail("description")}</p>
-
-                <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">
-                  {course.description}
-                </p>
+                <AtlasRichTextViewer
+                  value={course.description}
+                  className="mt-1 text-sm text-muted-foreground"
+                />
               </div>
 
               <div>

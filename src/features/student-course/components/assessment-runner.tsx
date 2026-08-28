@@ -317,9 +317,10 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
             </div>
           </div>
 
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base">
-            {assessment.learning_objective.description}
-          </p>
+          <AtlasRichTextViewer
+            value={assessment.learning_objective.description}
+            className="max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base"
+          />
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Check, Circle, Trophy } from "lucide-react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -86,9 +87,10 @@ export function InstructorLearningProgress({
                     )}
                   </div>
 
-                  <p className="text-sm text-muted-foreground">
-                    {lo.description}
-                  </p>
+                  <AtlasRichTextViewer
+                    value={lo.description}
+                    className="text-sm text-muted-foreground"
+                  />
                 </div>
               </div>
 
@@ -124,9 +126,10 @@ export function InstructorLearningProgress({
                             )}
                           </div>
 
-                          <p className="mt-1 text-sm text-muted-foreground">
-                            {concept.concept.description}
-                          </p>
+                          <AtlasRichTextViewer
+                            value={concept.concept.description}
+                            className="mt-1 text-sm text-muted-foreground"
+                          />
                         </div>
                       </div>
 
@@ -157,9 +160,10 @@ export function InstructorLearningProgress({
                                   {formatSoloLabel(level.solo_level.code)}
                                 </p>
 
-                                <p className="text-xs text-muted-foreground">
-                                  {level.solo_level.description}
-                                </p>
+                                <AtlasRichTextViewer
+                                  value={level.solo_level.description}
+                                  className="text-xs text-muted-foreground"
+                                />
 
                                 <p className="text-xs text-muted-foreground">
                                   {t("progress.masteryThreshold", {

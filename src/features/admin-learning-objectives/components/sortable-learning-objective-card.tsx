@@ -5,6 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LearningObjectiveConceptManager } from "@/features/admin-learning-objectives/components/learning-objective-concept-manager";
@@ -78,9 +79,10 @@ export function SortableLearningObjectiveCard({
               </Badge>
             </div>
 
-            <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
-              {learningObjective.description}
-            </p>
+            <AtlasRichTextViewer
+              value={learningObjective.description}
+              className="text-sm leading-6 text-muted-foreground"
+            />
           </div>
         </div>
 

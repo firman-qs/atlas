@@ -5,6 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Loader2, Pencil, Trash2 } from "lucide-react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { AdminLearningObjectiveConceptLevel } from "@/features/admin-learning-objectives/levels-types";
@@ -90,9 +91,10 @@ export function SortableLearningObjectiveConceptLevel({
               <Badge>{t("masteryBadge", { percent: thresholdPercent })}</Badge>
             </div>
 
-            <p className="text-xs text-muted-foreground">
-              {item.solo_level.description}
-            </p>
+            <AtlasRichTextViewer
+              value={item.solo_level.description}
+              className="text-xs text-muted-foreground"
+            />
           </div>
         </div>
 

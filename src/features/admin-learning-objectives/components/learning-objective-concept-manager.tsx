@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -307,9 +308,10 @@ export function LearningObjectiveConceptManager({
                       <p className="text-sm font-medium">{concept.name}</p>
                     </div>
 
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {concept.description}
-                    </p>
+                    <AtlasRichTextViewer
+                      value={concept.description}
+                      className="mt-1 text-xs text-muted-foreground"
+                    />
                   </div>
 
                   <Button

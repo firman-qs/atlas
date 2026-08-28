@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -213,9 +214,10 @@ export function AssessmentOptionsPanel({
                     )}
                   </Badge>
 
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    {options.progress.learning_objective.description}
-                  </p>
+                  <AtlasRichTextViewer
+                    value={options.progress.learning_objective.description}
+                    className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground"
+                  />
                 </div>
               </div>
 
@@ -404,9 +406,10 @@ export function AssessmentOptionsPanel({
                         )}
                       </div>
 
-                      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                        {review.learning_objective.description}
-                      </p>
+                      <AtlasRichTextViewer
+                        value={review.learning_objective.description}
+                        className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground"
+                      />
                     </div>
 
                     {review.can_review_learning_objective && (
@@ -459,9 +462,10 @@ export function AssessmentOptionsPanel({
                                 )}
                               </div>
 
-                              <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-                                {concept.concept.description}
-                              </p>
+                              <AtlasRichTextViewer
+                                value={concept.concept.description}
+                                className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground"
+                              />
                             </div>
 
                             {concept.can_review_concept && (

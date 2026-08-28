@@ -22,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -209,9 +210,10 @@ export function ConceptLibrary({ courseId }: ConceptLibraryProps) {
                         <p className="font-medium">{concept.name}</p>
                       </div>
 
-                      <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
-                        {concept.description}
-                      </p>
+                      <AtlasRichTextViewer
+                        value={concept.description}
+                        className="text-sm leading-6 text-muted-foreground"
+                      />
                     </div>
 
                     <div className="flex gap-2">

@@ -4,6 +4,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -130,9 +131,10 @@ export function InstructorAssessmentHistory({
                     </Badge>
                   </div>
 
-                  <p className="text-sm text-muted-foreground">
-                    {assessment.learning_objective.description}
-                  </p>
+                  <AtlasRichTextViewer
+                    value={assessment.learning_objective.description}
+                    className="text-sm text-muted-foreground"
+                  />
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
                     <span>

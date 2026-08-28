@@ -30,6 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -346,9 +347,10 @@ export function LearningObjectiveConceptLevelManager({
                       <Badge variant="secondary">{t("soloBadge", { level: level.level })}</Badge>
                     </div>
 
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {level.description}
-                    </p>
+                    <AtlasRichTextViewer
+                      value={level.description}
+                      className="mt-1 text-xs text-muted-foreground"
+                    />
                   </div>
 
                   <Button

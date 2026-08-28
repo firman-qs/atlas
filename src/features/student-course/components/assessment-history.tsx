@@ -1,5 +1,6 @@
 "use client";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -225,9 +226,10 @@ export function AssessmentHistory() {
                         </Badge>
                       </div>
 
-                      <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                        {assessment.learning_objective.description}
-                      </p>
+                      <AtlasRichTextViewer
+                        value={assessment.learning_objective.description}
+                        className="max-w-2xl text-sm leading-6 text-muted-foreground"
+                      />
 
                       {presentationState === "active" && (
                         <p className="text-xs font-medium text-primary">

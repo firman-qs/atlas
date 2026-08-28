@@ -132,9 +132,10 @@ export function AssessmentResultView({
               })}
         </h1>
 
-        <p className="max-w-3xl text-muted-foreground">
-          {result.learning_objective.description}
-        </p>
+        <AtlasRichTextViewer
+          value={result.learning_objective.description}
+          className="max-w-3xl text-muted-foreground"
+        />
       </div>
 
       {result.concepts.map((concept) => (

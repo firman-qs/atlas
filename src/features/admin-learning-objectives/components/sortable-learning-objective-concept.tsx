@@ -5,6 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Check, GripVertical, Link2, Loader2, Unlink } from "lucide-react";
 
+import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LearningObjectiveConceptLevelManager } from "@/features/admin-learning-objectives/components/learning-objective-concept-level-manager";
@@ -91,9 +92,10 @@ export function SortableLearningObjectiveConcept({
               </Badge>
             </div>
 
-            <p className="mt-2 text-sm text-muted-foreground">
-              {item.concept.description}
-            </p>
+            <AtlasRichTextViewer
+              value={item.concept.description}
+              className="mt-2 text-sm text-muted-foreground"
+            />
           </div>
         </div>
 
