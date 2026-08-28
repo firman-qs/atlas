@@ -73,6 +73,11 @@ export function AtlasRichTextEditor({
     onChangeRef.current = onChange;
   }, [onChange]);
 
+  const [initialPlaceholder] = useState(
+    () => placeholder ?? t("editorAriaLabel"),
+  );
+  const [initialDisabled] = useState(() => disabled);
+
   useEffect(() => {
     if (!containerRef.current) {
       return;
@@ -95,12 +100,12 @@ export function AtlasRichTextEditor({
       },
       featureConfigs: {
         [Crepe.Feature.Placeholder]: {
-          text: placeholder ?? t("editorAriaLabel"),
+          text: initialPlaceholder,
         },
       },
     });
 
-    crepe.setReadonly(disabled);
+    crepe.setReadonly(initialDisabled);
 
     crepe.on((listener) => {
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
@@ -127,7 +132,7 @@ export function AtlasRichTextEditor({
       setIsEditorReady(false);
       void crepe.destroy();
     };
-  }, [disabled, initialValue, placeholder, t]);
+  }, [initialDisabled, initialPlaceholder, initialValue]);
 
   useEffect(() => {
     const crepe = crepeRef.current;
@@ -320,7 +325,7 @@ export function AtlasRichTextEditor({
     <div
       className={cn(
         "atlas-rich-text-editor overflow-hidden rounded-lg border bg-background text-foreground shadow-2xs",
-        disabled && "opacity-60",
+        disabled && "opacity-90 bg-muted/5",
         className,
       )}
       aria-disabled={disabled}

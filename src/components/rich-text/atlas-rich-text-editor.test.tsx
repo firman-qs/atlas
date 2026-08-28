@@ -171,5 +171,35 @@ describe("AtlasRichTextEditor", () => {
 
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("dynamically sets readonly when disabled prop changes without destroying instance", async () => {
+    const { rerender } = render(
+      <AtlasRichTextEditor
+        value="Submitted essay response"
+        onChange={vi.fn()}
+        disabled={false}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(mockCreate).toHaveBeenCalledTimes(1);
+    });
+
+    rerender(
+      <AtlasRichTextEditor
+        value="Submitted essay response"
+        onChange={vi.fn()}
+        disabled={true}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(mockSetReadonly).toHaveBeenCalledWith(true);
+    });
+
+    // Ensure create was not called again (not destroyed & recreated)
+    expect(mockCreate).toHaveBeenCalledTimes(1);
+  });
 });
+
 
