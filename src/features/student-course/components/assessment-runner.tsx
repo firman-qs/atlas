@@ -7,7 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/features/auth/auth-provider";
 import { CancelAssessmentButton } from "@/features/student-course/components/cancel-assessment-button";
+import {
+  clearEssayDraft,
+  loadEssayDraft,
+  saveEssayDraft,
+} from "@/features/student-course/essay-draft-storage";
 import { learningObjectiveNumber } from "@/features/student-course/labels";
 import {
   studentAssessmentKeys,
@@ -47,20 +53,42 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
   const course = useTranslations("course");
   const errors = useTranslations("errors");
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const assessmentQuery = useAssessment(assessmentId);
   const issueQuestion = useIssueNextQuestion(assessmentId);
 
   const requestedInitialQuestion = useRef(false);
 
-  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
-  const [essayAnswer, setEssayAnswer] = useState("");
-  const [attemptResult, setAttemptResult] =
-    useState<SubmitAttemptResult | null>(null);
-
   const cachedQuestion = queryClient.getQueryData<AssessmentQuestion>(
     studentAssessmentKeys.question(assessmentId),
   );
+  const essayDraftContext =
+    user && cachedQuestion?.content.type === "essay"
+      ? `${user.id}:${assessmentId}:${cachedQuestion.id}`
+      : null;
+
+  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
+  const [essayState, setEssayState] = useState({
+    context: null as string | null,
+    value: "",
+    saved: false,
+  });
+  const [attemptResult, setAttemptResult] =
+    useState<SubmitAttemptResult | null>(null);
+
+  const restoredEssayDraft =
+    essayDraftContext && user && cachedQuestion
+      ? loadEssayDraft(user.id, assessmentId, cachedQuestion.id)
+      : null;
+  const essayAnswer =
+    essayState.context === essayDraftContext
+      ? essayState.value
+      : (restoredEssayDraft ?? "");
+  const essayDraftSaved =
+    essayState.context === essayDraftContext
+      ? essayState.saved
+      : Boolean(restoredEssayDraft);
 
   const assessment = assessmentQuery.data;
 
@@ -76,7 +104,11 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
     });
 
     setSelectedOptionId(null);
-    setEssayAnswer("");
+    setEssayState({ context: null, value: "", saved: false });
+
+    if (user) {
+      clearEssayDraft(user.id, assessmentId);
+    }
   }
 
   async function reconcileAssessmentState() {
@@ -124,8 +156,12 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
         queryKey: studentAssessmentKeys.question(assessmentId),
         exact: true,
       });
+
+      if (user) {
+        clearEssayDraft(user.id, assessmentId);
+      }
     }
-  }, [assessment?.status, assessmentId, queryClient]);
+  }, [assessment?.status, assessmentId, queryClient, user]);
 
   if (assessmentQuery.isPending) {
     return (
@@ -183,6 +219,15 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
 
   function handleSubmit(question: AssessmentQuestion) {
     const onSuccess = (result: SubmitAttemptResult) => {
+      if (question.content.type === "essay" && user) {
+        clearEssayDraft(user.id, assessmentId);
+        setEssayState({
+          context: essayDraftContext,
+          value: essayAnswer,
+          saved: false,
+        });
+      }
+
       setAttemptResult(result);
     };
 
@@ -231,10 +276,26 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
     );
   }
 
+  function handleEssayAnswerChange(
+    question: AssessmentQuestion,
+    value: string,
+  ) {
+    if (!user) {
+      setEssayState({ context: null, value, saved: false });
+      return;
+    }
+
+    setEssayState({
+      context: `${user.id}:${assessmentId}:${question.id}`,
+      value,
+      saved: saveEssayDraft(user.id, assessmentId, question.id, value),
+    });
+  }
+
   function handleNextQuestion() {
     setAttemptResult(null);
     setSelectedOptionId(null);
-    setEssayAnswer("");
+    setEssayState({ context: null, value: "", saved: false });
 
     queryClient.removeQueries({
       queryKey: studentAssessmentKeys.question(assessmentId),
@@ -477,12 +538,20 @@ export function AssessmentRunner({ assessmentId }: AssessmentRunnerProps) {
                 <div className="space-y-3">
                   <AtlasRichTextEditor
                     value={essayAnswer}
-                    onChange={setEssayAnswer}
+                    onChange={(value) =>
+                      handleEssayAnswerChange(question, value)
+                    }
                     disabled={submitAttempt.isPending || attemptResult !== null}
                     placeholder={messages("essayPlaceholder")}
                     mediaPurpose="attempt"
                     className="min-h-48"
                   />
+
+                  {essayDraftSaved && !attemptResult && (
+                    <p className="text-xs text-muted-foreground" role="status">
+                      {messages("draftSavedLocally")}
+                    </p>
+                  )}
 
                   {!attemptResult && (
                     <div className="flex justify-end">

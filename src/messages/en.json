@@ -331,6 +331,7 @@
     "mcqHint": "Choose the best answer, then submit your response.",
     "essayHint": "Write your response below. You can include supporting images when needed.",
     "essayPlaceholder": "Write your answer here...",
+    "draftSavedLocally": "Draft saved on this device",
     "submitting": "Submitting...",
     "evaluating": "Evaluating...",
     "submitAnswer": "Submit answer",

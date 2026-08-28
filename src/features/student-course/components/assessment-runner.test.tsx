@@ -1,6 +1,20 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@/test/render";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const localStorageValues = new Map<string, string>();
+const localStorageStub: Storage = {
+  get length() {
+    return localStorageValues.size;
+  },
+  clear: () => localStorageValues.clear(),
+  getItem: (key) => localStorageValues.get(key) ?? null,
+  key: (index) => Array.from(localStorageValues.keys())[index] ?? null,
+  removeItem: (key) => localStorageValues.delete(key),
+  setItem: (key, value) => localStorageValues.set(key, String(value)),
+};
+
+vi.stubGlobal("localStorage", localStorageStub);
+
 const invalidateQueries = vi.hoisted(() => vi.fn());
 const refetchQueries = vi.hoisted(() => vi.fn());
 const removeQueries = vi.hoisted(() => vi.fn());
@@ -13,6 +27,11 @@ const useSubmitAttempt = vi.hoisted(() => vi.fn());
 
 const issueMutate = vi.hoisted(() => vi.fn());
 const submitMutate = vi.hoisted(() => vi.fn());
+const useAuth = vi.hoisted(() => vi.fn());
+
+vi.mock("@/features/auth/auth-provider", () => ({
+  useAuth,
+}));
 
 vi.mock("@tanstack/react-query", () => ({
   useQueryClient: () => ({
@@ -126,6 +145,16 @@ const runningAssessment = {
 describe("AssessmentRunner", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+
+    useAuth.mockReturnValue({
+      user: {
+        id: "student-1",
+        email: "student@example.com",
+        full_name: "Student One",
+        updated_at: "2026-08-23T00:00:00Z",
+      },
+    });
 
     invalidateQueries.mockResolvedValue(undefined);
     refetchQueries.mockResolvedValue(undefined);
@@ -324,6 +353,132 @@ describe("AssessmentRunner", () => {
     expect(issueMutate).toHaveBeenCalledTimes(1);
   });
 
+  it("restores an essay draft after the assessment runner remounts", () => {
+    getQueryData.mockReturnValue({
+      id: "question-essay",
+      prompt: "Explain why electric flux is independent of radius.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    const firstRender = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+      {
+        target: {
+          value: "The field decreases while the spherical area increases.",
+        },
+      },
+    );
+
+    expect(screen.getByText("Draft saved on this device")).toBeInTheDocument();
+
+    firstRender.unmount();
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveValue(
+      "The field decreases while the spherical area increases.",
+    );
+  });
+
+  it("does not restore a draft into a different essay question", () => {
+    getQueryData.mockReturnValue({
+      id: "question-essay-1",
+      prompt: "Explain electric flux.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    const firstRender = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+      {
+        target: {
+          value: "Draft for the first question.",
+        },
+      },
+    );
+
+    firstRender.unmount();
+
+    getQueryData.mockReturnValue({
+      id: "question-essay-2",
+      prompt: "Explain Gauss's law.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveValue("");
+  });
+
+  it("does not restore another student's essay draft", () => {
+    getQueryData.mockReturnValue({
+      id: "question-essay",
+      prompt: "Explain electric flux.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    const firstRender = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+      {
+        target: {
+          value: "A draft belonging to student one.",
+        },
+      },
+    );
+
+    firstRender.unmount();
+
+    useAuth.mockReturnValue({
+      user: {
+        id: "student-2",
+        email: "student-2@example.com",
+        full_name: "Student Two",
+        updated_at: "2026-08-23T00:00:00Z",
+      },
+    });
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveValue("");
+  });
+
   it("keeps essay text available when evaluation fails", () => {
     getQueryData.mockReturnValue({
       id: "question-essay",
@@ -339,8 +494,22 @@ describe("AssessmentRunner", () => {
       isError: true,
       error: new Error("Essay evaluation is temporarily unavailable."),
     });
+    submitMutate.mockImplementation(
+      (
+        _request: unknown,
+        options: {
+          onError: (error: unknown) => void;
+        },
+      ) => {
+        options.onError(
+          new Error("Essay evaluation is temporarily unavailable."),
+        );
+      },
+    );
 
-    render(<AssessmentRunner assessmentId="assessment-1" />);
+    const firstRender = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
 
     const editor = screen.getByRole("textbox", {
       name: /write your answer here/i,
@@ -377,6 +546,82 @@ describe("AssessmentRunner", () => {
     );
 
     expect(editor).toHaveValue(answer);
+
+    firstRender.unmount();
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveValue(answer);
+  });
+
+  it("clears the essay draft after successful evaluation", async () => {
+    getQueryData.mockReturnValue({
+      id: "question-essay",
+      prompt: "Explain why electric flux is independent of radius.",
+      content: {
+        type: "essay",
+      },
+    });
+
+    const firstRender = render(
+      <AssessmentRunner assessmentId="assessment-1" />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+      {
+        target: {
+          value: "The area and field magnitude compensate.",
+        },
+      },
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /submit answer/i,
+      }),
+    );
+
+    const [, options] = submitMutate.mock.calls[0] as [
+      unknown,
+      {
+        onSuccess: (result: unknown) => void;
+      },
+    ];
+
+    await act(async () => {
+      options.onSuccess({
+        attempt_id: "attempt-1",
+        question_id: "question-essay",
+        cycle_number: 1,
+        is_correct: null,
+        score: 0.9,
+        feedback: "Good explanation.",
+        evaluated_at: "2026-08-23T00:00:00Z",
+        cycle_completed: false,
+        cycle_score: null,
+        mastery_threshold: 0.8,
+        level_mastered: false,
+        assessment_status: "running",
+        current_loc_level_id: "level-1",
+      });
+    });
+
+    firstRender.unmount();
+
+    render(<AssessmentRunner assessmentId="assessment-1" />);
+
+    expect(
+      screen.getByRole("textbox", {
+        name: /write your answer here/i,
+      }),
+    ).toHaveValue("");
   });
 
   it("preserves feedback until the student requests the next question", async () => {
