@@ -1,0 +1,268 @@
+/*
+ * KaTeX Layout Overrides — declared in @layer utilities so they take precedence
+ * over Tailwind's @layer base preflight resets (box-sizing, margin, padding, border).
+ *
+ * Key problems Tailwind preflight causes for KaTeX:
+ *
+ * 1. `* { box-sizing: border-box }` — KaTeX measures everything with content-box
+ *    sizing. Border-box makes the inline-table vlist cells collapse or expand
+ *    incorrectly causing fraction numerators/denominators and accents to overlap.
+ *
+ * 2. `* { border: 0 solid }` — Zeroes border-width on every element. KaTeX
+ *    fraction lines (.frac-line) and overline/underline use border-bottom to
+ *    draw the bar. With border-width = 0 those bars disappear entirely, causing
+ *    numerator and denominator to collide into each other.
+ *
+ * 3. `* { margin: 0; padding: 0 }` — KaTeX uses negative margins on some spans
+ *    (e.g. `.vlist-t2 { margin-right: -2px }`) for table column correction.
+ *    Zeroing margins causes the two-column vlist tables (vlist-t2) to shift.
+ *
+ * 4. `.vlist > span` height — KaTeX requires height: 0 on all vlist > span
+ *    children so every layer shares the same baseline origin. The spans then
+ *    use calculated `top` offsets to position content. Without height: 0 the
+ *    layers stack vertically causing accents (vec, hat) to appear below the
+ *    base symbol rather than above it.
+ */
+
+@layer utilities {
+  /* ─── Box model ──────────────────────────────────────────────── */
+  .katex,
+  .katex * {
+    box-sizing: content-box;
+    margin: revert;
+    padding: revert;
+    border: revert;
+  }
+
+  /* ─── Root element ────────────────────────────────────────────── */
+  .katex {
+    font: normal 1.21em KaTeX_Main, "Times New Roman", serif;
+    line-height: 1.2;
+    text-indent: 0;
+    text-rendering: auto;
+    white-space: normal;
+    direction: ltr;
+    position: relative;
+  }
+
+  /* ─── Vertical list (vlist): the core KaTeX layout primitive ─── */
+  .katex .vlist-t {
+    display: inline-table;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  .katex .vlist-r {
+    display: table-row;
+  }
+
+  .katex .vlist {
+    display: table-cell;
+    vertical-align: bottom;
+    position: relative;
+  }
+
+  /*
+   * CRITICAL: height MUST be 0 on every direct span child of .vlist.
+   * All content layers share the same baseline origin and are offset by
+   * calculated `top` values. A non-zero height displaces the baseline
+   * downward — accents land on top of the base letter instead of above it
+   * and fraction rows collapse onto each other.
+   */
+  .katex .vlist > span {
+    display: block;
+    height: 0;
+    position: relative;
+  }
+
+  .katex .vlist > span > span {
+    display: inline-block;
+  }
+
+  /* pstrut: establishes the reference height for the row without flowing */
+  .katex .vlist > span > .pstrut {
+    display: inline-block;
+    overflow: hidden;
+    width: 0;
+  }
+
+  /* Two-column vlist offset correction */
+  .katex .vlist-t2 {
+    margin-right: -2px;
+  }
+
+  /* Spacer column for two-column vlists */
+  .katex .vlist-s {
+    display: table-cell;
+    vertical-align: bottom;
+    font-size: 1px;
+    width: 2px;
+    min-width: 2px;
+  }
+
+  /* ─── Inline HTML nodes ───────────────────────────────────────── */
+  .katex .katex-html {
+    display: inline-block;
+    position: relative;
+  }
+
+  .katex .katex-html > .katex-newline {
+    display: block;
+  }
+
+  .katex .katex-base {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    width: min-content;
+  }
+
+  .katex .katex-strut {
+    display: inline-block;
+  }
+
+  /* ─── Subscripts / superscripts ──────────────────────────────── */
+  .katex .msupsub {
+    text-align: left;
+  }
+
+  /* ─── Fractions ───────────────────────────────────────────────── */
+  .katex .mfrac > span > span {
+    text-align: center;
+  }
+
+  /*
+   * Fraction bar and over/underlines:
+   * Tailwind zeros border-width; these elements rely on border-bottom to
+   * draw the horizontal rule. Restore with `revert` so katex.min.css wins,
+   * then force border-bottom-style: solid as a fallback.
+   */
+  .katex .mfrac .frac-line,
+  .katex .katex-overline .overline-line,
+  .katex .katex-underline .underline-line,
+  .katex .katex-hline,
+  .katex .katex-hdashline,
+  .katex .katex-rule {
+    display: inline-block;
+    width: 100%;
+    min-height: 1px;
+    border-bottom-width: revert;
+    border-bottom-style: solid;
+    border-bottom-color: currentColor;
+  }
+
+  .katex .katex-hdashline {
+    border-bottom-style: dashed;
+  }
+
+  /* ─── Accents (vec, hat, dot, bar, tilde, …) ──────────────────── */
+  .katex .katex-accent > .vlist-t {
+    text-align: center;
+  }
+
+  .katex .katex-accent .accent-body {
+    position: relative;
+  }
+
+  /* Zero width so the accent is centred above the base glyph */
+  .katex .katex-accent .accent-body:not(.accent-full) {
+    width: 0;
+  }
+
+  /* ─── Math atom display types ─────────────────────────────────── */
+  .katex .mord,
+  .katex .mbin,
+  .katex .mrel,
+  .katex .mopen,
+  .katex .mclose,
+  .katex .mpunct,
+  .katex .minner,
+  .katex .mop,
+  .katex .mspace,
+  .katex .katex-strut {
+    display: inline-block;
+  }
+
+  /* ─── SVG stretchy delimiters, sqrt radical, vector arrow ────── */
+  .katex svg {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: inherit;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  .katex svg path {
+    stroke: none;
+  }
+
+  /* ─── Misc helpers ────────────────────────────────────────────── */
+  .katex .llap,
+  .katex .rlap,
+  .katex .clap {
+    width: 0;
+    position: relative;
+  }
+
+  .katex .llap > .katex-inner,
+  .katex .rlap > .katex-inner,
+  .katex .clap > .katex-inner {
+    position: absolute;
+  }
+
+  .katex .llap > .katex-fix,
+  .katex .rlap > .katex-fix,
+  .katex .clap > .katex-fix {
+    display: inline-block;
+  }
+
+  .katex .llap > .katex-inner {
+    right: 0;
+  }
+
+  .katex .rlap > .katex-inner,
+  .katex .clap > .katex-inner {
+    left: 0;
+  }
+
+  .katex .katex-smash {
+    display: inline;
+    line-height: 0;
+  }
+
+  .katex .sqrt > .katex-root {
+    margin-left: 0.2777777778em;
+    margin-right: -0.5555555556em;
+  }
+
+  .katex .op-limits > .vlist-t {
+    text-align: center;
+  }
+
+  /* ─── Display mode ────────────────────────────────────────────── */
+  .katex-display {
+    display: block;
+    margin: 1em 0;
+    text-align: center;
+  }
+
+  .katex-display > .katex {
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .katex-display > .katex > .katex-html {
+    display: block;
+    position: relative;
+  }
+
+  /* ─── Viewer-specific ─────────────────────────────────────────── */
+  .atlas-rich-text-viewer .katex-display {
+    margin-block: 0.75rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.25rem;
+  }
+}
