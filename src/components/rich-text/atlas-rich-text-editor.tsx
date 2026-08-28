@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { AtlasRichTextViewer } from "@/components/rich-text/atlas-rich-text-viewer";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -14,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Crepe } from "@milkdown/crepe";
 import { commandsCtx, editorViewCtx } from "@milkdown/kit/core";
 import {
+  addBlockTypeCommand,
   blockquoteSchema,
   bulletListSchema,
   codeBlockSchema,
@@ -28,8 +28,6 @@ import { replaceAll } from "@milkdown/kit/utils";
 import {
   Bold,
   Code,
-  Eye,
-  EyeOff,
   Heading1,
   Heading2,
   Heading3,
@@ -65,7 +63,6 @@ export function AtlasRichTextEditor({
   const crepeRef = useRef<Crepe | null>(null);
   const onChangeRef = useRef(onChange);
   const [initialValue] = useState(() => value);
-  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
@@ -220,14 +217,25 @@ export function AtlasRichTextEditor({
 
   function handleMathBlock() {
     runEditorCommand((ctx) => {
+      const commands = ctx.get(commandsCtx);
+      const codeBlock = codeBlockSchema.type(ctx);
       const view = ctx.get(editorViewCtx);
       const { state, dispatch } = view;
       const { from, to } = state.selection;
-      const selected = state.doc.textBetween(from, to, " ");
-      const latex = selected.trim() || "\\int \\nabla \\times \\Psi";
-      const insertion = `\n\n$$\n${latex}\n$$\n\n`;
-      const tr = state.tr.insertText(insertion, from, to);
-      dispatch(tr);
+      const selectedText = state.doc.textBetween(from, to, "\n").trim();
+      if (selectedText) {
+        const node = codeBlock.create(
+          { language: "LaTeX" },
+          state.schema.text(selectedText),
+        );
+        const tr = state.tr.replaceSelectionWith(node);
+        dispatch(tr);
+      } else {
+        commands.call(addBlockTypeCommand.key, {
+          nodeType: codeBlock,
+          attrs: { language: "LaTeX" },
+        });
+      }
     });
   }
 
@@ -235,11 +243,13 @@ export function AtlasRichTextEditor({
     runEditorCommand((ctx) => {
       const view = ctx.get(editorViewCtx);
       const { state, dispatch } = view;
+      const mathInlineType = state.schema.nodes.math_inline;
+      if (!mathInlineType) return;
       const { from, to } = state.selection;
-      const selected = state.doc.textBetween(from, to, " ");
-      const latex = selected.trim() || "x";
-      const insertion = `$${latex}$`;
-      const tr = state.tr.insertText(insertion, from, to);
+      const selectedText = state.doc.textBetween(from, to, " ").trim();
+      const latex = selectedText || "\\Psi";
+      const node = mathInlineType.create({ value: latex });
+      const tr = state.tr.replaceSelectionWith(node);
       dispatch(tr);
     });
   }
@@ -260,17 +270,34 @@ export function AtlasRichTextEditor({
     try {
       const media = await uploadMedia(file, mediaPurpose);
       const altText = file.name.replace(/\.[^.]+$/, "").trim() || "Figure";
-      const imageMarkdown = `![${altText}](${mediaUrl(media.id)})`;
+      const url = mediaUrl(media.id);
 
       if (crepeRef.current) {
         crepeRef.current.editor.action((ctx) => {
           const view = ctx.get(editorViewCtx);
           const { state, dispatch } = view;
-          const { from, to } = state.selection;
-          const tr = state.tr.insertText(`\n\n${imageMarkdown}\n\n`, from, to);
-          dispatch(tr);
+          const imageBlockType =
+            state.schema.nodes["image-block"] ||
+            state.schema.nodes.image_block ||
+            state.schema.nodes.image;
+
+          if (imageBlockType) {
+            const node = imageBlockType.create({
+              src: url,
+              caption: altText,
+              alt: altText,
+            });
+            const tr = state.tr.replaceSelectionWith(node);
+            dispatch(tr);
+          } else {
+            const imageMarkdown = `![${altText}](${url})`;
+            const { from, to } = state.selection;
+            const tr = state.tr.insertText(`\n\n${imageMarkdown}\n\n`, from, to);
+            dispatch(tr);
+          }
         });
       } else {
+        const imageMarkdown = `![${altText}](${url})`;
         const nextValue = value.trimEnd()
           ? `${value.trimEnd()}\n\n${imageMarkdown}`
           : imageMarkdown;
@@ -521,55 +548,36 @@ export function AtlasRichTextEditor({
           </Tooltip>
         </div>
 
-        <div className="flex items-center gap-1">
-          {mediaPurpose && (
-            <>
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                className="sr-only"
-                disabled={disabled || isUploadingImage}
-                onChange={handleImageSelected}
-                aria-label={t("chooseImage")}
-              />
+        {mediaPurpose && (
+          <div className="flex items-center gap-1">
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="sr-only"
+              disabled={disabled || isUploadingImage}
+              onChange={handleImageSelected}
+              aria-label={t("chooseImage")}
+            />
 
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                disabled={disabled || isUploadingImage}
-                onClick={() => imageInputRef.current?.click()}
-                className="h-7 text-xs"
-              >
-                {isUploadingImage ? (
-                  <LoaderCircle className="size-3.5 animate-spin" />
-                ) : (
-                  <ImagePlus className="size-3.5" />
-                )}
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              disabled={disabled || isUploadingImage}
+              onClick={() => imageInputRef.current?.click()}
+              className="h-7 text-xs"
+            >
+              {isUploadingImage ? (
+                <LoaderCircle className="size-3.5 animate-spin" />
+              ) : (
+                <ImagePlus className="size-3.5" />
+              )}
 
-                {isUploadingImage ? t("uploading") : t("addImage")}
-              </Button>
-            </>
-          )}
-
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            onClick={() => setIsPreviewVisible((visible) => !visible)}
-            aria-expanded={isPreviewVisible}
-            className="h-7 text-xs"
-          >
-            {isPreviewVisible ? (
-              <EyeOff className="size-3.5" />
-            ) : (
-              <Eye className="size-3.5" />
-            )}
-
-            {isPreviewVisible ? t("hidePreview") : t("preview")}
-          </Button>
-        </div>
+              {isUploadingImage ? t("uploading") : t("addImage")}
+            </Button>
+          </div>
+        )}
       </div>
 
       {imageUploadError && (
@@ -586,22 +594,6 @@ export function AtlasRichTextEditor({
         ref={containerRef}
         className="atlas-crepe-editor min-h-[140px] bg-background"
       />
-
-      {isPreviewVisible && (
-        <div className="border-t bg-muted/10 p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            {t("renderedPreview")}
-          </p>
-
-          {value.trim() ? (
-            <AtlasRichTextViewer value={value} />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              {t("nothingToPreview")}
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }

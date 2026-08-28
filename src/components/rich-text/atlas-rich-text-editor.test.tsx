@@ -90,55 +90,18 @@ describe("AtlasRichTextEditor", () => {
     expect(mockAction).toHaveBeenCalled();
   });
 
-  it("shows and hides a rendered Markdown and math preview", async () => {
-    const { container } = render(
-      <AtlasRichTextEditor
-        value={"Apply **Gauss's law** using $\\Phi_E = q / \\epsilon_0$."}
-        onChange={vi.fn()}
-      />,
-    );
+  it("triggers math block and inline math actions from toolbar", async () => {
+    render(<AtlasRichTextEditor value="Initial text" onChange={vi.fn()} />);
 
     await waitFor(() => {
       expect(mockCreate).toHaveBeenCalled();
     });
 
-    expect(screen.queryByText("Rendered preview")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Math block ($$)" }));
+    expect(mockAction).toHaveBeenCalled();
 
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /preview/i,
-      }),
-    );
-
-    expect(screen.getByText("Rendered preview")).toBeInTheDocument();
-
-    expect(screen.getByText("Gauss's law")).toHaveProperty("tagName", "STRONG");
-
-    expect(container.querySelector(".katex")).toBeInTheDocument();
-
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /hide preview/i,
-      }),
-    );
-
-    expect(screen.queryByText("Rendered preview")).not.toBeInTheDocument();
-  });
-
-  it("renders an empty preview state", async () => {
-    render(<AtlasRichTextEditor value="" onChange={vi.fn()} />);
-
-    await waitFor(() => {
-      expect(mockCreate).toHaveBeenCalled();
-    });
-
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /preview/i,
-      }),
-    );
-
-    expect(screen.getByText("Nothing to preview yet.")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Inline math ($)" }));
+    expect(mockAction).toHaveBeenCalled();
   });
 
   it("uploads an authoring image and appends its Markdown reference", async () => {
