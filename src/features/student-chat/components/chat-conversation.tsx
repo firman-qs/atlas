@@ -285,8 +285,8 @@ export function ChatConversation({
     .flatMap((page) => page.items);
 
   return (
-    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
-      <div className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 sm:px-5">
+    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="absolute inset-x-0 top-0 z-20 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 sm:px-5">
         <div className="flex min-w-0 items-center gap-2">
           <Button
             type="button"
@@ -361,7 +361,7 @@ export function ChatConversation({
       <div
         ref={messageScrollRef}
         data-testid="chat-message-scroll"
-        className="min-h-0 flex-1 space-y-6 overflow-y-auto p-5"
+        className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 pb-5 pt-18 sm:pt-20"
       >
         {messagesQuery.hasNextPage && (
           <div className="flex justify-center">

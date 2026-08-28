@@ -29,8 +29,8 @@ export function ChatEmptyState({
   const t = useTranslations("chat");
 
   return (
-    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col">
-      <div className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 sm:px-5">
+    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="absolute inset-x-0 top-0 z-20 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 bg-background/80 px-4 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 sm:px-5">
         <div className="flex min-w-0 items-center gap-2">
           <Button
             type="button"
@@ -63,7 +63,7 @@ export function ChatEmptyState({
         </Button>
       </div>
 
-      <div className="flex min-h-0 flex-1 items-center justify-center p-6">
+      <div className="flex min-h-0 flex-1 items-center justify-center p-6 pt-20">
         <div className="max-w-md text-center">
           <div className="mx-auto relative size-14 overflow-hidden">
             <Image

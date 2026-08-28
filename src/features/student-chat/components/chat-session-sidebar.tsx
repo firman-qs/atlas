@@ -32,8 +32,8 @@ export function ChatSessionSidebar({
   const t = useTranslations("chat");
 
   return (
-    <aside className="flex min-h-0 h-full flex-col bg-muted/20">
-      <div className="sticky top-0 z-10 border-b border-border/80 bg-background/80 p-3.5 backdrop-blur-md supports-[backdrop-filter]:bg-background/65">
+    <aside className="relative flex min-h-0 h-full flex-col bg-muted/20 overflow-hidden">
+      <div className="absolute inset-x-0 top-0 z-10 border-b border-border/80 bg-background/80 p-3.5 backdrop-blur-md supports-[backdrop-filter]:bg-background/65">
         <Button
           type="button"
           className="w-full justify-start"
@@ -46,7 +46,7 @@ export function ChatSessionSidebar({
         </Button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+      <div className="min-h-0 flex-1 overflow-y-auto p-3 pt-18">
         <p className="px-2 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {t("recentChats")}
         </p>
