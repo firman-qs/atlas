@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export function InteractiveMascot() {
+  const t = useTranslations("landing.visuals");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mascotRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,8 +50,14 @@ export function InteractiveMascot() {
       const dist = Math.hypot(dx, dy);
 
       if (dist < 480) {
-        state.targetLookX = Math.max(-8, Math.min(8, (dx / (rect.width / 2)) * 8));
-        state.targetLookY = Math.max(-6, Math.min(6, (dy / (rect.height / 2)) * 6));
+        state.targetLookX = Math.max(
+          -8,
+          Math.min(8, (dx / (rect.width / 2)) * 8),
+        );
+        state.targetLookY = Math.max(
+          -6,
+          Math.min(6, (dy / (rect.height / 2)) * 6),
+        );
         state.targetX = dx * 0.14;
         state.targetY = dy * 0.14;
       } else {
@@ -85,8 +93,10 @@ export function InteractiveMascot() {
       // Elastic jelly spring physics
       const stiffness = 0.07;
       const damping = 0.84;
-      state.physVX = (state.physVX + (state.targetX - state.physX) * stiffness) * damping;
-      state.physVY = (state.physVY + (state.targetY - state.physY) * stiffness) * damping;
+      state.physVX =
+        (state.physVX + (state.targetX - state.physX) * stiffness) * damping;
+      state.physVY =
+        (state.physVY + (state.targetY - state.physY) * stiffness) * damping;
       state.physX += state.physVX;
       state.physY += state.physVY;
 
@@ -115,8 +125,8 @@ export function InteractiveMascot() {
       const rotX = -state.physY * 0.12;
       const rotY = state.physX * 0.14;
       const rotZ = state.physVX * 0.06;
-      const squashX = 1 + (state.physVX * 0.003) - (state.physVY * 0.002);
-      const squashY = 1 + (state.physVY * 0.003) - (state.physVX * 0.002);
+      const squashX = 1 + state.physVX * 0.003 - state.physVY * 0.002;
+      const squashY = 1 + state.physVY * 0.003 - state.physVX * 0.002;
       const hoverScale = state.isHovered ? 1.04 : 1.0;
 
       mascot.style.transform = `perspective(800px) translate3d(${state.physX.toFixed(1)}px, ${state.physY.toFixed(1)}px, 0) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${(squashX * hoverScale).toFixed(3)}, ${(squashY * hoverScale).toFixed(3)})`;
@@ -162,15 +172,12 @@ export function InteractiveMascot() {
       />
 
       {/* 3D Mascot Body (Authentic Artwork Body with Zero Baked Eyes) */}
-      <div
-        ref={mascotRef}
-        className="relative will-change-transform"
-      >
+      <div ref={mascotRef} className="relative will-change-transform">
         <div className="relative size-72 sm:size-84 animate-[float_6s_ease-in-out_infinite] will-change-transform">
           {/* Authentic 3D Mascot Character Body (Seamless Skin, Zero Duplicate Eyes) */}
           <Image
             src="/mascot-body.png"
-            alt="ATLAS Mascot"
+            alt={t("mascotAlt")}
             width={336}
             height={336}
             priority
@@ -189,7 +196,8 @@ export function InteractiveMascot() {
               height: "6.6%",
               borderRadius: "9999px",
               background: "#ffffff",
-              boxShadow: "0 0 14px 4px rgba(0,229,255,0.75), 0 0 4px 1px rgba(255,255,255,0.9)",
+              boxShadow:
+                "0 0 14px 4px rgba(0,229,255,0.75), 0 0 4px 1px rgba(255,255,255,0.9)",
             }}
           />
 
@@ -204,7 +212,8 @@ export function InteractiveMascot() {
               height: "6.6%",
               borderRadius: "9999px",
               background: "#ffffff",
-              boxShadow: "0 0 14px 4px rgba(0,229,255,0.75), 0 0 4px 1px rgba(255,255,255,0.9)",
+              boxShadow:
+                "0 0 14px 4px rgba(0,229,255,0.75), 0 0 4px 1px rgba(255,255,255,0.9)",
             }}
           />
         </div>

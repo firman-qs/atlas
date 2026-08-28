@@ -1,57 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowDown,
-  BookOpen,
-  ListTree,
-  Network,
-  Sparkles,
-} from "lucide-react";
-
-interface SoloLevelInfo {
-  level: string;
-  badge: string;
-  definition: string;
-  physicsExample: string;
-  assessmentFocus: string;
-}
-
-const soloLevels: SoloLevelInfo[] = [
-  {
-    level: "Unistructural",
-    badge: "Foundational Aspect",
-    definition:
-      "Focuses on a single relevant conceptual aspect or simple formula application.",
-    physicsExample:
-      "Calculating the electrostatic force magnitude between two static point charges using Coulomb's constant.",
-    assessmentFocus:
-      "Diagnostic MCQs verifying correct parameter identification (charges q₁, q₂ and distance r).",
-  },
-  {
-    level: "Multistructural",
-    badge: "Multiple Independent Aspects",
-    definition:
-      "Deals with several relevant aspects in isolation or stepwise combination without full synthesis.",
-    physicsExample:
-      "Computing the resultant electric field vector at a specific coordinate produced by three discrete source charges using superposition.",
-    assessmentFocus:
-      "Vector resolution questions and essay explanations of directional cancellation along Cartesian axes.",
-  },
-  {
-    level: "Relational",
-    badge: "Integrated Conceptual Synthesis",
-    definition:
-      "Connects multiple conceptual aspects into a coherent, interrelated theoretical framework.",
-    physicsExample:
-      "Explaining how electric field lines, Gaussian surfaces, and potential differences collectively describe the behavior of a conducting sphere in equilibrium.",
-    assessmentFocus:
-      "Qualitative essay assessment evaluating depth of conceptual linkage, causal reasoning, and boundary principles.",
-  },
-];
+import { useTranslations } from "next-intl";
+import { ArrowDown, BookOpen, ListTree, Network, Sparkles } from "lucide-react";
 
 export function ConceptualLearningSection() {
+  const t = useTranslations("landing.conceptualLearning");
   const [activeSoloTab, setActiveSoloTab] = useState<number>(1); // Default to Multistructural
+  const soloLevels = [
+    {
+      id: "unistructural",
+      level: t("soloLevels.unistructural.level"),
+      badge: t("soloLevels.unistructural.badge"),
+      definition: t("soloLevels.unistructural.definition"),
+      physicsExample: t("soloLevels.unistructural.physicsExample"),
+      assessmentFocus: t("soloLevels.unistructural.assessmentFocus"),
+    },
+    {
+      id: "multistructural",
+      level: t("soloLevels.multistructural.level"),
+      badge: t("soloLevels.multistructural.badge"),
+      definition: t("soloLevels.multistructural.definition"),
+      physicsExample: t("soloLevels.multistructural.physicsExample"),
+      assessmentFocus: t("soloLevels.multistructural.assessmentFocus"),
+    },
+    {
+      id: "relational",
+      level: t("soloLevels.relational.level"),
+      badge: t("soloLevels.relational.badge"),
+      definition: t("soloLevels.relational.definition"),
+      physicsExample: t("soloLevels.relational.physicsExample"),
+      assessmentFocus: t("soloLevels.relational.assessmentFocus"),
+    },
+  ];
 
   return (
     <section
@@ -63,25 +44,23 @@ export function ConceptualLearningSection() {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-[8px] border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs font-semibold text-primary">
-              Conceptual Taxonomy
+              {t("badge")}
             </div>
 
             <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Grounded in the SOLO Taxonomy for genuine conceptual depth
+              {t("title")}
             </h2>
 
             <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
-              ATLAS departs fundamentally from traditional percentage-based grading.
-              Assessment items are mapped to configured SOLO (Structure of Observed Learning Outcome) levels,
-              gauging how deeply a student understands concepts rather than how many questions they guessed correctly.
+              {t("description")}
             </p>
           </div>
 
           <div className="rounded-[16px] border border-border/80 bg-muted/30 p-5 text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Configured Curriculum Note:</span>{" "}
-            The levels illustrated below (Unistructural → Multistructural → Relational) represent
-            the configured progression deployed in the Electromagnetics pilot. ATLAS supports
-            domain-specific pedagogical structures tailored to academic requirements.
+            <span className="font-semibold text-foreground">
+              {t("curriculumNoteLabel")}
+            </span>{" "}
+            {t("curriculumNote")}
           </div>
         </div>
 
@@ -94,11 +73,11 @@ export function ConceptualLearningSection() {
                 <div className="flex items-center gap-2.5">
                   <ListTree className="size-4.5 text-primary" />
                   <h3 className="text-sm font-bold text-foreground">
-                    Curriculum Hierarchy Stack
+                    {t("hierarchy.title")}
                   </h3>
                 </div>
                 <span className="text-[11px] font-mono text-muted-foreground">
-                  Top-Down Architecture
+                  {t("hierarchy.subtitle")}
                 </span>
               </div>
 
@@ -109,9 +88,11 @@ export function ConceptualLearningSection() {
                     01
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-foreground">Course & Offering</p>
+                    <p className="text-xs font-bold text-foreground">
+                      {t("hierarchy.course.title")}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      e.g., General Physics II: Electromagnetism (Academic Term)
+                      {t("hierarchy.course.description")}
                     </p>
                   </div>
                 </div>
@@ -126,9 +107,11 @@ export function ConceptualLearningSection() {
                     02
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-foreground">Learning Objectives</p>
+                    <p className="text-xs font-bold text-foreground">
+                      {t("hierarchy.objectives.title")}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      Measurable goals defining qualitative and quantitative competence
+                      {t("hierarchy.objectives.description")}
                     </p>
                   </div>
                 </div>
@@ -143,9 +126,11 @@ export function ConceptualLearningSection() {
                     03
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-primary">Ordered Concepts</p>
+                    <p className="text-xs font-bold text-primary">
+                      {t("hierarchy.concepts.title")}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      Structured pedagogical sequence (Coulomb&apos;s Law → Gauss&apos;s Law → Potential)
+                      {t("hierarchy.concepts.description")}
                     </p>
                   </div>
                 </div>
@@ -160,9 +145,11 @@ export function ConceptualLearningSection() {
                     04
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-foreground">Configured SOLO Levels</p>
+                    <p className="text-xs font-bold text-foreground">
+                      {t("hierarchy.solo.title")}
+                    </p>
                     <p className="text-[11px] text-muted-foreground">
-                      Unistructural, Multistructural, Relational cognitive milestones
+                      {t("hierarchy.solo.description")}
                     </p>
                   </div>
                 </div>
@@ -178,10 +165,10 @@ export function ConceptualLearningSection() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                      Formative Assessment & Mastery
+                      {t("hierarchy.assessment.title")}
                     </p>
                     <p className="text-[11px] text-muted-foreground">
-                      MCQ & Essay evaluation → feedback → progression or review
+                      {t("hierarchy.assessment.description")}
                     </p>
                   </div>
                 </div>
@@ -189,7 +176,7 @@ export function ConceptualLearningSection() {
             </div>
 
             <div className="mt-6 border-t border-border/60 pt-4 text-xs text-muted-foreground">
-              Instructors retain full control over defining objectives, concepts, and assessment items.
+              {t("hierarchy.footer")}
             </div>
           </div>
 
@@ -200,11 +187,11 @@ export function ConceptualLearningSection() {
                 <div className="flex items-center gap-2.5">
                   <Network className="size-4.5 text-primary" />
                   <h3 className="text-sm font-bold text-foreground">
-                    SOLO Level Cognitive Depth
+                    {t("explorer.title")}
                   </h3>
                 </div>
                 <span className="text-[11px] font-medium text-muted-foreground">
-                  Select a level to inspect
+                  {t("explorer.subtitle")}
                 </span>
               </div>
 
@@ -214,7 +201,7 @@ export function ConceptualLearningSection() {
                   const isActive = activeSoloTab === index;
                   return (
                     <button
-                      key={item.level}
+                      key={item.id}
                       type="button"
                       onClick={() => setActiveSoloTab(index)}
                       className={`rounded-[12px] border p-2.5 text-center transition-all ${
@@ -224,7 +211,9 @@ export function ConceptualLearningSection() {
                       }`}
                     >
                       <p className="text-xs">{item.level}</p>
-                      <p className="text-[10px] opacity-75 font-normal">Level {index + 1}</p>
+                      <p className="text-[10px] opacity-75 font-normal">
+                        {t("explorer.level", { level: index + 1 })}
+                      </p>
                     </button>
                   );
                 })}
@@ -237,12 +226,14 @@ export function ConceptualLearningSection() {
                     {soloLevels[activeSoloTab].badge}
                   </span>
                   <span className="text-xs font-mono text-muted-foreground">
-                    SOLO Classification
+                    {t("explorer.classification")}
                   </span>
                 </div>
 
                 <h4 className="mt-3 text-base font-bold text-foreground">
-                  {soloLevels[activeSoloTab].level} Understanding
+                  {t("explorer.understanding", {
+                    level: soloLevels[activeSoloTab].level,
+                  })}
                 </h4>
 
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -254,7 +245,7 @@ export function ConceptualLearningSection() {
                   <div className="rounded-[10px] bg-muted/40 p-3 text-xs">
                     <p className="font-semibold text-foreground flex items-center gap-1.5">
                       <BookOpen className="size-3.5 text-primary" />
-                      Domain Example (Electromagnetism):
+                      {t("explorer.domainExample")}
                     </p>
                     <p className="mt-1 text-muted-foreground">
                       {soloLevels[activeSoloTab].physicsExample}
@@ -264,7 +255,7 @@ export function ConceptualLearningSection() {
                   <div className="rounded-[10px] bg-muted/40 p-3 text-xs">
                     <p className="font-semibold text-foreground flex items-center gap-1.5">
                       <Sparkles className="size-3.5 text-primary" />
-                      Assessment Mechanism:
+                      {t("explorer.assessmentMechanism")}
                     </p>
                     <p className="mt-1 text-muted-foreground">
                       {soloLevels[activeSoloTab].assessmentFocus}
@@ -275,8 +266,10 @@ export function ConceptualLearningSection() {
             </div>
 
             <div className="mt-6 rounded-[12px] border border-primary/20 bg-primary/5 p-3.5 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Pedagogical Value:</span>{" "}
-              Ensures students transition from rote formula recall to qualitative structural synthesis.
+              <span className="font-semibold text-foreground">
+                {t("explorer.pedagogicalValueLabel")}
+              </span>{" "}
+              {t("explorer.pedagogicalValue")}
             </div>
           </div>
         </div>

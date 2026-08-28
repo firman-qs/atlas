@@ -2,12 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import {
-  Atom,
-  ShieldCheck,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Atom, ShieldCheck, Sparkles, Zap } from "lucide-react";
 
 interface OrbitBadge {
   id: string;
@@ -19,53 +15,58 @@ interface OrbitBadge {
   initialY: number;
 }
 
-const orbitBadges: OrbitBadge[] = [
-  {
-    id: "concepts",
-    title: "Ordered Concepts",
-    subtitle: "Coulomb & Field Vectors",
-    icon: Atom,
-    color: "text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
-    initialX: -160,
-    initialY: -50,
-  },
-  {
-    id: "taxonomy",
-    title: "Configured SOLO",
-    subtitle: "Unistructural → Relational",
-    icon: ShieldCheck,
-    color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
-    initialX: 160,
-    initialY: -50,
-  },
-  {
-    id: "evaluation",
-    title: "Qualitative Essay",
-    subtitle: "Diagnostic Reasoning",
-    icon: Sparkles,
-    color: "text-primary bg-primary/10 border-primary/30",
-    initialX: 160,
-    initialY: 65,
-  },
-  {
-    id: "assistance",
-    title: "Learning Assistant",
-    subtitle: "Course-Grounded AI",
-    icon: Zap,
-    color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30",
-    initialX: -160,
-    initialY: 65,
-  },
-];
-
 export function InteractiveHeroLogo() {
+  const t = useTranslations("landing.visuals");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const ripplesRef = useRef<{ x: number; y: number; r: number; alpha: number }[]>([]);
+  const ripplesRef = useRef<
+    { x: number; y: number; r: number; alpha: number }[]
+  >([]);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [activeBadgeId, setActiveBadgeId] = useState<string | null>(null);
+  const orbitBadges: OrbitBadge[] = [
+    {
+      id: "concepts",
+      title: t("orbit.concepts.title"),
+      subtitle: t("orbit.concepts.subtitle"),
+      icon: Atom,
+      color:
+        "text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
+      initialX: -160,
+      initialY: -50,
+    },
+    {
+      id: "taxonomy",
+      title: t("orbit.taxonomy.title"),
+      subtitle: t("orbit.taxonomy.subtitle"),
+      icon: ShieldCheck,
+      color:
+        "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
+      initialX: 160,
+      initialY: -50,
+    },
+    {
+      id: "evaluation",
+      title: t("orbit.evaluation.title"),
+      subtitle: t("orbit.evaluation.subtitle"),
+      icon: Sparkles,
+      color: "text-primary bg-primary/10 border-primary/30",
+      initialX: 160,
+      initialY: 65,
+    },
+    {
+      id: "assistance",
+      title: t("orbit.assistance.title"),
+      subtitle: t("orbit.assistance.subtitle"),
+      icon: Zap,
+      color:
+        "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30",
+      initialX: -160,
+      initialY: 65,
+    },
+  ];
 
   // Dynamic 3D tilt
   const tiltX = isHovered ? (mousePos.y / 150) * -12 : 0;
@@ -107,13 +108,13 @@ export function InteractiveHeroLogo() {
 
         ctx.beginPath();
         ctx.ellipse(
-          cx + (mousePos.x * 0.06),
-          cy + (mousePos.y * 0.06),
+          cx + mousePos.x * 0.06,
+          cy + mousePos.y * 0.06,
           radius + waveDistort,
           (radius + waveDistort) * 0.85,
           0,
           0,
-          Math.PI * 2
+          Math.PI * 2,
         );
 
         ctx.strokeStyle = isDark
@@ -215,7 +216,7 @@ export function InteractiveHeroLogo() {
         <div className="relative size-28 overflow-hidden transition-transform duration-300 group-hover:scale-105 sm:size-32">
           <Image
             src="/logo.png"
-            alt="ATLAS Learning System Logo"
+            alt={t("logoAlt")}
             width={128}
             height={128}
             priority
@@ -229,7 +230,7 @@ export function InteractiveHeroLogo() {
             isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
           }`}
         >
-          <span>Click to pulse field</span>
+          <span>{t("pulseHint")}</span>
         </div>
       </div>
 
@@ -249,10 +250,13 @@ export function InteractiveHeroLogo() {
             onMouseLeave={() => setActiveBadgeId(null)}
             style={{
               transform: `translate(${offsetX}px, ${offsetY}px)`,
-              transition: "transform 0.4s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s",
+              transition:
+                "transform 0.4s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s",
             }}
             className={`absolute z-10 hidden sm:flex cursor-pointer items-center gap-2.5 rounded-xl border bg-card/85 p-2.5 shadow-xs backdrop-blur-md transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-primary/40 hover:bg-card ${
-              isBadgeActive ? "ring-1 ring-primary/40 border-primary/50 shadow-md scale-105" : ""
+              isBadgeActive
+                ? "ring-1 ring-primary/40 border-primary/50 shadow-md scale-105"
+                : ""
             }`}
           >
             <div

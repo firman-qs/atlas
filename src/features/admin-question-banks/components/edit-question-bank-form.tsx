@@ -18,29 +18,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useUpdateQuestionBank } from "@/features/admin-question-banks/queries";
 import type { QuestionBank } from "@/features/admin-question-banks/types";
 import { ApiError } from "@/lib/api/api-error";
 
-const editQuestionBankSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Code is required.")
-    .max(50, "Code cannot exceed 50 characters."),
+export function editQuestionBankSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z.string().trim().min(1, t("codeRequired")).max(50, t("codeMax")),
 
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required.")
-    .max(255, "Name cannot exceed 255 characters."),
+    name: z.string().trim().min(1, t("nameRequired")).max(255, t("nameMax")),
 
-  description: z.string(),
+    description: z.string(),
 
-  is_student_selectable: z.boolean(),
-});
+    is_student_selectable: z.boolean(),
+  });
+}
 
-type EditQuestionBankFormValues = z.infer<typeof editQuestionBankSchema>;
+type EditQuestionBankFormValues = z.infer<
+  ReturnType<typeof editQuestionBankSchema>
+>;
 
 interface EditQuestionBankFormProps {
   bank: QuestionBank;
@@ -54,13 +51,14 @@ export function EditQuestionBankForm({
   onSaved,
 }: EditQuestionBankFormProps) {
   const t = useTranslations("admin.questionBanks.form");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const updateQuestionBank = useUpdateQuestionBank(bank.id);
 
   const form = useForm<EditQuestionBankFormValues>({
-    resolver: zodResolver(editQuestionBankSchema),
+    resolver: zodResolver(editQuestionBankSchema(tValidation)),
     defaultValues: {
       code: bank.code,
       name: bank.name,
@@ -127,7 +125,9 @@ export function EditQuestionBankForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="edit-bank-description">{t("formDescription")}</FieldLabel>
+          <FieldLabel htmlFor="edit-bank-description">
+            {t("formDescription")}
+          </FieldLabel>
 
           <Textarea
             id="edit-bank-description"

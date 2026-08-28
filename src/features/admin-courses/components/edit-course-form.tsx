@@ -11,29 +11,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useUpdateAdminCourse } from "@/features/admin-courses/queries";
 import type { AdminCourse } from "@/features/admin-courses/types";
 
-const editCourseSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Course code is required.")
-    .max(50, "Course code must be at most 50 characters."),
-  title: z
-    .string()
-    .trim()
-    .min(1, "Course title is required.")
-    .max(255, "Course title must be at most 255 characters."),
-  description: z.string().trim().min(1, "Course description is required."),
-  credits: z
-    .number()
-    .int("Credits must be a whole number.")
-    .min(1, "Credits must be at least 1.")
-    .max(10, "Credits must be at most 10."),
-});
+export function editCourseSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("courseCodeRequired"))
+      .max(50, t("courseCodeMax")),
+    title: z
+      .string()
+      .trim()
+      .min(1, t("courseTitleRequired"))
+      .max(255, t("courseTitleMax")),
+    description: z.string().trim().min(1, t("courseDescriptionRequired")),
+    credits: z
+      .number()
+      .int(t("creditsWhole"))
+      .min(1, t("creditsMin"))
+      .max(10, t("creditsMax")),
+  });
+}
 
-type EditCourseFormValues = z.infer<typeof editCourseSchema>;
+type EditCourseFormValues = z.infer<ReturnType<typeof editCourseSchema>>;
 
 interface EditCourseFormProps {
   course: AdminCourse;
@@ -47,6 +50,7 @@ export function EditCourseForm({
   onSaved,
 }: EditCourseFormProps) {
   const t = useTranslations("admin.courses.form");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
@@ -57,7 +61,7 @@ export function EditCourseForm({
     handleSubmit,
     formState: { errors },
   } = useForm<EditCourseFormValues>({
-    resolver: zodResolver(editCourseSchema),
+    resolver: zodResolver(editCourseSchema(tValidation)),
     defaultValues: {
       code: course.code,
       title: course.title,

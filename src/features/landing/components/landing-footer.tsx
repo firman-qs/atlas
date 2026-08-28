@@ -72,7 +72,10 @@ export function LandingFooter() {
     },
   ];
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
     if (href.startsWith("#")) {
       e.preventDefault();
       const target = document.querySelector(href);
@@ -97,7 +100,7 @@ export function LandingFooter() {
               <div className="relative size-7.5 overflow-hidden transition-transform group-hover:scale-105">
                 <Image
                   src="/logo.png"
-                  alt="ATLAS Logo"
+                  alt={tHeader("logoAlt")}
                   width={30}
                   height={30}
                   className="size-full object-contain"
@@ -135,7 +138,7 @@ export function LandingFooter() {
             </h4>
 
             <nav
-              aria-label="Footer navigation"
+              aria-label={t("navigationAria")}
               className="mt-3 flex flex-col items-start gap-2"
             >
               {exploreLinks.map((item) => (

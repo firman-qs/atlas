@@ -1,6 +1,8 @@
 {
-  "metadata": {"description": "Asesmen formatif adaptif untuk pembelajaran konseptual"},
-  "common": {"save": "Simpan", "cancel": "Batalkan"},
+  "metadata": {
+    "description": "Asesmen formatif adaptif untuk pembelajaran konseptual"
+  },
+  "common": { "save": "Simpan", "cancel": "Batalkan" },
   "navigation": {
     "breadcrumbs": {
       "dashboard": "Dasbor",
@@ -19,6 +21,7 @@
       "users": "Pengguna"
     },
     "sidebar": {
+      "logoAlt": "Logo ATLAS",
       "formativeAssessment": "Asesmen Formatif",
       "workspace": "Ruang Kerja",
       "curriculum": "Kurikulum",
@@ -139,6 +142,7 @@
     "roles": "Peran"
   },
   "accessibility": {
+    "breadcrumb": "Jejak navigasi",
     "close": "Tutup",
     "more": "Lainnya",
     "sidebar": "Bilah samping",
@@ -258,8 +262,11 @@
     "noAssessments": "Belum ada asesmen",
     "activeAssessment": "Asesmen aktif",
     "assessment": "Asesmen",
-    "modes": {"progress": "Progres", "review": "Tinjauan"},
-    "modeAssessment": {"progress": "Asesmen progres", "review": "Asesmen tinjauan"},
+    "modes": { "progress": "Progres", "review": "Tinjauan" },
+    "modeAssessment": {
+      "progress": "Asesmen progres",
+      "review": "Asesmen tinjauan"
+    },
     "statuses": {
       "created": "Siap dimulai",
       "running": "Sedang berlangsung",
@@ -319,7 +326,7 @@
     "question": "Soal",
     "assessmentQuestion": "Soal asesmen",
     "questionNumber": "Soal {number}",
-    "questionTypes": {"mcq": "Pilihan ganda", "essay": "Esai"},
+    "questionTypes": { "mcq": "Pilihan ganda", "essay": "Esai" },
     "yourAnswer": "Jawaban Anda",
     "mcqHint": "Pilih jawaban terbaik, lalu kirim respons Anda.",
     "essayHint": "Tulis respons Anda di bawah. Anda dapat menyertakan gambar pendukung bila diperlukan.",
@@ -545,6 +552,7 @@
     },
     "students": {
       "title": "Mahasiswa",
+      "pageDescription": "Jelajahi akun mahasiswa aktif yang tersedia untuk pendaftaran yang dikelola pengajar.",
       "searchPlaceholder": "Cari mahasiswa berdasarkan nama atau email...",
       "searchAria": "Cari mahasiswa",
       "search": "Cari",
@@ -567,6 +575,45 @@
     }
   },
   "admin": {
+    "validation": {
+      "yearWhole": "Tahun harus berupa bilangan bulat.",
+      "yearMin": "Tahun harus 2000 atau setelahnya.",
+      "yearMax": "Tahun tidak boleh lebih dari 2200.",
+      "startDateRequired": "Tanggal mulai wajib diisi.",
+      "endDateRequired": "Tanggal selesai wajib diisi.",
+      "endDateOrder": "Tanggal selesai harus sama dengan atau setelah tanggal mulai.",
+      "conceptCodeRequired": "Kode konsep wajib diisi.",
+      "conceptCodeMax": "Kode konsep tidak boleh lebih dari 50 karakter.",
+      "conceptNameRequired": "Nama konsep wajib diisi.",
+      "conceptNameMax": "Nama konsep tidak boleh lebih dari 255 karakter.",
+      "conceptDescriptionRequired": "Deskripsi konsep wajib diisi.",
+      "courseCodeRequired": "Kode mata kuliah wajib diisi.",
+      "courseCodeMax": "Kode mata kuliah tidak boleh lebih dari 50 karakter.",
+      "courseTitleRequired": "Judul mata kuliah wajib diisi.",
+      "courseTitleMax": "Judul mata kuliah tidak boleh lebih dari 255 karakter.",
+      "courseDescriptionRequired": "Deskripsi mata kuliah wajib diisi.",
+      "creditsWhole": "Jumlah SKS harus berupa bilangan bulat.",
+      "creditsMin": "Jumlah SKS harus setidaknya 1.",
+      "creditsMax": "Jumlah SKS tidak boleh lebih dari 10.",
+      "learningObjectiveCodeRequired": "Kode tujuan pembelajaran wajib diisi.",
+      "learningObjectiveCodeMax": "Kode tujuan pembelajaran tidak boleh lebih dari 50 karakter.",
+      "learningObjectiveDescriptionRequired": "Deskripsi tujuan pembelajaran wajib diisi.",
+      "courseRequired": "Mata kuliah wajib dipilih.",
+      "codeRequired": "Kode wajib diisi.",
+      "codeMax": "Kode tidak boleh lebih dari 50 karakter.",
+      "nameRequired": "Nama wajib diisi.",
+      "nameMax": "Nama tidak boleh lebih dari 255 karakter.",
+      "learningObjectiveRequired": "Tujuan pembelajaran wajib dipilih.",
+      "conceptRequired": "Konsep wajib dipilih.",
+      "soloLevelRequired": "Level SOLO wajib dipilih.",
+      "questionPromptRequired": "Teks soal wajib diisi.",
+      "mcqMinOptions": "Soal pilihan ganda memerlukan setidaknya dua opsi.",
+      "optionTextRequired": "Teks opsi wajib diisi.",
+      "selectCorrectAnswer": "Pilih jawaban yang benar.",
+      "correctAnswerInvalid": "Jawaban benar yang dipilih tidak valid.",
+      "essayRubricRequired": "Rubrik esai wajib diisi.",
+      "idealAnswerRequired": "Jawaban ideal wajib diisi."
+    },
     "academicTerms": {
       "title": "Periode Akademik",
       "description": "Kelola periode akademik yang digunakan oleh penawaran mata kuliah ATLAS.",
@@ -620,6 +667,11 @@
         "name": "Nama konsep",
         "description": "Deskripsi"
       },
+      "placeholders": {
+        "code": "mis. em-c003",
+        "name": "mis. Potensial Listrik",
+        "description": "Jelaskan materi konseptual yang diwakili oleh konsep ini."
+      },
       "actions": {
         "edit": "Edit",
         "delete": "Hapus",
@@ -672,8 +724,11 @@
       },
       "form": {
         "code": "Kode mata kuliah",
+        "codePlaceholder": "mis. um032em000",
         "title": "Judul mata kuliah",
+        "titlePlaceholder": "mis. Elektromagnetika",
         "description": "Deskripsi mata kuliah",
+        "descriptionPlaceholder": "Jelaskan mata kuliah ini.",
         "credits": "SKS",
         "creating": "Membuat...",
         "create": "Buat mata kuliah",
@@ -743,6 +798,10 @@
       "labels": {
         "code": "Kode",
         "description": "Deskripsi"
+      },
+      "placeholders": {
+        "code": "mis. lo3",
+        "description": "Jelaskan hal yang perlu dipahami atau dapat dilakukan mahasiswa."
       },
       "concepts": {
         "title": "Konsep",
@@ -863,6 +922,8 @@
         "title": "Tambah Soal",
         "searchPlaceholder": "Cari petunjuk soal...",
         "allTypes": "Semua jenis",
+        "mcq": "Pilihan ganda",
+        "essay": "Esai",
         "allStatuses": "Semua status",
         "published": "Dipublikasikan",
         "draft": "Draf",
@@ -1193,6 +1254,9 @@
     "header": {
       "themeToggleAria": "Ganti tema visual",
       "openMenuAria": "Buka menu navigasi",
+      "primaryNavigationAria": "Navigasi utama",
+      "mobileNavigationAria": "Navigasi seluler",
+      "logoAlt": "Logo ATLAS",
       "tagline": "Atlas, Targeted Learning Assessment System",
       "homeAria": "Beranda ATLAS",
       "dashboard": "Dasbor",
@@ -1287,6 +1351,391 @@
         "published": "Dipublikasikan",
         "drafting": "Penyusunan Draf",
         "editBank": "Edit Bank Soal"
+      },
+      "demo": {
+        "concepts": {
+          "levels": {
+            "unistructural": "Unistruktural",
+            "multistructural": "Multistruktural",
+            "relational": "Relasional"
+          },
+          "stages": {
+            "demonstrated": "Terbukti",
+            "activeAssessment": "Asesmen Aktif",
+            "upcoming": "Mendatang"
+          },
+          "coulomb": {
+            "name": "Hukum Coulomb & Muatan Titik",
+            "description": "Hitung gaya elektrostatik skalar dan berarah antara muatan titik statis diskret.",
+            "unistructural": {
+              "criteria": "Ingat hubungan kuadrat terbalik skalar dan hitung besar gaya elektrostatik.",
+              "prompt": "Diberikan $q_1 = +2.0\\,\\mu\\text{C}$ dan $q_2 = -4.0\\,\\mu\\text{C}$ yang terpisah sejauh $r = 0.50\\,\\text{m}$, hitung besar gaya elektrostatik $F = k_e \\frac{|q_1 q_2|}{r^2}$."
+            },
+            "multistructural": {
+              "criteria": "Uraikan gaya vektor ortogonal pada sumbu koordinat dan jumlahkan gaya resultannya.",
+              "prompt": "Tiga muatan titik kolinear terletak di sepanjang sumbu $x$. Tentukan vektor gaya elektrostatik bersih $\\vec{F}_{\\text{net}} = \\sum \\vec{F}_i$ yang bekerja pada muatan uji."
+            },
+            "relational": {
+              "criteria": "Integrasikan definisi medan Coulomb dengan usaha dan energi potensial elektrostatik.",
+              "prompt": "Turunkan energi potensial elektrostatik $U = \\frac{1}{4\\pi\\varepsilon_0}\\sum_{i<j}\\frac{q_i q_j}{r_{ij}}$ untuk membawa muatan diskret dari tak terhingga ke konfigurasi statis."
+            }
+          },
+          "superposition": {
+            "name": "Superposisi Medan Listrik",
+            "description": "Uraikan vektor medan koordinat dua dimensi dan analisis superposisi bersih.",
+            "unistructural": {
+              "criteria": "Hitung besar medan listrik individual $\\vec{E} = \\frac{1}{4\\pi\\varepsilon_0} \\frac{q}{r^2} \\hat{r}$ dari satu sumber titik.",
+              "prompt": "Tentukan vektor medan listrik $\\vec{E}$ pada jarak $r = 0.30\\,\\text{m}$ dari muatan titik terisolasi $q = +5.0\\,\\text{nC}$."
+            },
+            "multistructural": {
+              "criteria": "Hitung komponen vektor dan uraikan pembatalan konstruktif/destruktif yang simetris.",
+              "prompt": "Dua muatan titik identik $+q$ ditempatkan pada $(-d, 0)$ dan $(+d, 0)$. Rumuskan medan bersih $\\vec{E}_{\\text{net}}(0, y) = 2 E_y \\hat{j} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{j}$."
+            },
+            "relational": {
+              "criteria": "Sintesis batas medan kontinu, pendekatan dipol, dan transisi gradien untuk $y \\gg d$.",
+              "prompt": "Analisis ekspansi asimtotik $\\vec{E}_{\\text{net}}$ ketika $y \\gg d$, dan jelaskan mengapa medan dipol meluruh sebagai $1/y^3$."
+            }
+          },
+          "gauss": {
+            "name": "Hukum Fluks Gauss pada Konduktor",
+            "description": "Evaluasi integral fluks permukaan dan kondisi batas internal pada kesetimbangan elektrostatik.",
+            "unistructural": {
+              "criteria": "Nyatakan rumus Hukum Gauss $\\Phi_E = \\oint \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}$.",
+              "prompt": "Hitung fluks listrik total $\\Phi_E$ melalui permukaan bola tertutup yang melingkupi muatan bersih $Q_{\\text{enc}} = +8.85\\,\\text{nC}$."
+            },
+            "multistructural": {
+              "criteria": "Terapkan simetri ruang (bola, silinder, bidang) untuk mengeluarkan besar medan konstan dari integral fluks.",
+              "prompt": "Turunkan medan listrik $\\vec{E}(r) = \\frac{\\lambda}{2\\pi\\varepsilon_0 r} \\hat{r}$ di luar garis tak berhingga dengan rapat muatan linear seragam $\\lambda$."
+            },
+            "relational": {
+              "criteria": "Jelaskan mengapa $\\vec{E} = 0$ di dalam konduktor pada kesetimbangan dan buktikan bahwa muatan berlebih hanya berada pada batas konduktor.",
+              "prompt": "Berikan bukti kualitatif menggunakan Hukum Gauss bahwa setiap permukaan Gaussian sembarang di dalam konduktor pada kesetimbangan melingkupi muatan bersih nol."
+            }
+          }
+        },
+        "assessment": {
+          "mcq": {
+            "prompt": "Dua muatan titik positif dengan besar yang sama $+q$ dipasang pada sumbu $x$ di $(-d, 0)$ dan $(+d, 0)$. Persamaan mana yang secara tepat menyatakan vektor medan listrik bersih $\\vec{E}_{\\text{net}}$ pada titik sembarang $(0, y)$ di sumbu $y$?",
+            "options": {
+              "a": {
+                "feedback": "Komponen horizontal $x$ mengarah berlawanan ($E_{1x} = -E_{2x}$) dan saling meniadakan hingga nol. Medan bersih tidak memiliki komponen $\\hat{\\imath}$."
+              },
+              "b": {
+                "feedback": "Benar. Komponen $x$ yang simetris saling meniadakan ($E_x = 0$), sedangkan komponen vertikal dijumlahkan secara konstruktif: $E_{\\text{net}} = 2 \\left(\\frac{k_e q}{r^2}\\right) \\sin\\theta = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$."
+              },
+              "c": {
+                "text": "$\\vec{E}_{\\text{net}} = 0$ di seluruh sumbu $y$",
+                "feedback": "Pembatalan medan elektrostatik hanya terjadi di titik asal $(0, 0)$. Pada titik $y > 0$, kedua komponen ke atas mengarah ke $+y$ sehingga menghasilkan vektor vertikal tak nol."
+              },
+              "d": {
+                "feedback": "Opsi ini tidak memperhitungkan pembatalan simetris di sepanjang sumbu koordinat horizontal."
+              }
+            }
+          },
+          "essay": {
+            "prompt": "Dua muatan titik positif dengan besar yang sama $+q$ berada pada $(-d, 0)$ dan $(+d, 0)$. Jelaskan langkah-langkah untuk menentukan vektor medan listrik bersih $\\vec{E}_{\\text{net}}$ pada titik sembarang $(0, y)$ di sumbu $y$. Uraikan dekomposisi vektor dan simetri koordinat.",
+            "sampleA": {
+              "label": "Contoh Jawaban A",
+              "text": "Setiap muatan menghasilkan medan listrik yang menjauhi muatan tersebut dengan besar $E = \\frac{k_e q}{d^2 + y^2}$. Dengan menguraikannya menjadi komponen pada sumbu koordinat:\n\n1. $E_{1x} = -E \\cos\\theta$ dan $E_{2x} = +E \\cos\\theta$, sehingga komponen horizontal saling meniadakan secara simetris: $E_{\\text{net}, x} = 0$.\n2. $E_{1y} = E_{2y} = E \\sin\\theta$, dengan $\\sin\\theta = \\frac{y}{\\sqrt{d^2 + y^2}}$.\n\nPenjumlahan komponen vertikal menghasilkan $\\vec{E}_{\\text{net}} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$.",
+              "feedback": "**Umpan Balik Asesmen Formatif**:\n- **Demonstrasi Konseptual**: Menjelaskan dekomposisi vektor dan pembatalan simetris pada sumbu $x$ secara tepat.\n- **Formulasi Matematis**: Penurunan lengkap interferensi konstruktif vertikal $\\vec{E}_{\\text{net}} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$.\n- **Langkah Progresi Berikutnya**: Siap mempelajari perilaku asimtotik pada jarak jauh ($y \\gg d$) di level Relasional.",
+              "status": "Kriteria Terpenuhi"
+            },
+            "sampleB": {
+              "label": "Contoh Jawaban B",
+              "text": "Jarak dari setiap muatan ke $(0, y)$ adalah $r = \\sqrt{d^2 + y^2}$. Dengan rumus Coulomb $E = \\frac{k_e q}{r^2}$, kedua medan saling meniadakan karena kedua muatan positif dan saling mendorong.",
+              "feedback": "**Panduan Diagnostik Formatif**:\n- **Kesenjangan yang Teridentifikasi**: Jarak $r$ dihitung dengan benar, tetapi medan dianggap saling meniadakan sepenuhnya pada semua arah.\n- **Petunjuk Pembimbing**: Perhatikan bahwa komponen horizontal saling berlawanan, sedangkan kedua muatan menghasilkan medan ke atas pada arah $+y$. Bagaimana komponen vertikalnya bergabung?",
+              "status": "Siklus Formatif Aktif"
+            }
+          }
+        },
+        "chat": {
+          "equilibrium": {
+            "title": "Medan Nol dalam Konduktor",
+            "question": "Mengapa medan listrik di dalam konduktor padat pada kesetimbangan elektrostatik harus bernilai nol?",
+            "response": "Pada kesetimbangan elektrostatik, muatan bergerak di dalam konduktor merespons setiap medan listrik internal. Elektron bebas menyebar kembali ke permukaan luar sampai membentuk medan permukaan terinduksi yang tepat meniadakan medan internal, sehingga $\\vec{E} = 0$ di seluruh bagian dalam konduktor.",
+            "citation": "Bab 22 · Hukum Gauss pada Konduktor (PHYS102 Seksi 01)"
+          },
+          "potential": {
+            "title": "Medan vs. Potensial",
+            "question": "Jika medan listrik bernilai nol di suatu wilayah, apakah potensial elektrostatiknya juga harus nol?",
+            "response": "Tidak. Medan listrik berkaitan dengan potensial melalui $\\vec{E} = -\\vec{\\nabla} V$. Jika $\\vec{E} = 0$ di seluruh wilayah, $V$ seragam secara spasial (wilayah ekuipotensial), tetapi tidak harus nol. Sebagai contoh, bagian dalam konduktor bermuatan memiliki potensial konstan $V = V_{\\text{surface}}$.",
+            "citation": "Bab 23 · Gradien Potensial Listrik"
+          },
+          "dipole": {
+            "title": "Skala Jarak Dipol",
+            "question": "Mengapa medan dipol listrik meluruh sebagai $1/r^3$, sedangkan medan monopol meluruh sebagai $1/r^2$?",
+            "response": "Karena muatan positif dan negatif $+q$ dan $-q$ dipisahkan oleh jarak $d$, medan monopol $1/r^2$ yang berlawanan hampir saling meniadakan pada jarak jauh. Suku tak nol terdepan dalam ekspansi multipol adalah momen dipol $\\vec{p} = q\\vec{d}$, yang medannya berskala $\\frac{p}{r^3}$.",
+            "citation": "Bab 21 · Superposisi Vektor Dipol"
+          }
+        }
+      }
+    },
+    "authoredCapabilities": {
+      "badge": "Kapabilitas Platform",
+      "title": "Disusun untuk kedalaman akademik dan kejelasan konseptual",
+      "description": "ATLAS menyatukan hierarki kurikulum, asesmen formatif, umpan balik diagnostik, dan bantuan AI kontekstual dalam arsitektur pendidikan yang terpadu.",
+      "pillars": {
+        "structured": {
+          "number": "Pilar 01",
+          "title": "Pembelajaran Terstruktur",
+          "description": "Pembelajaran bukan sekadar kumpulan soal kuis acak. Kurikulum disusun dalam hierarki yang jelas dan mencerminkan urutan pedagogis yang sebenarnya.",
+          "features": {
+            "progression": {
+              "title": "Progresi Konseptual",
+              "description": "Konsep berurutan dikelompokkan dalam tujuan pembelajaran yang jelas untuk membimbing mahasiswa dari pemahaman dasar menuju pemahaman yang lebih mendalam."
+            },
+            "assessment": {
+              "title": "Asesmen Formatif Adaptif",
+              "description": "Menyajikan butir formatif yang menargetkan level konseptual mahasiswa saat ini, bukan pengujian secara sembarang."
+            }
+          },
+          "footerLabel": "Alur Hierarkis:",
+          "footerText": "Penawaran Mata Kuliah → Tujuan Pembelajaran → Konsep Berurutan → Level SOLO Terkonfigurasi."
+        },
+        "feedback": {
+          "number": "Pilar 02",
+          "title": "Umpan Balik & Evaluasi",
+          "description": "Asesmen dirancang untuk pembelajaran, bukan sekadar pemberian nilai. Umpan balik menjelaskan penalaran yang mendasari jawaban dan secara langsung menanggapi miskonsepsi.",
+          "features": {
+            "essay": {
+              "title": "Evaluasi Esai Berbantuan AI",
+              "description": "Mengevaluasi penjelasan kualitatif terbuka dengan mengidentifikasi kesesuaian konseptual dan bagian tertentu yang terlewat."
+            },
+            "formative": {
+              "title": "Umpan Balik Formatif yang Bermakna",
+              "description": "Memberikan penjelasan tepat waktu tentang alasan suatu jawaban belum lengkap dan mendorong wawasan konseptual berikutnya."
+            }
+          },
+          "footerLabel": "Dua Format Butir:",
+          "footerText": "Soal Pilihan Ganda (MCQ) Diagnostik & pertanyaan Esai Kualitatif."
+        },
+        "evidence": {
+          "number": "Pilar 03",
+          "title": "Konteks & Bukti",
+          "description": "Seluruh interaksi pembelajaran tetap berlandaskan materi yang dikurasi pengajar sehingga transparansi dan bukti yang dapat diperiksa tetap terjaga.",
+          "features": {
+            "assistance": {
+              "title": "Bantuan Berbasis Mata Kuliah",
+              "description": "Asisten belajar AI yang berlandaskan langsung pada materi mata kuliah untuk mencegah halusinasi dan menjaga ketepatan pedagogis."
+            },
+            "inspectable": {
+              "title": "Bukti Pembelajaran yang Dapat Diperiksa",
+              "description": "Riwayat percobaan, jejak progresi, dan evaluasi diagnostik yang lengkap tetap dapat diaudit oleh mahasiswa dan pengajar."
+            }
+          },
+          "footerLabel": "Integritas Akademik:",
+          "footerText": "Jejak audit yang transparan tanpa algoritme penilaian yang tidak jelas atau prediksi kotak hitam."
+        }
+      }
+    },
+    "conceptualLearning": {
+      "badge": "Taksonomi Konseptual",
+      "title": "Berlandaskan Taksonomi SOLO untuk kedalaman konseptual yang nyata",
+      "description": "ATLAS secara mendasar berbeda dari penilaian tradisional berbasis persentase. Butir asesmen dipetakan ke level SOLO (Structure of Observed Learning Outcome) yang dikonfigurasi untuk mengukur kedalaman pemahaman konsep mahasiswa, bukan jumlah soal yang berhasil ditebak.",
+      "curriculumNoteLabel": "Catatan Kurikulum Terkonfigurasi:",
+      "curriculumNote": "Level yang ditampilkan di bawah (Unistruktural → Multistruktural → Relasional) mewakili progresi yang dikonfigurasi untuk uji coba Elektromagnetisme. ATLAS mendukung struktur pedagogis khusus bidang yang disesuaikan dengan kebutuhan akademik.",
+      "hierarchy": {
+        "title": "Tumpukan Hierarki Kurikulum",
+        "subtitle": "Arsitektur Atas ke Bawah",
+        "course": {
+          "title": "Mata Kuliah & Penawaran",
+          "description": "mis., Fisika Dasar II: Elektromagnetisme (Periode Akademik)"
+        },
+        "objectives": {
+          "title": "Tujuan Pembelajaran",
+          "description": "Sasaran terukur yang mendefinisikan kompetensi kualitatif dan kuantitatif"
+        },
+        "concepts": {
+          "title": "Konsep Berurutan",
+          "description": "Urutan pedagogis terstruktur (Hukum Coulomb → Hukum Gauss → Potensial)"
+        },
+        "solo": {
+          "title": "Level SOLO Terkonfigurasi",
+          "description": "Tonggak kognitif Unistruktural, Multistruktural, dan Relasional"
+        },
+        "assessment": {
+          "title": "Asesmen Formatif & Penguasaan",
+          "description": "Evaluasi MCQ & Esai → umpan balik → progresi atau tinjauan"
+        },
+        "footer": "Pengajar memegang kendali penuh dalam menetapkan tujuan, konsep, dan butir asesmen."
+      },
+      "soloLevels": {
+        "unistructural": {
+          "level": "Unistruktural",
+          "badge": "Aspek Dasar",
+          "definition": "Berfokus pada satu aspek konseptual yang relevan atau penerapan rumus sederhana.",
+          "physicsExample": "Menghitung besar gaya elektrostatik antara dua muatan titik statis menggunakan konstanta Coulomb.",
+          "assessmentFocus": "MCQ diagnostik yang memverifikasi identifikasi parameter secara tepat (muatan q₁, q₂ dan jarak r)."
+        },
+        "multistructural": {
+          "level": "Multistruktural",
+          "badge": "Beberapa Aspek Mandiri",
+          "definition": "Membahas beberapa aspek relevan secara terpisah atau dalam kombinasi bertahap tanpa sintesis penuh.",
+          "physicsExample": "Menghitung vektor medan listrik resultan pada koordinat tertentu yang dihasilkan oleh tiga muatan sumber diskret menggunakan superposisi.",
+          "assessmentFocus": "Soal penguraian vektor dan penjelasan esai tentang pembatalan arah pada sumbu Kartesius."
+        },
+        "relational": {
+          "level": "Relasional",
+          "badge": "Sintesis Konseptual Terpadu",
+          "definition": "Menghubungkan berbagai aspek konseptual menjadi kerangka teoretis yang koheren dan saling berkaitan.",
+          "physicsExample": "Menjelaskan bagaimana garis medan listrik, permukaan Gaussian, dan beda potensial secara bersama-sama menggambarkan perilaku bola konduktor dalam kesetimbangan.",
+          "assessmentFocus": "Asesmen esai kualitatif yang mengevaluasi kedalaman keterkaitan konsep, penalaran sebab-akibat, dan prinsip batas."
+        }
+      },
+      "explorer": {
+        "title": "Kedalaman Kognitif Level SOLO",
+        "subtitle": "Pilih level untuk memeriksa",
+        "level": "Level {level}",
+        "classification": "Klasifikasi SOLO",
+        "understanding": "Pemahaman {level}",
+        "domainExample": "Contoh Bidang (Elektromagnetisme):",
+        "assessmentMechanism": "Mekanisme Asesmen:",
+        "pedagogicalValueLabel": "Nilai Pedagogis:",
+        "pedagogicalValue": "Memastikan mahasiswa beralih dari menghafal rumus menuju sintesis struktural kualitatif."
+      }
+    },
+    "learningLoop": {
+      "badge": "Arsitektur Pedagogis",
+      "title": "Cara kerja ATLAS: Siklus Pembelajaran Formatif",
+      "description": "Siklus berkelanjutan berbasis bukti yang mencakup penyelidikan terarah, umpan balik diagnostik, dan progresi konseptual.",
+      "steps": {
+        "target": {
+          "title": "Pilih Sasaran Pembelajaran",
+          "shortDescription": "Fokus pada tujuan pembelajaran dan konsep berurutannya.",
+          "detailedDescription": "Mahasiswa memasuki penawaran mata kuliah aktif lalu memilih tujuan pembelajaran tertentu (misalnya Medan dan Gaya Listrik) beserta urutan konsep yang telah ditetapkan.",
+          "badge": "Landasan Kurikulum"
+        },
+        "assessment": {
+          "title": "Asesmen Formatif",
+          "shortDescription": "Kerjakan soal MCQ atau esai terbuka.",
+          "detailedDescription": "ATLAS menyajikan butir formatif diagnostik yang dikalibrasi dengan level konseptual terkonfigurasi mahasiswa saat ini (misalnya Unistruktural, Multistruktural, atau Relasional).",
+          "badge": "Penyelidikan Aktif"
+        },
+        "feedback": {
+          "title": "Terima Umpan Balik Diagnostik",
+          "shortDescription": "Analisis wawasan kualitatif dan penjelasan konseptual.",
+          "detailedDescription": "Alih-alih hanya menerima skor angka, mahasiswa memperoleh umpan balik terarah yang menjelaskan penalaran fisika di balik jawabannya dan menyoroti miskonsepsi.",
+          "badge": "Dialog Formatif"
+        },
+        "mastery": {
+          "title": "Tunjukkan Penguasaan",
+          "shortDescription": "Tunjukkan pemahaman konseptual yang kuat pada level saat ini.",
+          "detailedDescription": "Ketika jawaban mahasiswa menunjukkan kesesuaian menyeluruh dengan kriteria level SOLO saat ini, penguasaan dicatat.",
+          "badge": "Verifikasi"
+        },
+        "progression": {
+          "title": "Lanjutkan Lebih Mendalam",
+          "shortDescription": "Maju ke level SOLO yang lebih dalam atau konsep berikutnya.",
+          "detailedDescription": "Mahasiswa maju di sepanjang jalur pembelajaran menuju level SOLO terkonfigurasi berikutnya (misalnya Relasional) atau beralih ke konsep berurutan berikutnya dalam silabus.",
+          "badge": "Kemajuan"
+        }
+      },
+      "interactiveStep": "Langkah Pembelajaran Interaktif",
+      "pedagogicalPurposeLabel": "Tujuan Pedagogis:",
+      "pedagogicalPurpose": "Memastikan mahasiswa menerima intervensi formatif segera sebelum miskonsepsi mengakar pada tahap pembelajaran yang lebih tinggi.",
+      "branches": {
+        "adaptive": {
+          "badge": "Cabang Adaptif",
+          "title": "Ketika Penguasaan Belum Terbukti",
+          "description": "Alih-alih memberi nilai rendah permanen sebagai hukuman, ATLAS memulai siklus formatif berikutnya. Mahasiswa menerima umpan balik kontekstual, refleksi terbimbing, dan soal formatif alternatif untuk memperkuat landasan konseptualnya.",
+          "footer": "Asesmen diperlakukan sebagai kesempatan belajar yang berulang."
+        },
+        "retention": {
+          "badge": "Cabang Retensi",
+          "title": "Meninjau Materi yang Telah Dikuasai",
+          "description": "Mahasiswa dapat meninjau kembali konsep yang telah dikuasai kapan saja melalui asesmen tinjauan. Latihan tinjauan memperkuat retensi konseptual jangka panjang tanpa mengganggu catatan penguasaan yang sudah ada.",
+          "footer": "Lingkungan tinjauan yang aman dan mempertahankan capaian yang telah terbukti."
+        }
+      }
+    },
+    "perspectives": {
+      "badge": "Perspektif Pendidikan",
+      "title": "Dua Perspektif, Satu Sistem",
+      "description": "ATLAS menyediakan antarmuka khusus yang disesuaikan dengan alur kerja mahasiswa dan pengajar, sekaligus mempertahankan landasan bukti bersama yang dapat diaudit.",
+      "primaryFunctions": "{count} Fungsi Utama",
+      "validatedWorkflow": "Alur Kerja Terverifikasi",
+      "student": {
+        "toggle": "Perspektif Mahasiswa",
+        "environment": "Lingkungan Mahasiswa",
+        "heading": "Pembelajaran formatif interaktif & pemantauan mandiri",
+        "features": {
+          "progress": {
+            "title": "Periksa Progres Pembelajaran",
+            "description": "Lihat status terkini pada seluruh tujuan pembelajaran, konsep berurutan, dan level SOLO yang telah dibuktikan."
+          },
+          "assessments": {
+            "title": "Selesaikan Asesmen Formatif",
+            "description": "Jawab butir pilihan ganda terkalibrasi dan tulis jawaban esai kualitatif untuk evaluasi berkelanjutan."
+          },
+          "feedback": {
+            "title": "Terima Umpan Balik Diagnostik",
+            "description": "Akses umpan balik formatif yang menjelaskan prinsip fisika dan membimbing penyempurnaan konseptual."
+          },
+          "review": {
+            "title": "Tinjau Kembali Materi yang Dikuasai",
+            "description": "Ikuti asesmen tinjauan pada konsep yang telah dikuasai untuk memperkuat retensi tanpa mengubah catatan penguasaan."
+          },
+          "evidence": {
+            "title": "Periksa Bukti Asesmen",
+            "description": "Audit percobaan asesmen, esai yang dikirim, dan catatan umpan balik untuk refleksi mandiri berkelanjutan."
+          },
+          "assistant": {
+            "title": "Asisten Belajar Berbasis Mata Kuliah",
+            "description": "Berinteraksi dengan asisten AI yang sepenuhnya berlandaskan silabus pengajar dan materi mata kuliah terverifikasi."
+          }
+        }
+      },
+      "instructor": {
+        "toggle": "Perspektif Pengajar",
+        "environment": "Lingkungan Pengajar",
+        "heading": "Tata kelola kurikulum & pengamatan progresi",
+        "features": {
+          "structures": {
+            "title": "Atur Struktur Pembelajaran",
+            "description": "Tetapkan penawaran mata kuliah, rumuskan tujuan pembelajaran, dan konfigurasikan urutan konsep pedagogis."
+          },
+          "material": {
+            "title": "Kelola Materi Formatif",
+            "description": "Susun dan kurasi butir formatif yang dipetakan langsung ke level SOLO dan hasil kognitif terkonfigurasi."
+          },
+          "banks": {
+            "title": "Kelola Bank Soal",
+            "description": "Atur, impor, dan pelihara repositori soal MCQ dan esai diagnostik untuk setiap penawaran mata kuliah."
+          },
+          "progress": {
+            "title": "Amati Progresi Mahasiswa",
+            "description": "Lacak jalur konseptual mahasiswa dan identifikasi hambatan belajar umum pada kelompok penawaran."
+          },
+          "evidence": {
+            "title": "Periksa Bukti Asesmen",
+            "description": "Tinjau percobaan mahasiswa, esai kualitatif yang dikirim, dan jejak evaluasi AI untuk menjaga integritas asesmen."
+          }
+        }
+      }
+    },
+    "visuals": {
+      "logoAlt": "Logo Sistem Pembelajaran ATLAS",
+      "mascotAlt": "Maskot ATLAS",
+      "companionMascotAlt": "Maskot Pendamping AI ATLAS",
+      "mascotAvatarAlt": "Avatar Maskot AI ATLAS",
+      "pulseHint": "Klik untuk memancarkan medan",
+      "orbit": {
+        "concepts": {
+          "title": "Konsep Berurutan",
+          "subtitle": "Coulomb & Vektor Medan"
+        },
+        "taxonomy": {
+          "title": "SOLO Terkonfigurasi",
+          "subtitle": "Unistruktural → Relasional"
+        },
+        "evaluation": {
+          "title": "Esai Kualitatif",
+          "subtitle": "Penalaran Diagnostik"
+        },
+        "assistance": {
+          "title": "Asisten Belajar",
+          "subtitle": "AI Berbasis Mata Kuliah"
+        }
       }
     },
     "guidesFaq": {
@@ -1433,6 +1882,7 @@
       "signIn": "Masuk",
       "getStarted": "Mulai Sekarang",
       "exploreTitle": "Jelajahi",
+      "navigationAria": "Navigasi footer",
       "links": {
         "features": "Fitur",
         "guidesFaq": "Panduan & FAQ",
@@ -1448,7 +1898,6 @@
     }
   },
   "errors": {
-
     "dashboard": "Tidak dapat memuat dasbor Anda.",
     "courses": "Tidak dapat memuat mata kuliah Anda.",
     "course": "Tidak dapat memuat mata kuliah ini.",

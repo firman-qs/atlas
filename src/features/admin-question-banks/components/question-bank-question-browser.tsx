@@ -146,15 +146,15 @@ export function QuestionBankQuestionBrowser({
                 {questionType === "all"
                   ? t("allTypes")
                   : questionType === "mcq"
-                    ? "MCQ"
-                    : "Essay"}
+                    ? t("mcq")
+                    : t("essay")}
               </span>
             </SelectTrigger>
 
             <SelectContent>
               <SelectItem value="all">{t("allTypes")}</SelectItem>
-              <SelectItem value="mcq">MCQ</SelectItem>
-              <SelectItem value="essay">Essay</SelectItem>
+              <SelectItem value="mcq">{t("mcq")}</SelectItem>
+              <SelectItem value="essay">{t("essay")}</SelectItem>
             </SelectContent>
           </Select>
 

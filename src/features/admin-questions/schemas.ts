@@ -1,86 +1,90 @@
 import { z } from "zod";
 
+import type { AdminValidationTranslator } from "@/features/admin-validation";
+
 const mcqOptionSchema = z.object({
   clientId: z.string().min(1),
   text: z.string(),
 });
 
-export const questionAuthoringSchema = z
-  .object({
-    courseId: z.string().min(1, "Course is required."),
-    learningObjectiveId: z.string().min(1, "Learning objective is required."),
-    conceptId: z.string().min(1, "Concept is required."),
-    soloLevelId: z.string().min(1, "SOLO level is required."),
-    questionType: z.enum(["mcq", "essay"]),
-    prompt: z.string().trim().min(1, "Question prompt is required."),
-    feedback: z.string(),
-    aiGuidelines: z.string(),
-    isOptionShuffled: z.boolean(),
-    correctOptionId: z.string(),
-    options: z.array(mcqOptionSchema),
-    rubric: z.string(),
-    idealAnswer: z.string(),
-  })
-  .superRefine((values, ctx) => {
-    if (values.questionType === "mcq") {
-      if (values.options.length < 2) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["options"],
-          message: "A multiple-choice question requires at least two options.",
-        });
-      }
-
-      values.options.forEach((option, index) => {
-        if (option.text.trim() === "") {
+export function createQuestionAuthoringSchema(t: AdminValidationTranslator) {
+  return z
+    .object({
+      courseId: z.string().min(1, t("courseRequired")),
+      learningObjectiveId: z.string().min(1, t("learningObjectiveRequired")),
+      conceptId: z.string().min(1, t("conceptRequired")),
+      soloLevelId: z.string().min(1, t("soloLevelRequired")),
+      questionType: z.enum(["mcq", "essay"]),
+      prompt: z.string().trim().min(1, t("questionPromptRequired")),
+      feedback: z.string(),
+      aiGuidelines: z.string(),
+      isOptionShuffled: z.boolean(),
+      correctOptionId: z.string(),
+      options: z.array(mcqOptionSchema),
+      rubric: z.string(),
+      idealAnswer: z.string(),
+    })
+    .superRefine((values, ctx) => {
+      if (values.questionType === "mcq") {
+        if (values.options.length < 2) {
           ctx.addIssue({
             code: "custom",
-            path: ["options", index, "text"],
-            message: "Option text is required.",
+            path: ["options"],
+            message: t("mcqMinOptions"),
           });
         }
-      });
 
-      if (!values.correctOptionId) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["correctOptionId"],
-          message: "Select the correct answer.",
+        values.options.forEach((option, index) => {
+          if (option.text.trim() === "") {
+            ctx.addIssue({
+              code: "custom",
+              path: ["options", index, "text"],
+              message: t("optionTextRequired"),
+            });
+          }
         });
-      } else {
-        const correctExists = values.options.some(
-          (option) => option.clientId === values.correctOptionId,
-        );
 
-        if (!correctExists) {
+        if (!values.correctOptionId) {
           ctx.addIssue({
             code: "custom",
             path: ["correctOptionId"],
-            message: "The selected correct answer is invalid.",
+            message: t("selectCorrectAnswer"),
+          });
+        } else {
+          const correctExists = values.options.some(
+            (option) => option.clientId === values.correctOptionId,
+          );
+
+          if (!correctExists) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["correctOptionId"],
+              message: t("correctAnswerInvalid"),
+            });
+          }
+        }
+      }
+
+      if (values.questionType === "essay") {
+        if (values.rubric.trim() === "") {
+          ctx.addIssue({
+            code: "custom",
+            path: ["rubric"],
+            message: t("essayRubricRequired"),
+          });
+        }
+
+        if (values.idealAnswer.trim() === "") {
+          ctx.addIssue({
+            code: "custom",
+            path: ["idealAnswer"],
+            message: t("idealAnswerRequired"),
           });
         }
       }
-    }
-
-    if (values.questionType === "essay") {
-      if (values.rubric.trim() === "") {
-        ctx.addIssue({
-          code: "custom",
-          path: ["rubric"],
-          message: "Essay rubric is required.",
-        });
-      }
-
-      if (values.idealAnswer.trim() === "") {
-        ctx.addIssue({
-          code: "custom",
-          path: ["idealAnswer"],
-          message: "Ideal answer is required.",
-        });
-      }
-    }
-  });
+    });
+}
 
 export type QuestionAuthoringFormValues = z.infer<
-  typeof questionAuthoringSchema
+  ReturnType<typeof createQuestionAuthoringSchema>
 >;

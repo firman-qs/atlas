@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   BookOpenCheck,
@@ -25,61 +26,56 @@ interface LoopStep {
   badge: string;
 }
 
-const mainLoopSteps: LoopStep[] = [
-  {
-    id: "target",
-    stepNumber: "01",
-    title: "Select Learning Target",
-    shortDesc: "Focus on a learning objective and its ordered concept.",
-    detailedDesc:
-      "The student enters an active course offering and selects a specific learning objective (e.g. Electric Fields and Forces) along its defined sequence of ordered concepts.",
-    icon: Compass,
-    badge: "Curriculum Anchor",
-  },
-  {
-    id: "assessment",
-    stepNumber: "02",
-    title: "Formative Assessment",
-    shortDesc: "Engage with MCQ or open-ended essay questions.",
-    detailedDesc:
-      "ATLAS presents diagnostic formative items calibrated to the student's current configured conceptual level (e.g., Unistructural, Multistructural, or Relational).",
-    icon: ClipboardList,
-    badge: "Active Inquiry",
-  },
-  {
-    id: "feedback",
-    stepNumber: "03",
-    title: "Receive Diagnostic Feedback",
-    shortDesc: "Analyze qualitative insights and conceptual explanations.",
-    detailedDesc:
-      "Rather than a bare numerical score, the student receives targeted feedback explaining the physical reasoning behind their answers and highlighting any misconceptions.",
-    icon: MessageSquareText,
-    badge: "Formative Dialogue",
-  },
-  {
-    id: "mastery",
-    stepNumber: "04",
-    title: "Demonstrate Mastery",
-    shortDesc: "Show robust conceptual understanding at the current level.",
-    detailedDesc:
-      "When the student's responses demonstrate comprehensive alignment with the criteria for the current SOLO level, mastery is registered.",
-    icon: CheckCircle2,
-    badge: "Verification",
-  },
-  {
-    id: "progression",
-    stepNumber: "05",
-    title: "Progress Deeper",
-    shortDesc: "Advance to deeper SOLO levels or subsequent concepts.",
-    detailedDesc:
-      "The student advances along the learning trajectory to the next configured SOLO level (e.g., Relational) or transitions to the next ordered concept in the syllabus.",
-    icon: ArrowRight,
-    badge: "Advancement",
-  },
-];
-
 export function LearningLoopSection() {
+  const t = useTranslations("landing.learningLoop");
   const [selectedStep, setSelectedStep] = useState<string>("feedback");
+  const mainLoopSteps: LoopStep[] = [
+    {
+      id: "target",
+      stepNumber: "01",
+      title: t("steps.target.title"),
+      shortDesc: t("steps.target.shortDescription"),
+      detailedDesc: t("steps.target.detailedDescription"),
+      icon: Compass,
+      badge: t("steps.target.badge"),
+    },
+    {
+      id: "assessment",
+      stepNumber: "02",
+      title: t("steps.assessment.title"),
+      shortDesc: t("steps.assessment.shortDescription"),
+      detailedDesc: t("steps.assessment.detailedDescription"),
+      icon: ClipboardList,
+      badge: t("steps.assessment.badge"),
+    },
+    {
+      id: "feedback",
+      stepNumber: "03",
+      title: t("steps.feedback.title"),
+      shortDesc: t("steps.feedback.shortDescription"),
+      detailedDesc: t("steps.feedback.detailedDescription"),
+      icon: MessageSquareText,
+      badge: t("steps.feedback.badge"),
+    },
+    {
+      id: "mastery",
+      stepNumber: "04",
+      title: t("steps.mastery.title"),
+      shortDesc: t("steps.mastery.shortDescription"),
+      detailedDesc: t("steps.mastery.detailedDescription"),
+      icon: CheckCircle2,
+      badge: t("steps.mastery.badge"),
+    },
+    {
+      id: "progression",
+      stepNumber: "05",
+      title: t("steps.progression.title"),
+      shortDesc: t("steps.progression.shortDescription"),
+      detailedDesc: t("steps.progression.detailedDescription"),
+      icon: ArrowRight,
+      badge: t("steps.progression.badge"),
+    },
+  ];
 
   const currentStepData =
     mainLoopSteps.find((s) => s.id === selectedStep) || mainLoopSteps[2];
@@ -93,16 +89,15 @@ export function LearningLoopSection() {
         {/* Section Header */}
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-[8px] border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs font-semibold text-primary">
-            Pedagogical Architecture
+            {t("badge")}
           </div>
 
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            How ATLAS works: The formative learning loop
+            {t("title")}
           </h2>
 
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
-            A continuous, evidence-grounded cycle of targeted inquiry, diagnostic feedback,
-            and conceptual progression.
+            {t("description")}
           </p>
         </div>
 
@@ -147,7 +142,9 @@ export function LearningLoopSection() {
 
                     <h3
                       className={`mt-3 text-sm font-semibold tracking-tight ${
-                        isSelected ? "text-foreground font-bold" : "text-foreground"
+                        isSelected
+                          ? "text-foreground font-bold"
+                          : "text-foreground"
                       }`}
                     >
                       {step.title}
@@ -187,7 +184,7 @@ export function LearningLoopSection() {
 
               <div className="text-xs text-muted-foreground flex items-center gap-1.5">
                 <Sparkles className="size-3.5 text-primary" />
-                <span>Interactive Learning Step</span>
+                <span>{t("interactiveStep")}</span>
               </div>
             </div>
 
@@ -197,9 +194,11 @@ export function LearningLoopSection() {
               </p>
 
               <div className="rounded-[12px] border border-border/80 bg-muted/40 p-4 text-xs">
-                <p className="font-semibold text-foreground">Pedagogical Purpose:</p>
+                <p className="font-semibold text-foreground">
+                  {t("pedagogicalPurposeLabel")}
+                </p>
                 <p className="mt-1 text-muted-foreground">
-                  Ensures students receive immediate formative interventions before misconceptions solidify into higher-level learning stages.
+                  {t("pedagogicalPurpose")}
                 </p>
               </div>
             </div>
@@ -216,24 +215,22 @@ export function LearningLoopSection() {
                   <Repeat2 className="size-4.5" />
                 </div>
                 <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-                  Adaptive Branch
+                  {t("branches.adaptive.badge")}
                 </span>
               </div>
 
               <h3 className="mt-4 text-base font-bold text-foreground">
-                When Mastery is Not Yet Demonstrated
+                {t("branches.adaptive.title")}
               </h3>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Rather than penalizing with a permanent low grade, ATLAS initiates
-                another formative cycle. The student is offered contextual feedback,
-                guided reflection, and alternative formative questions to strengthen their conceptual grounding.
+                {t("branches.adaptive.description")}
               </p>
             </div>
 
             <div className="mt-6 flex items-center gap-2 rounded-[10px] bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
               <RefreshCw className="size-3.5 text-primary" />
-              <span>Assessment is treated as an iterative opportunity for learning.</span>
+              <span>{t("branches.adaptive.footer")}</span>
             </div>
           </div>
 
@@ -245,23 +242,22 @@ export function LearningLoopSection() {
                   <BookOpenCheck className="size-4.5" />
                 </div>
                 <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-0.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-                  Retention Branch
+                  {t("branches.retention.badge")}
                 </span>
               </div>
 
               <h3 className="mt-4 text-base font-bold text-foreground">
-                Reviewing Mastered Material
+                {t("branches.retention.title")}
               </h3>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Students can revisit previously mastered concepts at any time through review assessments.
-                Engaging in review practice reinforces long-term conceptual retention without disrupting the student&apos;s established mastery record.
+                {t("branches.retention.description")}
               </p>
             </div>
 
             <div className="mt-6 flex items-center gap-2 rounded-[10px] bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
               <GraduationCap className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>Safe review environment that preserves demonstrated achievements.</span>
+              <span>{t("branches.retention.footer")}</span>
             </div>
           </div>
         </div>

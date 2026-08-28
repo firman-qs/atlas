@@ -11,23 +11,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useUpdateLearningObjective } from "@/features/admin-learning-objectives/queries";
 import type { AdminLearningObjective } from "@/features/admin-learning-objectives/types";
 
-const editLearningObjectiveSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Learning objective code is required.")
-    .max(50, "Learning objective code must be at most 50 characters."),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Learning objective description is required."),
-});
+export function editLearningObjectiveSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("learningObjectiveCodeRequired"))
+      .max(50, t("learningObjectiveCodeMax")),
+    description: z
+      .string()
+      .trim()
+      .min(1, t("learningObjectiveDescriptionRequired")),
+  });
+}
 
 type EditLearningObjectiveFormValues = z.infer<
-  typeof editLearningObjectiveSchema
+  ReturnType<typeof editLearningObjectiveSchema>
 >;
 
 interface EditLearningObjectiveFormProps {
@@ -42,13 +45,14 @@ export function EditLearningObjectiveForm({
   onSaved,
 }: EditLearningObjectiveFormProps) {
   const t = useTranslations("admin.learningObjectives");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const updateLearningObjective = useUpdateLearningObjective();
 
   const form = useForm<EditLearningObjectiveFormValues>({
-    resolver: zodResolver(editLearningObjectiveSchema),
+    resolver: zodResolver(editLearningObjectiveSchema(tValidation)),
     defaultValues: {
       code: learningObjective.code,
       description: learningObjective.description,
@@ -84,7 +88,9 @@ export function EditLearningObjectiveForm({
       )}
 
       <div className="space-y-2">
-        <Label htmlFor={`lo-code-${learningObjective.id}`}>{t("labels.code")}</Label>
+        <Label htmlFor={`lo-code-${learningObjective.id}`}>
+          {t("labels.code")}
+        </Label>
 
         <Input
           id={`lo-code-${learningObjective.id}`}
@@ -133,7 +139,9 @@ export function EditLearningObjectiveForm({
             <Loader2 className="animate-spin" />
           )}
 
-          {updateLearningObjective.isPending ? t("actions.saving") : t("actions.save")}
+          {updateLearningObjective.isPending
+            ? t("actions.saving")
+            : t("actions.save")}
         </Button>
       </div>
     </form>

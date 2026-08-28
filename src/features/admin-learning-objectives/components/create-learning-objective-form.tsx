@@ -11,22 +11,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useCreateLearningObjective } from "@/features/admin-learning-objectives/queries";
 
-const createLearningObjectiveSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Learning objective code is required.")
-    .max(50, "Learning objective code must be at most 50 characters."),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Learning objective description is required."),
-});
+export function createLearningObjectiveSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("learningObjectiveCodeRequired"))
+      .max(50, t("learningObjectiveCodeMax")),
+    description: z
+      .string()
+      .trim()
+      .min(1, t("learningObjectiveDescriptionRequired")),
+  });
+}
 
 type CreateLearningObjectiveFormValues = z.infer<
-  typeof createLearningObjectiveSchema
+  ReturnType<typeof createLearningObjectiveSchema>
 >;
 
 interface CreateLearningObjectiveFormProps {
@@ -41,13 +44,14 @@ export function CreateLearningObjectiveForm({
   onCreated,
 }: CreateLearningObjectiveFormProps) {
   const t = useTranslations("admin.learningObjectives");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const createLearningObjective = useCreateLearningObjective(courseId);
 
   const form = useForm<CreateLearningObjectiveFormValues>({
-    resolver: zodResolver(createLearningObjectiveSchema),
+    resolver: zodResolver(createLearningObjectiveSchema(tValidation)),
     defaultValues: {
       code: "",
       description: "",
@@ -88,7 +92,7 @@ export function CreateLearningObjectiveForm({
 
         <Input
           id="learning-objective-code"
-          placeholder="e.g. lo3"
+          placeholder={t("placeholders.code")}
           disabled={createLearningObjective.isPending}
           {...form.register("code")}
         />
@@ -101,12 +105,14 @@ export function CreateLearningObjectiveForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="learning-objective-description">{t("labels.description")}</Label>
+        <Label htmlFor="learning-objective-description">
+          {t("labels.description")}
+        </Label>
 
         <Textarea
           id="learning-objective-description"
           rows={4}
-          placeholder="Describe what students should understand or be able to do."
+          placeholder={t("placeholders.description")}
           disabled={createLearningObjective.isPending}
           {...form.register("description")}
         />

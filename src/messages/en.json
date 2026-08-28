@@ -1,6 +1,8 @@
 {
-  "metadata": {"description": "Adaptive formative assessment for conceptual learning"},
-  "common": {"save": "Save", "cancel": "Cancel"},
+  "metadata": {
+    "description": "Adaptive formative assessment for conceptual learning"
+  },
+  "common": { "save": "Save", "cancel": "Cancel" },
   "navigation": {
     "breadcrumbs": {
       "dashboard": "Dashboard",
@@ -19,6 +21,7 @@
       "users": "Users"
     },
     "sidebar": {
+      "logoAlt": "ATLAS logo",
       "formativeAssessment": "Formative Assessment",
       "workspace": "Workspace",
       "curriculum": "Curriculum",
@@ -139,6 +142,7 @@
     "roles": "Roles"
   },
   "accessibility": {
+    "breadcrumb": "Breadcrumb",
     "close": "Close",
     "more": "More",
     "sidebar": "Sidebar",
@@ -258,8 +262,11 @@
     "noAssessments": "No assessments yet",
     "activeAssessment": "Active assessment",
     "assessment": "Assessment",
-    "modes": {"progress": "Progress", "review": "Review"},
-    "modeAssessment": {"progress": "Progress assessment", "review": "Review assessment"},
+    "modes": { "progress": "Progress", "review": "Review" },
+    "modeAssessment": {
+      "progress": "Progress assessment",
+      "review": "Review assessment"
+    },
     "statuses": {
       "created": "Ready to start",
       "running": "In progress",
@@ -319,7 +326,7 @@
     "question": "Question",
     "assessmentQuestion": "Assessment question",
     "questionNumber": "Question {number}",
-    "questionTypes": {"mcq": "Multiple choice", "essay": "Essay"},
+    "questionTypes": { "mcq": "Multiple choice", "essay": "Essay" },
     "yourAnswer": "Your answer",
     "mcqHint": "Choose the best answer, then submit your response.",
     "essayHint": "Write your response below. You can include supporting images when needed.",
@@ -545,6 +552,7 @@
     },
     "students": {
       "title": "Students",
+      "pageDescription": "Browse active student accounts available for instructor-managed enrollment.",
       "searchPlaceholder": "Search students by name or email...",
       "searchAria": "Search students",
       "search": "Search",
@@ -567,6 +575,45 @@
     }
   },
   "admin": {
+    "validation": {
+      "yearWhole": "Year must be a whole number.",
+      "yearMin": "Year must be 2000 or later.",
+      "yearMax": "Year cannot exceed 2200.",
+      "startDateRequired": "Start date is required.",
+      "endDateRequired": "End date is required.",
+      "endDateOrder": "End date must be on or after the start date.",
+      "conceptCodeRequired": "Concept code is required.",
+      "conceptCodeMax": "Concept code must be at most 50 characters.",
+      "conceptNameRequired": "Concept name is required.",
+      "conceptNameMax": "Concept name must be at most 255 characters.",
+      "conceptDescriptionRequired": "Concept description is required.",
+      "courseCodeRequired": "Course code is required.",
+      "courseCodeMax": "Course code cannot exceed 50 characters.",
+      "courseTitleRequired": "Course title is required.",
+      "courseTitleMax": "Course title cannot exceed 255 characters.",
+      "courseDescriptionRequired": "Course description is required.",
+      "creditsWhole": "Credits must be a whole number.",
+      "creditsMin": "Credits must be at least 1.",
+      "creditsMax": "Credits cannot exceed 10.",
+      "learningObjectiveCodeRequired": "Learning objective code is required.",
+      "learningObjectiveCodeMax": "Learning objective code must be at most 50 characters.",
+      "learningObjectiveDescriptionRequired": "Learning objective description is required.",
+      "courseRequired": "Course is required.",
+      "codeRequired": "Code is required.",
+      "codeMax": "Code cannot exceed 50 characters.",
+      "nameRequired": "Name is required.",
+      "nameMax": "Name cannot exceed 255 characters.",
+      "learningObjectiveRequired": "Learning objective is required.",
+      "conceptRequired": "Concept is required.",
+      "soloLevelRequired": "SOLO level is required.",
+      "questionPromptRequired": "Question prompt is required.",
+      "mcqMinOptions": "A multiple-choice question requires at least two options.",
+      "optionTextRequired": "Option text is required.",
+      "selectCorrectAnswer": "Select the correct answer.",
+      "correctAnswerInvalid": "The selected correct answer is invalid.",
+      "essayRubricRequired": "Essay rubric is required.",
+      "idealAnswerRequired": "Ideal answer is required."
+    },
     "academicTerms": {
       "title": "Academic Terms",
       "description": "Manage academic periods used by ATLAS course offerings.",
@@ -620,6 +667,11 @@
         "name": "Concept name",
         "description": "Description"
       },
+      "placeholders": {
+        "code": "e.g. em-c003",
+        "name": "e.g. Electric Potential",
+        "description": "Describe the conceptual content represented by this concept."
+      },
       "actions": {
         "edit": "Edit",
         "delete": "Delete",
@@ -672,8 +724,11 @@
       },
       "form": {
         "code": "Course code",
+        "codePlaceholder": "e.g. um032em000",
         "title": "Course title",
+        "titlePlaceholder": "e.g. Electromagnetics",
         "description": "Course description",
+        "descriptionPlaceholder": "Describe the course.",
         "credits": "Credits",
         "creating": "Creating...",
         "create": "Create course",
@@ -743,6 +798,10 @@
       "labels": {
         "code": "Code",
         "description": "Description"
+      },
+      "placeholders": {
+        "code": "e.g. lo3",
+        "description": "Describe what students should understand or be able to do."
       },
       "concepts": {
         "title": "Concepts",
@@ -863,6 +922,8 @@
         "title": "Add Questions",
         "searchPlaceholder": "Search question prompts...",
         "allTypes": "All types",
+        "mcq": "MCQ",
+        "essay": "Essay",
         "allStatuses": "All statuses",
         "published": "Published",
         "draft": "Draft",
@@ -1193,6 +1254,9 @@
     "header": {
       "themeToggleAria": "Toggle visual theme",
       "openMenuAria": "Open navigation menu",
+      "primaryNavigationAria": "Primary navigation",
+      "mobileNavigationAria": "Mobile navigation",
+      "logoAlt": "ATLAS Logo",
       "tagline": "Atlas, Targeted Learning Assessment System",
       "homeAria": "ATLAS Home",
       "dashboard": "Dashboard",
@@ -1287,6 +1351,391 @@
         "published": "Published",
         "drafting": "Drafting",
         "editBank": "Edit Bank"
+      },
+      "demo": {
+        "concepts": {
+          "levels": {
+            "unistructural": "Unistructural",
+            "multistructural": "Multistructural",
+            "relational": "Relational"
+          },
+          "stages": {
+            "demonstrated": "Demonstrated",
+            "activeAssessment": "Active Assessment",
+            "upcoming": "Upcoming"
+          },
+          "coulomb": {
+            "name": "Coulomb's Law & Point Charges",
+            "description": "Calculate scalar and directional electrostatic forces between discrete static point charges.",
+            "unistructural": {
+              "criteria": "Recall scalar inverse-square relation and calculate electrostatic force magnitude.",
+              "prompt": "Given $q_1 = +2.0\\,\\mu\\text{C}$ and $q_2 = -4.0\\,\\mu\\text{C}$ separated by $r = 0.50\\,\\text{m}$, calculate the electrostatic force magnitude $F = k_e \\frac{|q_1 q_2|}{r^2}$."
+            },
+            "multistructural": {
+              "criteria": "Decompose orthogonal vector forces along coordinate axes and sum resultant forces.",
+              "prompt": "Three collinear point charges are situated along the $x$-axis. Determine the net electrostatic force vector $\\vec{F}_{\\text{net}} = \\sum \\vec{F}_i$ acting on the test charge."
+            },
+            "relational": {
+              "criteria": "Integrate Coulomb field definitions with work and electrostatic potential energy.",
+              "prompt": "Derive the electrostatic potential energy $U = \\frac{1}{4\\pi\\varepsilon_0}\\sum_{i<j}\\frac{q_i q_j}{r_{ij}}$ for bringing discrete charges from infinity into static configuration."
+            }
+          },
+          "superposition": {
+            "name": "Electric Field Superposition",
+            "description": "Resolve two-dimensional coordinate field vectors and analyze net superposition.",
+            "unistructural": {
+              "criteria": "Calculate individual electric field magnitude $\\vec{E} = \\frac{1}{4\\pi\\varepsilon_0} \\frac{q}{r^2} \\hat{r}$ from a single point source.",
+              "prompt": "Determine the electric field vector $\\vec{E}$ at a distance $r = 0.30\\,\\text{m}$ from an isolated point charge $q = +5.0\\,\\text{nC}$."
+            },
+            "multistructural": {
+              "criteria": "Compute vector components and resolve symmetric constructive/destructive cancellation.",
+              "prompt": "Two identical point charges $+q$ are placed at $(-d, 0)$ and $(+d, 0)$. Formulate the net field $\\vec{E}_{\\text{net}}(0, y) = 2 E_y \\hat{j} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{j}$."
+            },
+            "relational": {
+              "criteria": "Synthesize field continuous limits, dipole approximations, and gradient transitions for $y \\gg d$.",
+              "prompt": "Analyze the asymptotic expansion of $\\vec{E}_{\\text{net}}$ when $y \\gg d$, explaining why dipole fields decay as $1/y^3$."
+            }
+          },
+          "gauss": {
+            "name": "Gauss's Flux Law on Conductors",
+            "description": "Evaluate surface flux integrals and internal boundary conditions in electrostatic equilibrium.",
+            "unistructural": {
+              "criteria": "State Gauss's Law formula $\\Phi_E = \\oint \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}$.",
+              "prompt": "Calculate the total electric flux $\\Phi_E$ through a closed spherical surface enclosing a net charge $Q_{\\text{enc}} = +8.85\\,\\text{nC}$."
+            },
+            "multistructural": {
+              "criteria": "Apply spatial symmetry (spherical, cylindrical, planar) to extract constant field magnitude from the flux integral.",
+              "prompt": "Derive the electric field $\\vec{E}(r) = \\frac{\\lambda}{2\\pi\\varepsilon_0 r} \\hat{r}$ outside an infinitely long line of uniform linear charge density $\\lambda$."
+            },
+            "relational": {
+              "criteria": "Explain why internal $\\vec{E} = 0$ in equilibrium and prove excess charge resides strictly on conductor boundaries.",
+              "prompt": "Provide a qualitative proof using Gauss's Law that any arbitrary Gaussian surface drawn inside a conductor in equilibrium encloses zero net charge."
+            }
+          }
+        },
+        "assessment": {
+          "mcq": {
+            "prompt": "Two positive point charges of equal magnitude $+q$ are fixed on the $x$-axis at $(-d, 0)$ and $(+d, 0)$. Which expression accurately represents the net electric field vector $\\vec{E}_{\\text{net}}$ at an arbitrary point $(0, y)$ on the $y$-axis?",
+            "options": {
+              "a": {
+                "feedback": "The horizontal $x$-components point in opposite directions ($E_{1x} = -E_{2x}$) and destructively cancel to zero. The net field has no $\\hat{\\imath}$ component."
+              },
+              "b": {
+                "feedback": "Correct. Symmetrical $x$-components cancel ($E_x = 0$) while vertical components add constructively: $E_{\\text{net}} = 2 \\left(\\frac{k_e q}{r^2}\\right) \\sin\\theta = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$."
+              },
+              "c": {
+                "text": "$\\vec{E}_{\\text{net}} = 0$ everywhere along the $y$-axis",
+                "feedback": "Electrostatic field cancellation occurs only at the origin $(0, 0)$. At points $y > 0$, both upward components point in $+y$, producing a non-zero vertical vector."
+              },
+              "d": {
+                "feedback": "This option fails to account for symmetry cancellation along the horizontal coordinate axis."
+              }
+            }
+          },
+          "essay": {
+            "prompt": "Two positive point charges of equal magnitude $+q$ are located at $(-d, 0)$ and $(+d, 0)$. Explain the step-by-step procedure to determine the net electric field vector $\\vec{E}_{\\text{net}}$ at an arbitrary point $(0, y)$ on the $y$-axis. Detail the vector decomposition and coordinate symmetry.",
+            "sampleA": {
+              "label": "Example Submission A",
+              "text": "Each charge creates an electric field pointing away from itself with magnitude $E = \\frac{k_e q}{d^2 + y^2}$. Decomposing into components along the coordinate axes:\n\n1. $E_{1x} = -E \\cos\\theta$ and $E_{2x} = +E \\cos\\theta$, so the horizontal components cancel symmetrically: $E_{\\text{net}, x} = 0$.\n2. $E_{1y} = E_{2y} = E \\sin\\theta$, where $\\sin\\theta = \\frac{y}{\\sqrt{d^2 + y^2}}$.\n\nSumming the vertical components yields $\\vec{E}_{\\text{net}} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$.",
+              "feedback": "**Formative Assessment Feedback**:\n- **Conceptual Demonstration**: Accurately explains vector decomposition and symmetric cancellation along the $x$-axis.\n- **Mathematical Formulation**: Complete derivation of vertical constructive interference $\\vec{E}_{\\text{net}} = \\frac{2 k_e q y}{(d^2 + y^2)^{3/2}} \\hat{\\jmath}$.\n- **Next Progression Step**: Ready to explore asymptotic behavior at large distances ($y \\gg d$) at the Relational level.",
+              "status": "Criteria Met"
+            },
+            "sampleB": {
+              "label": "Example Submission B",
+              "text": "The distance from each charge to $(0, y)$ is $r = \\sqrt{d^2 + y^2}$. Using Coulomb's formula $E = \\frac{k_e q}{r^2}$, the two fields cancel because both charges are positive and push against each other.",
+              "feedback": "**Formative Diagnostic Guidance**:\n- **Identified Gap**: Correctly calculates the distance $r$, but assumes fields cancel completely in all directions.\n- **Guiding Hint**: Notice that while horizontal components oppose each other, both charges produce an upward field along the $+y$ direction. How do the vertical components combine?",
+              "status": "Formative Cycle Active"
+            }
+          }
+        },
+        "chat": {
+          "equilibrium": {
+            "title": "Zero Field in Conductors",
+            "question": "Why must the electric field inside a solid conductor in electrostatic equilibrium be zero?",
+            "response": "In electrostatic equilibrium, mobile charges inside the conductor move in response to any internal electric field. Free electrons redistribute to the outer surface until they establish an induced surface field that exactly cancels the internal field, ensuring $\\vec{E} = 0$ everywhere within the interior bulk.",
+            "citation": "Chapter 22 · Gauss's Law on Conductors (PHYS102 Section 01)"
+          },
+          "potential": {
+            "title": "Field vs. Potential",
+            "question": "If the electric field is zero in a region, does the electrostatic potential also have to be zero?",
+            "response": "No. The electric field is related to potential by $\\vec{E} = -\\vec{\\nabla} V$. If $\\vec{E} = 0$ throughout a region, $V$ is spatially uniform (an equipotential region), not necessarily zero. For example, the interior of a charged conductor has constant potential $V = V_{\\text{surface}}$.",
+            "citation": "Chapter 23 · Electric Potential Gradients"
+          },
+          "dipole": {
+            "title": "Dipole Distance Scaling",
+            "question": "Why does an electric dipole field fall off as $1/r^3$ while a monopole falls off as $1/r^2$?",
+            "response": "Because the positive and negative charges $+q$ and $-q$ are separated by distance $d$, their opposing $1/r^2$ monopole fields nearly cancel at large distances. The leading non-zero term in the multipole expansion is the dipole moment $\\vec{p} = q\\vec{d}$, whose field scales as $\\frac{p}{r^3}$.",
+            "citation": "Chapter 21 · Dipole Vector Superposition"
+          }
+        }
+      }
+    },
+    "authoredCapabilities": {
+      "badge": "Platform Capabilities",
+      "title": "Authored for academic depth and conceptual clarity",
+      "description": "ATLAS unites curriculum hierarchy, formative assessment, diagnostic feedback, and contextual AI assistance into an integrated educational architecture.",
+      "pillars": {
+        "structured": {
+          "number": "Pillar 01",
+          "title": "Structured Learning",
+          "description": "Learning is not a random collection of quiz questions. Curriculum is structured into clear hierarchies that reflect true pedagogical sequence.",
+          "features": {
+            "progression": {
+              "title": "Conceptual Progression",
+              "description": "Ordered concepts grouped under defined learning objectives, guiding students from foundational to nuanced understanding."
+            },
+            "assessment": {
+              "title": "Adaptive Formative Assessment",
+              "description": "Presents formative items targeted at the student's current conceptual level rather than arbitrary testing."
+            }
+          },
+          "footerLabel": "Hierarchical Flow:",
+          "footerText": "Course Offering → Learning Objectives → Ordered Concepts → Configured SOLO levels."
+        },
+        "feedback": {
+          "number": "Pillar 02",
+          "title": "Feedback & Evaluation",
+          "description": "Assessment is designed for learning, not merely grading. Feedback illuminates underlying reasoning and directly addresses misconceptions.",
+          "features": {
+            "essay": {
+              "title": "AI-Supported Essay Evaluation",
+              "description": "Evaluates open-ended qualitative explanations, identifying conceptual alignment and specific omissions."
+            },
+            "formative": {
+              "title": "Meaningful Formative Feedback",
+              "description": "Delivers timely explanations that explain why an answer is incomplete and prompt the next conceptual insight."
+            }
+          },
+          "footerLabel": "Dual Item Formats:",
+          "footerText": "Diagnostic Multiple-Choice Questions (MCQ) & Qualitative Essay inquiries."
+        },
+        "evidence": {
+          "number": "Pillar 03",
+          "title": "Context & Evidence",
+          "description": "All learning interactions remain grounded in instructor-curated materials, preserving full transparency and inspectable evidence.",
+          "features": {
+            "assistance": {
+              "title": "Course-Grounded Assistance",
+              "description": "An AI learning assistant anchored directly in course materials, preventing hallucinations and preserving pedagogical fidelity."
+            },
+            "inspectable": {
+              "title": "Inspectable Learning Evidence",
+              "description": "Complete attempt histories, progression traces, and diagnostic evaluations remain auditable for students and instructors."
+            }
+          },
+          "footerLabel": "Academic Integrity:",
+          "footerText": "Transparent audit logs with no opaque scoring algorithms or black-box predictions."
+        }
+      }
+    },
+    "conceptualLearning": {
+      "badge": "Conceptual Taxonomy",
+      "title": "Grounded in the SOLO Taxonomy for genuine conceptual depth",
+      "description": "ATLAS departs fundamentally from traditional percentage-based grading. Assessment items are mapped to configured SOLO (Structure of Observed Learning Outcome) levels, gauging how deeply a student understands concepts rather than how many questions they guessed correctly.",
+      "curriculumNoteLabel": "Configured Curriculum Note:",
+      "curriculumNote": "The levels illustrated below (Unistructural → Multistructural → Relational) represent the configured progression deployed in the Electromagnetics pilot. ATLAS supports domain-specific pedagogical structures tailored to academic requirements.",
+      "hierarchy": {
+        "title": "Curriculum Hierarchy Stack",
+        "subtitle": "Top-Down Architecture",
+        "course": {
+          "title": "Course & Offering",
+          "description": "e.g., General Physics II: Electromagnetism (Academic Term)"
+        },
+        "objectives": {
+          "title": "Learning Objectives",
+          "description": "Measurable goals defining qualitative and quantitative competence"
+        },
+        "concepts": {
+          "title": "Ordered Concepts",
+          "description": "Structured pedagogical sequence (Coulomb's Law → Gauss's Law → Potential)"
+        },
+        "solo": {
+          "title": "Configured SOLO Levels",
+          "description": "Unistructural, Multistructural, Relational cognitive milestones"
+        },
+        "assessment": {
+          "title": "Formative Assessment & Mastery",
+          "description": "MCQ & Essay evaluation → feedback → progression or review"
+        },
+        "footer": "Instructors retain full control over defining objectives, concepts, and assessment items."
+      },
+      "soloLevels": {
+        "unistructural": {
+          "level": "Unistructural",
+          "badge": "Foundational Aspect",
+          "definition": "Focuses on a single relevant conceptual aspect or simple formula application.",
+          "physicsExample": "Calculating the electrostatic force magnitude between two static point charges using Coulomb's constant.",
+          "assessmentFocus": "Diagnostic MCQs verifying correct parameter identification (charges q₁, q₂ and distance r)."
+        },
+        "multistructural": {
+          "level": "Multistructural",
+          "badge": "Multiple Independent Aspects",
+          "definition": "Deals with several relevant aspects in isolation or stepwise combination without full synthesis.",
+          "physicsExample": "Computing the resultant electric field vector at a specific coordinate produced by three discrete source charges using superposition.",
+          "assessmentFocus": "Vector resolution questions and essay explanations of directional cancellation along Cartesian axes."
+        },
+        "relational": {
+          "level": "Relational",
+          "badge": "Integrated Conceptual Synthesis",
+          "definition": "Connects multiple conceptual aspects into a coherent, interrelated theoretical framework.",
+          "physicsExample": "Explaining how electric field lines, Gaussian surfaces, and potential differences collectively describe the behavior of a conducting sphere in equilibrium.",
+          "assessmentFocus": "Qualitative essay assessment evaluating depth of conceptual linkage, causal reasoning, and boundary principles."
+        }
+      },
+      "explorer": {
+        "title": "SOLO Level Cognitive Depth",
+        "subtitle": "Select a level to inspect",
+        "level": "Level {level}",
+        "classification": "SOLO Classification",
+        "understanding": "{level} Understanding",
+        "domainExample": "Domain Example (Electromagnetism):",
+        "assessmentMechanism": "Assessment Mechanism:",
+        "pedagogicalValueLabel": "Pedagogical Value:",
+        "pedagogicalValue": "Ensures students transition from rote formula recall to qualitative structural synthesis."
+      }
+    },
+    "learningLoop": {
+      "badge": "Pedagogical Architecture",
+      "title": "How ATLAS works: The formative learning loop",
+      "description": "A continuous, evidence-grounded cycle of targeted inquiry, diagnostic feedback, and conceptual progression.",
+      "steps": {
+        "target": {
+          "title": "Select Learning Target",
+          "shortDescription": "Focus on a learning objective and its ordered concept.",
+          "detailedDescription": "The student enters an active course offering and selects a specific learning objective (e.g. Electric Fields and Forces) along its defined sequence of ordered concepts.",
+          "badge": "Curriculum Anchor"
+        },
+        "assessment": {
+          "title": "Formative Assessment",
+          "shortDescription": "Engage with MCQ or open-ended essay questions.",
+          "detailedDescription": "ATLAS presents diagnostic formative items calibrated to the student's current configured conceptual level (e.g., Unistructural, Multistructural, or Relational).",
+          "badge": "Active Inquiry"
+        },
+        "feedback": {
+          "title": "Receive Diagnostic Feedback",
+          "shortDescription": "Analyze qualitative insights and conceptual explanations.",
+          "detailedDescription": "Rather than a bare numerical score, the student receives targeted feedback explaining the physical reasoning behind their answers and highlighting any misconceptions.",
+          "badge": "Formative Dialogue"
+        },
+        "mastery": {
+          "title": "Demonstrate Mastery",
+          "shortDescription": "Show robust conceptual understanding at the current level.",
+          "detailedDescription": "When the student's responses demonstrate comprehensive alignment with the criteria for the current SOLO level, mastery is registered.",
+          "badge": "Verification"
+        },
+        "progression": {
+          "title": "Progress Deeper",
+          "shortDescription": "Advance to deeper SOLO levels or subsequent concepts.",
+          "detailedDescription": "The student advances along the learning trajectory to the next configured SOLO level (e.g., Relational) or transitions to the next ordered concept in the syllabus.",
+          "badge": "Advancement"
+        }
+      },
+      "interactiveStep": "Interactive Learning Step",
+      "pedagogicalPurposeLabel": "Pedagogical Purpose:",
+      "pedagogicalPurpose": "Ensures students receive immediate formative interventions before misconceptions solidify into higher-level learning stages.",
+      "branches": {
+        "adaptive": {
+          "badge": "Adaptive Branch",
+          "title": "When Mastery is Not Yet Demonstrated",
+          "description": "Rather than penalizing with a permanent low grade, ATLAS initiates another formative cycle. The student is offered contextual feedback, guided reflection, and alternative formative questions to strengthen their conceptual grounding.",
+          "footer": "Assessment is treated as an iterative opportunity for learning."
+        },
+        "retention": {
+          "badge": "Retention Branch",
+          "title": "Reviewing Mastered Material",
+          "description": "Students can revisit previously mastered concepts at any time through review assessments. Engaging in review practice reinforces long-term conceptual retention without disrupting the student's established mastery record.",
+          "footer": "Safe review environment that preserves demonstrated achievements."
+        }
+      }
+    },
+    "perspectives": {
+      "badge": "Educational Perspectives",
+      "title": "Designed for students and instructors",
+      "description": "ATLAS provides specialized interfaces tailored to the distinct workflows of learners and educators while maintaining a shared, auditable evidence base.",
+      "primaryFunctions": "{count} Primary Functions",
+      "validatedWorkflow": "Validated Workflow",
+      "student": {
+        "toggle": "Student Perspective",
+        "environment": "Learner Environment",
+        "heading": "Interactive formative learning & self-monitoring",
+        "features": {
+          "progress": {
+            "title": "Inspect Learning Progress",
+            "description": "View current status across all learning objectives, ordered concepts, and demonstrated SOLO levels."
+          },
+          "assessments": {
+            "title": "Complete Formative Assessments",
+            "description": "Answer calibrated multiple-choice items and write qualitative essay responses for ongoing evaluation."
+          },
+          "feedback": {
+            "title": "Receive Diagnostic Feedback",
+            "description": "Access formative feedback that explains underlying physical principles and guides conceptual refinement."
+          },
+          "review": {
+            "title": "Revisit Mastered Material",
+            "description": "Take review assessments on previously mastered concepts to strengthen retention without altering mastery records."
+          },
+          "evidence": {
+            "title": "Inspect Assessment Evidence",
+            "description": "Audit prior assessment attempts, submitted essays, and feedback records for continuous self-reflection."
+          },
+          "assistant": {
+            "title": "Course-Grounded Learning Assistant",
+            "description": "Interact with an AI assistant strictly grounded in the instructor's syllabus and verified course materials."
+          }
+        }
+      },
+      "instructor": {
+        "toggle": "Instructor Perspective",
+        "environment": "Educator Environment",
+        "heading": "Curriculum governance & progression observation",
+        "features": {
+          "structures": {
+            "title": "Organize Learning Structures",
+            "description": "Define course offerings, articulate learning objectives, and configure pedagogical concept sequences."
+          },
+          "material": {
+            "title": "Manage Formative Material",
+            "description": "Author and curate formative items mapped directly to configured SOLO levels and cognitive outcomes."
+          },
+          "banks": {
+            "title": "Manage Question Banks",
+            "description": "Organize, import, and maintain diagnostic MCQ and essay question repositories per course offering."
+          },
+          "progress": {
+            "title": "Observe Student Progression",
+            "description": "Track student conceptual trajectories, identifying common learning obstacles across cohort offerings."
+          },
+          "evidence": {
+            "title": "Inspect Assessment Evidence",
+            "description": "Review detailed student attempts, submitted qualitative essays, and AI evaluation traces for assessment integrity."
+          }
+        }
+      }
+    },
+    "visuals": {
+      "logoAlt": "ATLAS Learning System Logo",
+      "mascotAlt": "ATLAS Mascot",
+      "companionMascotAlt": "ATLAS AI Companion Mascot",
+      "mascotAvatarAlt": "ATLAS AI Mascot Avatar",
+      "pulseHint": "Click to pulse field",
+      "orbit": {
+        "concepts": {
+          "title": "Ordered Concepts",
+          "subtitle": "Coulomb & Field Vectors"
+        },
+        "taxonomy": {
+          "title": "Configured SOLO",
+          "subtitle": "Unistructural → Relational"
+        },
+        "evaluation": {
+          "title": "Qualitative Essay",
+          "subtitle": "Diagnostic Reasoning"
+        },
+        "assistance": {
+          "title": "Learning Assistant",
+          "subtitle": "Course-Grounded AI"
+        }
       }
     },
     "guidesFaq": {
@@ -1433,6 +1882,7 @@
       "signIn": "Sign In",
       "getStarted": "Get Started",
       "exploreTitle": "Explore",
+      "navigationAria": "Footer navigation",
       "links": {
         "features": "Features",
         "guidesFaq": "Guides & FAQ",

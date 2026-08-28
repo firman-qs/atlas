@@ -9,8 +9,11 @@ import {
   MessageSquareQuote,
   Sparkles,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function CapabilitiesSection() {
+  const t = useTranslations("landing.authoredCapabilities");
+
   return (
     <section
       id="capabilities"
@@ -20,16 +23,15 @@ export function CapabilitiesSection() {
         {/* Section Header */}
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-[8px] border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs font-semibold text-primary">
-            Platform Capabilities
+            {t("badge")}
           </div>
 
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Authored for academic depth and conceptual clarity
+            {t("title")}
           </h2>
 
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground">
-            ATLAS unites curriculum hierarchy, formative assessment, diagnostic feedback,
-            and contextual AI assistance into an integrated educational architecture.
+            {t("description")}
           </p>
         </div>
 
@@ -40,7 +42,7 @@ export function CapabilitiesSection() {
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary">
-                  Pillar 01
+                  {t("pillars.structured.number")}
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-[12px] bg-primary/10 text-primary">
                   <GitBranch className="size-5" />
@@ -48,12 +50,11 @@ export function CapabilitiesSection() {
               </div>
 
               <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">
-                Structured Learning
+                {t("pillars.structured.title")}
               </h3>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Learning is not a random collection of quiz questions. Curriculum is structured
-                into clear hierarchies that reflect true pedagogical sequence.
+                {t("pillars.structured.description")}
               </p>
 
               <div className="mt-6 space-y-4 border-t border-border/60 pt-5">
@@ -61,10 +62,10 @@ export function CapabilitiesSection() {
                   <Layers className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      Conceptual Progression
+                      {t("pillars.structured.features.progression.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Ordered concepts grouped under defined learning objectives, guiding students from foundational to nuanced understanding.
+                      {t("pillars.structured.features.progression.description")}
                     </p>
                   </div>
                 </div>
@@ -73,10 +74,10 @@ export function CapabilitiesSection() {
                   <CheckCircle className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      Adaptive Formative Assessment
+                      {t("pillars.structured.features.assessment.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Presents formative items targeted at the student&apos;s current conceptual level rather than arbitrary testing.
+                      {t("pillars.structured.features.assessment.description")}
                     </p>
                   </div>
                 </div>
@@ -84,8 +85,10 @@ export function CapabilitiesSection() {
             </div>
 
             <div className="mt-8 rounded-[12px] border border-border/60 bg-muted/30 p-3.5 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Hierarchical Flow:</span>{" "}
-              Course Offering → Learning Objectives → Ordered Concepts → Configured SOLO levels.
+              <span className="font-semibold text-foreground">
+                {t("pillars.structured.footerLabel")}
+              </span>{" "}
+              {t("pillars.structured.footerText")}
             </div>
           </div>
 
@@ -94,7 +97,7 @@ export function CapabilitiesSection() {
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary">
-                  Pillar 02
+                  {t("pillars.feedback.number")}
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-[12px] bg-primary/10 text-primary">
                   <MessageSquareQuote className="size-5" />
@@ -102,12 +105,11 @@ export function CapabilitiesSection() {
               </div>
 
               <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">
-                Feedback & Evaluation
+                {t("pillars.feedback.title")}
               </h3>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Assessment is designed for learning, not merely grading. Feedback illuminates
-                underlying reasoning and directly addresses misconceptions.
+                {t("pillars.feedback.description")}
               </p>
 
               <div className="mt-6 space-y-4 border-t border-border/60 pt-5">
@@ -115,10 +117,10 @@ export function CapabilitiesSection() {
                   <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      AI-Supported Essay Evaluation
+                      {t("pillars.feedback.features.essay.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Evaluates open-ended qualitative explanations, identifying conceptual alignment and specific omissions.
+                      {t("pillars.feedback.features.essay.description")}
                     </p>
                   </div>
                 </div>
@@ -127,10 +129,10 @@ export function CapabilitiesSection() {
                   <BookMarked className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      Meaningful Formative Feedback
+                      {t("pillars.feedback.features.formative.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Delivers timely explanations that explain why an answer is incomplete and prompt the next conceptual insight.
+                      {t("pillars.feedback.features.formative.description")}
                     </p>
                   </div>
                 </div>
@@ -138,8 +140,10 @@ export function CapabilitiesSection() {
             </div>
 
             <div className="mt-8 rounded-[12px] border border-border/60 bg-muted/30 p-3.5 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Dual Item Formats:</span>{" "}
-              Diagnostic Multiple-Choice Questions (MCQ) & Qualitative Essay inquiries.
+              <span className="font-semibold text-foreground">
+                {t("pillars.feedback.footerLabel")}
+              </span>{" "}
+              {t("pillars.feedback.footerText")}
             </div>
           </div>
 
@@ -148,7 +152,7 @@ export function CapabilitiesSection() {
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary">
-                  Pillar 03
+                  {t("pillars.evidence.number")}
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-[12px] bg-primary/10 text-primary">
                   <FileCheck2 className="size-5" />
@@ -156,11 +160,11 @@ export function CapabilitiesSection() {
               </div>
 
               <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">
-                Context & Evidence
+                {t("pillars.evidence.title")}
               </h3>
 
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                All learning interactions remain grounded in instructor-curated materials, preserving full transparency and inspectable evidence.
+                {t("pillars.evidence.description")}
               </p>
 
               <div className="mt-6 space-y-4 border-t border-border/60 pt-5">
@@ -168,10 +172,10 @@ export function CapabilitiesSection() {
                   <BrainCircuit className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      Course-Grounded Assistance
+                      {t("pillars.evidence.features.assistance.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      An AI learning assistant anchored directly in course materials, preventing hallucinations and preserving pedagogical fidelity.
+                      {t("pillars.evidence.features.assistance.description")}
                     </p>
                   </div>
                 </div>
@@ -180,10 +184,10 @@ export function CapabilitiesSection() {
                   <Clock className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <h4 className="text-xs font-semibold text-foreground">
-                      Inspectable Learning Evidence
+                      {t("pillars.evidence.features.inspectable.title")}
                     </h4>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      Complete attempt histories, progression traces, and diagnostic evaluations remain auditable for students and instructors.
+                      {t("pillars.evidence.features.inspectable.description")}
                     </p>
                   </div>
                 </div>
@@ -191,8 +195,10 @@ export function CapabilitiesSection() {
             </div>
 
             <div className="mt-8 rounded-[12px] border border-border/60 bg-muted/30 p-3.5 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Academic Integrity:</span>{" "}
-              Transparent audit logs with no opaque scoring algorithms or black-box predictions.
+              <span className="font-semibold text-foreground">
+                {t("pillars.evidence.footerLabel")}
+              </span>{" "}
+              {t("pillars.evidence.footerText")}
             </div>
           </div>
         </div>

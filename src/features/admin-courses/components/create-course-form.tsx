@@ -16,32 +16,35 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useCreateAdminCourse } from "@/features/admin-courses/queries";
 import { ApiError } from "@/lib/api/api-error";
 
-const createCourseSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Course code is required.")
-    .max(50, "Course code cannot exceed 50 characters."),
+export function createCourseSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("courseCodeRequired"))
+      .max(50, t("courseCodeMax")),
 
-  title: z
-    .string()
-    .trim()
-    .min(1, "Course title is required.")
-    .max(255, "Course title cannot exceed 255 characters."),
+    title: z
+      .string()
+      .trim()
+      .min(1, t("courseTitleRequired"))
+      .max(255, t("courseTitleMax")),
 
-  description: z.string().trim().min(1, "Course description is required."),
+    description: z.string().trim().min(1, t("courseDescriptionRequired")),
 
-  credits: z
-    .number()
-    .int("Credits must be a whole number.")
-    .min(1, "Credits must be at least 1.")
-    .max(10, "Credits cannot exceed 10."),
-});
+    credits: z
+      .number()
+      .int(t("creditsWhole"))
+      .min(1, t("creditsMin"))
+      .max(10, t("creditsMax")),
+  });
+}
 
-type CreateCourseFormValues = z.infer<typeof createCourseSchema>;
+type CreateCourseFormValues = z.infer<ReturnType<typeof createCourseSchema>>;
 
 interface CreateCourseFormProps {
   onCreated?: () => void;
@@ -53,13 +56,14 @@ export function CreateCourseForm({
   onCancel,
 }: CreateCourseFormProps) {
   const t = useTranslations("admin.courses.form");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const createCourse = useCreateAdminCourse();
 
   const form = useForm<CreateCourseFormValues>({
-    resolver: zodResolver(createCourseSchema),
+    resolver: zodResolver(createCourseSchema(tValidation)),
     defaultValues: {
       code: "",
       title: "",
@@ -99,7 +103,7 @@ export function CreateCourseForm({
 
           <Input
             id="course-code"
-            placeholder="e.g. um032em000"
+            placeholder={t("codePlaceholder")}
             disabled={createCourse.isPending}
             aria-invalid={!!form.formState.errors.code}
             {...form.register("code")}
@@ -113,7 +117,7 @@ export function CreateCourseForm({
 
           <Input
             id="course-title"
-            placeholder="e.g. Electromagnetics"
+            placeholder={t("titlePlaceholder")}
             disabled={createCourse.isPending}
             aria-invalid={!!form.formState.errors.title}
             {...form.register("title")}
@@ -123,11 +127,13 @@ export function CreateCourseForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.description}>
-          <FieldLabel htmlFor="course-description">{t("description")}</FieldLabel>
+          <FieldLabel htmlFor="course-description">
+            {t("description")}
+          </FieldLabel>
 
           <Textarea
             id="course-description"
-            placeholder="Describe the course."
+            placeholder={t("descriptionPlaceholder")}
             disabled={createCourse.isPending}
             aria-invalid={!!form.formState.errors.description}
             {...form.register("description")}

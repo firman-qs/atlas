@@ -31,34 +31,32 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useAdminCourses } from "@/features/admin-courses/queries";
 import { useCreateQuestionBank } from "@/features/admin-question-banks/queries";
 import { ApiError } from "@/lib/api/api-error";
 
-const createQuestionBankSchema = z.object({
-  course_id: z.string().min(1, "Course is required."),
+export function createQuestionBankSchema(t: AdminValidationTranslator) {
+  return z.object({
+    course_id: z.string().min(1, t("courseRequired")),
 
-  code: z
-    .string()
-    .trim()
-    .min(1, "Code is required.")
-    .max(50, "Code cannot exceed 50 characters."),
+    code: z.string().trim().min(1, t("codeRequired")).max(50, t("codeMax")),
 
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required.")
-    .max(255, "Name cannot exceed 255 characters."),
+    name: z.string().trim().min(1, t("nameRequired")).max(255, t("nameMax")),
 
-  description: z.string(),
+    description: z.string(),
 
-  is_student_selectable: z.boolean(),
-});
+    is_student_selectable: z.boolean(),
+  });
+}
 
-type CreateQuestionBankFormValues = z.infer<typeof createQuestionBankSchema>;
+type CreateQuestionBankFormValues = z.infer<
+  ReturnType<typeof createQuestionBankSchema>
+>;
 
 export function CreateQuestionBankForm() {
   const t = useTranslations("admin.questionBanks.form");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
 
   const createQuestionBank = useCreateQuestionBank();
@@ -70,7 +68,7 @@ export function CreateQuestionBankForm() {
   });
 
   const form = useForm<CreateQuestionBankFormValues>({
-    resolver: zodResolver(createQuestionBankSchema),
+    resolver: zodResolver(createQuestionBankSchema(tValidation)),
     defaultValues: {
       course_id: "",
       code: "",
@@ -123,9 +121,7 @@ export function CreateQuestionBankForm() {
       <CardHeader>
         <CardTitle>{t("title")}</CardTitle>
 
-        <CardDescription>
-          {t("description")}
-        </CardDescription>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -194,9 +190,7 @@ export function CreateQuestionBankForm() {
                 {...form.register("code")}
               />
 
-              <FieldDescription>
-                {t("codeDescription")}
-              </FieldDescription>
+              <FieldDescription>{t("codeDescription")}</FieldDescription>
 
               <FieldError errors={[form.formState.errors.code]} />
             </Field>
@@ -272,9 +266,7 @@ export function CreateQuestionBankForm() {
               <Plus />
             )}
 
-            {createQuestionBank.isPending
-              ? t("creating")
-              : t("create")}
+            {createQuestionBank.isPending ? t("creating") : t("create")}
           </Button>
         </form>
       </CardContent>

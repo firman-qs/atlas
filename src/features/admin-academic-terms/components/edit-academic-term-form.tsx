@@ -31,36 +31,41 @@ import type {
   AcademicSemester,
   AdminAcademicTerm,
 } from "@/features/admin-academic-terms/types";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 
-const editAcademicTermSchema = z
-  .object({
-    year: z
-      .number()
-      .int("Year must be a whole number.")
-      .min(2000, "Year must be 2000 or later.")
-      .max(2200, "Year cannot exceed 2200."),
+export function editAcademicTermSchema(t: AdminValidationTranslator) {
+  return z
+    .object({
+      year: z
+        .number()
+        .int(t("yearWhole"))
+        .min(2000, t("yearMin"))
+        .max(2200, t("yearMax")),
 
-    semester: z.enum([
-      "odd",
-      "even",
-      "ganjil",
-      "genap",
-      "antara",
-      "spring",
-      "fall",
-      "summer",
-    ]),
+      semester: z.enum([
+        "odd",
+        "even",
+        "ganjil",
+        "genap",
+        "antara",
+        "spring",
+        "fall",
+        "summer",
+      ]),
 
-    starts_at: z.string().min(1, "Start date is required."),
+      starts_at: z.string().min(1, t("startDateRequired")),
 
-    ends_at: z.string().min(1, "End date is required."),
-  })
-  .refine((values) => values.starts_at <= values.ends_at, {
-    message: "End date must be on or after the start date.",
-    path: ["ends_at"],
-  });
+      ends_at: z.string().min(1, t("endDateRequired")),
+    })
+    .refine((values) => values.starts_at <= values.ends_at, {
+      message: t("endDateOrder"),
+      path: ["ends_at"],
+    });
+}
 
-type EditAcademicTermFormValues = z.infer<typeof editAcademicTermSchema>;
+type EditAcademicTermFormValues = z.infer<
+  ReturnType<typeof editAcademicTermSchema>
+>;
 
 interface EditAcademicTermFormProps {
   academicTerm: AdminAcademicTerm;
@@ -74,6 +79,7 @@ export function EditAcademicTermForm({
   onCancel,
 }: EditAcademicTermFormProps) {
   const t = useTranslations("admin.academicTerms");
+  const tValidation = useTranslations("admin.validation");
   const tSemesters = useTranslations("course.semesters");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
@@ -88,7 +94,7 @@ export function EditAcademicTermForm({
   const updateAcademicTerm = useUpdateAdminAcademicTerm(academicTerm.id);
 
   const form = useForm<EditAcademicTermFormValues>({
-    resolver: zodResolver(editAcademicTermSchema),
+    resolver: zodResolver(editAcademicTermSchema(tValidation)),
     defaultValues: {
       year: academicTerm.year,
       semester: academicTerm.semester,
@@ -131,7 +137,9 @@ export function EditAcademicTermForm({
 
       <FieldGroup>
         <Field data-invalid={!!form.formState.errors.year}>
-          <FieldLabel htmlFor="edit-academic-term-year">{t("labels.year")}</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-year">
+            {t("labels.year")}
+          </FieldLabel>
 
           <Input
             id="edit-academic-term-year"
@@ -184,7 +192,9 @@ export function EditAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.starts_at}>
-          <FieldLabel htmlFor="edit-academic-term-start">{t("labels.startDate")}</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-start">
+            {t("labels.startDate")}
+          </FieldLabel>
 
           <Input
             id="edit-academic-term-start"
@@ -198,7 +208,9 @@ export function EditAcademicTermForm({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.ends_at}>
-          <FieldLabel htmlFor="edit-academic-term-end">{t("labels.endDate")}</FieldLabel>
+          <FieldLabel htmlFor="edit-academic-term-end">
+            {t("labels.endDate")}
+          </FieldLabel>
 
           <Input
             id="edit-academic-term-end"

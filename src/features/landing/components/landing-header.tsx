@@ -61,7 +61,9 @@ function AuthActions({ isMobile = false }: { isMobile?: boolean }) {
   }
 
   return (
-    <div className={`flex items-center gap-2 ${isMobile ? "flex-col w-full" : ""}`}>
+    <div
+      className={`flex items-center gap-2 ${isMobile ? "flex-col w-full" : ""}`}
+    >
       <Button
         variant="ghost"
         size="sm"
@@ -140,7 +142,7 @@ export function LandingHeader() {
             <div className="relative size-7 overflow-hidden transition-transform group-hover:scale-105">
               <Image
                 src="/logo.png"
-                alt="ATLAS Logo"
+                alt={tHeader("logoAlt")}
                 width={28}
                 height={28}
                 priority
@@ -155,7 +157,7 @@ export function LandingHeader() {
 
           {/* Desktop Navigation Links */}
           <nav
-            aria-label="Primary navigation"
+            aria-label={tHeader("primaryNavigationAria")}
             className="hidden items-center gap-1 md:flex"
           >
             {navigation.map((item) => (
@@ -205,14 +207,16 @@ export function LandingHeader() {
                   <div className="relative size-7.5 overflow-hidden">
                     <Image
                       src="/logo.png"
-                      alt="ATLAS Logo"
+                      alt={tHeader("logoAlt")}
                       width={30}
                       height={30}
                       className="size-full object-contain"
                     />
                   </div>
                   <div>
-                    <SheetTitle className="text-base font-semibold">ATLAS</SheetTitle>
+                    <SheetTitle className="text-base font-semibold">
+                      ATLAS
+                    </SheetTitle>
                     <SheetDescription className="text-xs">
                       {tHeader("tagline")}
                     </SheetDescription>
@@ -222,7 +226,7 @@ export function LandingHeader() {
 
               <div className="mt-6 flex flex-1 flex-col justify-between">
                 <nav
-                  aria-label="Mobile navigation"
+                  aria-label={tHeader("mobileNavigationAria")}
                   className="flex flex-col gap-1"
                 >
                   {navigation.map((item) => (

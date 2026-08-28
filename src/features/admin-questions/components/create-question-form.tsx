@@ -19,7 +19,7 @@ import {
 } from "@/features/admin-questions/components/question-placement-fields";
 import { useCreateAdminQuestion } from "@/features/admin-questions/queries";
 import {
-  questionAuthoringSchema,
+  createQuestionAuthoringSchema,
   type QuestionAuthoringFormValues,
 } from "@/features/admin-questions/schemas";
 import type { CreateAdminQuestionRequest } from "@/features/admin-questions/types";
@@ -48,6 +48,7 @@ export function CreateQuestionForm() {
   const tPlacement = useTranslations("admin.questions.placement");
   const tDetail = useTranslations("admin.questions.detail");
   const tErrors = useTranslations("admin.errors");
+  const tValidation = useTranslations("admin.validation");
   const common = useTranslations("common");
 
   const [initialOptions] = useState(() => [
@@ -58,7 +59,7 @@ export function CreateQuestionForm() {
   const router = useRouter();
 
   const form = useForm<QuestionAuthoringFormValues>({
-    resolver: zodResolver(questionAuthoringSchema),
+    resolver: zodResolver(createQuestionAuthoringSchema(tValidation)),
     defaultValues: {
       courseId: "",
       learningObjectiveId: "",

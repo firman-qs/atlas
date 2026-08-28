@@ -18,7 +18,7 @@ import {
 } from "@/features/admin-questions/components/question-placement-fields";
 import { useUpdateAdminQuestion } from "@/features/admin-questions/queries";
 import {
-  questionAuthoringSchema,
+  createQuestionAuthoringSchema,
   type QuestionAuthoringFormValues,
 } from "@/features/admin-questions/schemas";
 import type {
@@ -101,9 +101,10 @@ export function EditQuestionForm({
   const t = useTranslations("admin.questions");
   const tForm = useTranslations("admin.questions.form");
   const tPlacement = useTranslations("admin.questions.placement");
+  const tValidation = useTranslations("admin.validation");
 
   const form = useForm<QuestionAuthoringFormValues>({
-    resolver: zodResolver(questionAuthoringSchema),
+    resolver: zodResolver(createQuestionAuthoringSchema(tValidation)),
     defaultValues: createInitialValues(question, courseId),
   });
 
@@ -167,11 +168,11 @@ export function EditQuestionForm({
   return (
     <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">{tForm("editTitle")}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          {tForm("editTitle")}
+        </h1>
 
-        <p className="mt-1 text-muted-foreground">
-          {tForm("editDescription")}
-        </p>
+        <p className="mt-1 text-muted-foreground">{tForm("editDescription")}</p>
       </div>
 
       <Card>

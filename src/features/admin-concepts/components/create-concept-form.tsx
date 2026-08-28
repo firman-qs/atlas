@@ -11,25 +11,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useCreateConcept } from "@/features/admin-concepts/queries";
 
-const createConceptSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Concept code is required.")
-    .max(50, "Concept code must be at most 50 characters."),
+export function createConceptSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("conceptCodeRequired"))
+      .max(50, t("conceptCodeMax")),
 
-  name: z
-    .string()
-    .trim()
-    .min(1, "Concept name is required.")
-    .max(255, "Concept name must be at most 255 characters."),
+    name: z
+      .string()
+      .trim()
+      .min(1, t("conceptNameRequired"))
+      .max(255, t("conceptNameMax")),
 
-  description: z.string().trim().min(1, "Concept description is required."),
-});
+    description: z.string().trim().min(1, t("conceptDescriptionRequired")),
+  });
+}
 
-type CreateConceptFormValues = z.infer<typeof createConceptSchema>;
+type CreateConceptFormValues = z.infer<ReturnType<typeof createConceptSchema>>;
 
 interface CreateConceptFormProps {
   courseId: string;
@@ -43,13 +46,14 @@ export function CreateConceptForm({
   onCreated,
 }: CreateConceptFormProps) {
   const t = useTranslations("admin.concepts");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const createConcept = useCreateConcept(courseId);
 
   const form = useForm<CreateConceptFormValues>({
-    resolver: zodResolver(createConceptSchema),
+    resolver: zodResolver(createConceptSchema(tValidation)),
     defaultValues: {
       code: "",
       name: "",
@@ -93,7 +97,7 @@ export function CreateConceptForm({
 
           <Input
             id="concept-code"
-            placeholder="e.g. em-c003"
+            placeholder={t("placeholders.code")}
             disabled={createConcept.isPending}
             {...form.register("code")}
           />
@@ -110,7 +114,7 @@ export function CreateConceptForm({
 
           <Input
             id="concept-name"
-            placeholder="e.g. Electric Potential"
+            placeholder={t("placeholders.name")}
             disabled={createConcept.isPending}
             {...form.register("name")}
           />
@@ -129,7 +133,7 @@ export function CreateConceptForm({
         <Textarea
           id="concept-description"
           rows={4}
-          placeholder="Describe the conceptual content represented by this concept."
+          placeholder={t("placeholders.description")}
           disabled={createConcept.isPending}
           {...form.register("description")}
         />
@@ -154,7 +158,9 @@ export function CreateConceptForm({
         <Button type="submit" disabled={createConcept.isPending}>
           {createConcept.isPending && <Loader2 className="animate-spin" />}
 
-          {createConcept.isPending ? t("actions.creating") : t("actions.create")}
+          {createConcept.isPending
+            ? t("actions.creating")
+            : t("actions.create")}
         </Button>
       </div>
     </form>

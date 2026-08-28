@@ -44,7 +44,9 @@ import { useActiveRole } from "@/features/auth/active-role-provider";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useLogout } from "@/features/auth/queries";
 
-function getNavigation(t: ReturnType<typeof useTranslations<"navigation.sidebar">>) {
+function getNavigation(
+  t: ReturnType<typeof useTranslations<"navigation.sidebar">>,
+) {
   return {
     student: [
       {
@@ -69,96 +71,96 @@ function getNavigation(t: ReturnType<typeof useTranslations<"navigation.sidebar"
       },
     ],
 
-  instructor: [
-    {
-      label: t("workspace"),
-      items: [
-        {
-          label: t("dashboard"),
-          href: "/dashboard",
-          icon: LayoutDashboard,
-        },
-        {
-          label: t("courseOfferings"),
-          href: "/instructor/course-offerings",
-          icon: GraduationCap,
-        },
-        {
-          label: t("students"),
-          href: "/instructor/students",
-          icon: Users,
-        },
-      ],
-    },
-  ],
+    instructor: [
+      {
+        label: t("workspace"),
+        items: [
+          {
+            label: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
+          },
+          {
+            label: t("courseOfferings"),
+            href: "/instructor/course-offerings",
+            icon: GraduationCap,
+          },
+          {
+            label: t("students"),
+            href: "/instructor/students",
+            icon: Users,
+          },
+        ],
+      },
+    ],
 
-  admin: [
-    {
-      label: t("workspace"),
-      items: [
-        {
-          label: t("dashboard"),
-          href: "/dashboard",
-          icon: LayoutDashboard,
-        },
-      ],
-    },
-    {
-      label: t("curriculum"),
-      items: [
-        {
-          label: t("courses"),
-          href: "/admin/courses",
-          icon: BookOpen,
-        },
-        {
-          label: t("curriculumImport"),
-          href: "/admin/curriculum-import",
-          icon: FileUp,
-        },
-        {
-          label: t("questions"),
-          href: "/admin/questions",
-          icon: ClipboardCheck,
-        },
-        {
-          label: t("questionImport"),
-          href: "/admin/question-import",
-          icon: FileUp,
-        },
-        {
-          label: t("questionBanks"),
-          href: "/admin/question-banks",
-          icon: Library,
-        },
-      ],
-    },
-    {
-      label: t("delivery"),
-      items: [
-        {
-          label: t("academicTerms"),
-          href: "/admin/academic-terms",
-          icon: CalendarDays,
-        },
-        {
-          label: t("courseOfferings"),
-          href: "/admin/course-offerings",
-          icon: GraduationCap,
-        },
-      ],
-    },
-    {
-      label: t("administration"),
-      items: [
-        {
-          label: t("users"),
-          href: "/admin/users",
-          icon: Users,
-        },
-      ],
-    },
-  ],
+    admin: [
+      {
+        label: t("workspace"),
+        items: [
+          {
+            label: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
+          },
+        ],
+      },
+      {
+        label: t("curriculum"),
+        items: [
+          {
+            label: t("courses"),
+            href: "/admin/courses",
+            icon: BookOpen,
+          },
+          {
+            label: t("curriculumImport"),
+            href: "/admin/curriculum-import",
+            icon: FileUp,
+          },
+          {
+            label: t("questions"),
+            href: "/admin/questions",
+            icon: ClipboardCheck,
+          },
+          {
+            label: t("questionImport"),
+            href: "/admin/question-import",
+            icon: FileUp,
+          },
+          {
+            label: t("questionBanks"),
+            href: "/admin/question-banks",
+            icon: Library,
+          },
+        ],
+      },
+      {
+        label: t("delivery"),
+        items: [
+          {
+            label: t("academicTerms"),
+            href: "/admin/academic-terms",
+            icon: CalendarDays,
+          },
+          {
+            label: t("courseOfferings"),
+            href: "/admin/course-offerings",
+            icon: GraduationCap,
+          },
+        ],
+      },
+      {
+        label: t("administration"),
+        items: [
+          {
+            label: t("users"),
+            href: "/admin/users",
+            icon: Users,
+          },
+        ],
+      },
+    ],
   } as const;
 }
 
@@ -206,7 +208,7 @@ export function AppSidebar() {
               <div className="relative size-7 shrink-0 overflow-hidden">
                 <Image
                   src="/logo.png"
-                  alt="ATLAS Logo"
+                  alt={t("logoAlt")}
                   width={28}
                   height={28}
                   className="size-full object-contain"

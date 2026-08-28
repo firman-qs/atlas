@@ -11,26 +11,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { AdminValidationTranslator } from "@/features/admin-validation";
 import { useUpdateConcept } from "@/features/admin-concepts/queries";
 import type { AdminConcept } from "@/features/admin-concepts/types";
 
-const editConceptSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "Concept code is required.")
-    .max(50, "Concept code must be at most 50 characters."),
+export function editConceptSchema(t: AdminValidationTranslator) {
+  return z.object({
+    code: z
+      .string()
+      .trim()
+      .min(1, t("conceptCodeRequired"))
+      .max(50, t("conceptCodeMax")),
 
-  name: z
-    .string()
-    .trim()
-    .min(1, "Concept name is required.")
-    .max(255, "Concept name must be at most 255 characters."),
+    name: z
+      .string()
+      .trim()
+      .min(1, t("conceptNameRequired"))
+      .max(255, t("conceptNameMax")),
 
-  description: z.string().trim().min(1, "Concept description is required."),
-});
+    description: z.string().trim().min(1, t("conceptDescriptionRequired")),
+  });
+}
 
-type EditConceptFormValues = z.infer<typeof editConceptSchema>;
+type EditConceptFormValues = z.infer<ReturnType<typeof editConceptSchema>>;
 
 interface EditConceptFormProps {
   concept: AdminConcept;
@@ -44,13 +47,14 @@ export function EditConceptForm({
   onSaved,
 }: EditConceptFormProps) {
   const t = useTranslations("admin.concepts");
+  const tValidation = useTranslations("admin.validation");
   const tErrors = useTranslations("admin.errors");
   const common = useTranslations("common");
 
   const updateConcept = useUpdateConcept(concept.course_id);
 
   const form = useForm<EditConceptFormValues>({
-    resolver: zodResolver(editConceptSchema),
+    resolver: zodResolver(editConceptSchema(tValidation)),
     defaultValues: {
       code: concept.code,
       name: concept.name,
@@ -89,7 +93,9 @@ export function EditConceptForm({
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor={`concept-code-${concept.id}`}>{t("labels.code")}</Label>
+          <Label htmlFor={`concept-code-${concept.id}`}>
+            {t("labels.code")}
+          </Label>
 
           <Input
             id={`concept-code-${concept.id}`}
@@ -105,7 +111,9 @@ export function EditConceptForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={`concept-name-${concept.id}`}>{t("labels.name")}</Label>
+          <Label htmlFor={`concept-name-${concept.id}`}>
+            {t("labels.name")}
+          </Label>
 
           <Input
             id={`concept-name-${concept.id}`}
@@ -122,7 +130,9 @@ export function EditConceptForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`concept-description-${concept.id}`}>{t("labels.description")}</Label>
+        <Label htmlFor={`concept-description-${concept.id}`}>
+          {t("labels.description")}
+        </Label>
 
         <Textarea
           id={`concept-description-${concept.id}`}
