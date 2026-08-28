@@ -55,33 +55,26 @@ export function LandingFooter() {
 
   const exploreLinks = [
     {
-      label: t("links.features"),
-      href: "#features",
+      label: t("links.capabilities"),
+      href: "#capabilities",
+    },
+    {
+      label: t("links.progression"),
+      href: "#progression",
     },
     {
       label: t("links.guidesFaq"),
       href: "#guides-faq",
     },
     {
-      label: t("links.team"),
-      href: "#team",
+      label: t("links.project"),
+      href: "#project",
     },
     {
       label: t("links.publication"),
       href: "#publication",
     },
   ];
-
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#")) {
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
-        window.history.pushState(null, "", href);
-      }
-    }
-  };
 
   return (
     <footer className="bg-muted/20 px-4 py-12 sm:px-6">
@@ -142,7 +135,6 @@ export function LandingFooter() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={(e) => handleLinkClick(e, item.href)}
                   className="text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {item.label}

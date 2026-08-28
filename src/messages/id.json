@@ -1185,10 +1185,10 @@
   },
   "landing": {
     "nav": {
-      "features": "Fitur",
+      "capabilities": "Kapabilitas",
+      "progression": "Progresi",
       "guidesFaq": "Panduan & FAQ",
-      "team": "Tim",
-      "publication": "Publikasi"
+      "project": "Proyek"
     },
     "header": {
       "themeToggleAria": "Ganti tema visual",
@@ -1400,29 +1400,33 @@
       }
     },
     "project": {
-      "badge": "Tim Akademik & Riset",
-      "title": "Tim Pengembang ATLAS",
-      "description": "ATLAS dikembangkan melalui riset akademik di Universitas Negeri Malang, memadukan pendidikan fisika dengan sistem asesmen formatif cerdas.",
+      "badge": "Tim Proyek & Akademik",
+      "title": "Sosok dan dukungan institusional di balik ATLAS",
+      "description": "ATLAS memadukan asesmen pendidikan, pembelajaran konseptual, dan rekayasa perangkat lunak dalam proyek akademik berorientasi riset.",
+      "clickToCollapse": "Klik untuk menutup",
+      "clickForBio": "Klik untuk bio",
       "roles": {
-        "student": "Mahasiswa",
-        "supervisor1": "Pembimbing 1",
-        "supervisor2": "Pembimbing 2"
+        "creator": "Pencipta & Pengembang",
+        "supervisor": "Pembimbing Akademik"
+      },
+      "bios": {
+        "firman": "Memimpin arsitektur perangkat lunak, pipeline asesmen formatif AI, dan implementasi sistem.",
+        "khusaini": "Spesialis pendidikan fisika yang membimbing desain pedagogis, taksonomi asesmen, dan model pembelajaran.",
+        "cahyo": "Pakar konten fisika yang memberikan arahan struktur konseptual elektromagnetisme dan penyelarasan kurikulum."
+      },
+      "funding": {
+        "badge": "Hibah Internal",
+        "title": "Pengakuan Pendanaan",
+        "institution": "Universitas Negeri Malang",
+        "type": "Pendanaan Internal Non-PNBP",
+        "description": "Dukungan disediakan untuk riset teknologi pembelajaran dan implementasi asesmen percontohan."
       },
       "publication": {
         "badge": "Dalam Persiapan",
         "title": "Status Publikasi",
-        "subtitle": "Evaluasi Empiris & Riset Pendidikan",
-        "itemTitle": "Asesmen Formatif dan Progresi Taksonomi SOLO pada Materi Elektromagnetisme Dasar: Kerangka Kerja ATLAS",
-        "itemAuthors": "Firman Qashdus Sabil, Khusaini, Cahyo Aji Hapsoro",
-        "itemStatus": "Naskah dalam persiapan publikasi jurnal riset pendidikan fisika",
-        "description": "Temuan riset dan data evaluasi dari implementasi percontohan elektromagnetisme akan dipublikasikan."
-      },
-      "funding": {
-        "title": "Pendanaan",
-        "institution": "Universitas Negeri Malang",
-        "type": "Pendanaan Riset Internal Non-PNBP",
-        "department": "Departemen Fisika, Fakultas Matematika dan Ilmu Pengetahuan Alam",
-        "description": "Dukungan pendanaan dan fasilitas institusional disediakan untuk riset teknologi pembelajaran dan implementasi asesmen percontohan."
+        "subtitle": "Evaluasi Empiris",
+        "type": "Publikasi riset",
+        "description": "Segera hadir."
       }
     },
     "footer": {
@@ -1434,9 +1438,10 @@
       "getStarted": "Mulai Sekarang",
       "exploreTitle": "Jelajahi",
       "links": {
-        "features": "Fitur",
+        "capabilities": "Kapabilitas",
+        "progression": "Progresi",
         "guidesFaq": "Panduan & FAQ",
-        "team": "Tim",
+        "project": "Tim Proyek",
         "publication": "Publikasi"
       },
       "supportTitle": "Dukungan Institusional",

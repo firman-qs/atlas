@@ -8,15 +8,15 @@ import { ProjectSection } from "@/features/landing/components/project-section";
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen scroll-smooth bg-slate-50/50 dark:bg-slate-950 text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-clip">
-      {/* Interactive Electromagnetic Vector Field Background */}
+    <div className="relative min-h-screen scroll-smooth bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+      {/* Interactive Electromagnetic Vector Field Background (Vibrant & Cursor-Reactive) */}
       <LandingFieldCanvas />
 
-      {/* Navigation Header with Frosted Glass */}
+      {/* Navigation Header with Windows 11 Acrylic / Frosted Glass */}
       <LandingHeader />
 
       {/* Main Streamlined Narrative Flow */}
-      <main className="relative z-10 pt-14">
+      <main className="relative z-10">
         <LandingHero />
         <InteractiveFeaturesConsole />
         <GuidesFaqSection />

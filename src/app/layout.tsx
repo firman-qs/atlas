@@ -37,7 +37,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       lang={locale}
       className={cn(
         "h-full",
-        "scroll-smooth",
         "antialiased",
         geistSans.variable,
         geistMono.variable,

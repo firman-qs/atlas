@@ -45,21 +45,21 @@ describe("LandingHeader", () => {
       "/register",
     );
 
-    expect(screen.getByRole("link", { name: "Features" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Capabilities" })).toHaveAttribute(
       "href",
-      "#features",
+      "#capabilities",
+    );
+    expect(screen.getByRole("link", { name: "Progression" })).toHaveAttribute(
+      "href",
+      "#progression",
     );
     expect(screen.getByRole("link", { name: "Guides & FAQ" })).toHaveAttribute(
       "href",
       "#guides-faq",
     );
-    expect(screen.getByRole("link", { name: "Team" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Project" })).toHaveAttribute(
       "href",
-      "#team",
-    );
-    expect(screen.getByRole("link", { name: "Publication" })).toHaveAttribute(
-      "href",
-      "#publication",
+      "#project",
     );
   });
 
@@ -83,21 +83,21 @@ describe("LandingHeader", () => {
       "/register",
     );
 
-    expect(screen.getByRole("link", { name: "Fitur" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Kapabilitas" })).toHaveAttribute(
       "href",
-      "#features",
+      "#capabilities",
+    );
+    expect(screen.getByRole("link", { name: "Progresi" })).toHaveAttribute(
+      "href",
+      "#progression",
     );
     expect(screen.getByRole("link", { name: "Panduan & FAQ" })).toHaveAttribute(
       "href",
       "#guides-faq",
     );
-    expect(screen.getByRole("link", { name: "Tim" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Proyek" })).toHaveAttribute(
       "href",
-      "#team",
-    );
-    expect(screen.getByRole("link", { name: "Publikasi" })).toHaveAttribute(
-      "href",
-      "#publication",
+      "#project",
     );
   });
 });
