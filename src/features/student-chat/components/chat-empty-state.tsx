@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   Maximize2,
@@ -8,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { AuthMascot } from "@/features/auth/components/auth-mascot";
 
 interface ChatEmptyStateProps {
   courseTitle: string;
@@ -64,34 +64,31 @@ export function ChatEmptyState({
       </div>
 
       <div className="flex min-h-0 flex-1 items-center justify-center p-6 pt-20">
-        <div className="max-w-md text-center">
-          <div className="mx-auto relative size-14 overflow-hidden">
-            <Image
-              src="/mascot.png"
-              alt=""
-              aria-hidden="true"
-              width={56}
-              height={56}
-              className="size-full object-contain drop-shadow-xs"
+        <div className="max-w-md text-center flex flex-col items-center">
+          {/* Interactive 3D ATLAS Mascot */}
+          <div className="w-full flex justify-center mb-1">
+            <AuthMascot
+              size="md"
+              expression={isCreating ? "submitting" : "idle"}
             />
           </div>
 
-          <h3 className="mt-4 text-xl font-semibold">
+          <h3 className="text-xl font-bold tracking-tight sm:text-2xl text-foreground">
             {t("learnWithTutor")}
           </h3>
 
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground max-w-sm">
             {t("learnWithTutorPrompt")}
           </p>
 
           <Button
             type="button"
-            className="mt-5"
+            size="lg"
+            className="mt-6 rounded-full px-6 font-medium shadow-sm transition-all hover:shadow-md"
             onClick={onCreateSession}
             disabled={isCreating}
           >
-            <MessageSquarePlus />
-
+            <MessageSquarePlus className="mr-1.5 size-4" />
             {isCreating ? t("creating") : t("startNewChat")}
           </Button>
         </div>

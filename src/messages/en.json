@@ -372,7 +372,7 @@
     "chatsDescription": "Your AI Tutor conversations for {courseTitle}.",
     "newChat": "New chat",
     "creating": "Creating...",
-    "startNewChat": "Start a new chat",
+    "startNewChat": "Ask ATLAS",
     "startConversation": "Start this conversation",
     "startConversationPrompt": "Ask about concepts from this course. Your ATLAS tutor will use the course curriculum and your learning progress as context.",
     "learnWithTutor": "Learn with your ATLAS tutor",
